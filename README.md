@@ -3,10 +3,11 @@
 **Atlas AI-Assisted & Governed Development (AAGD)**
 
 ## 📊 Estado del Proyecto
-- **Fase Actual**: 0 - Fundación y Estrategia
-- **Versión Playbook**: v0.1
+- **Fase Actual**: 1 - Diseño del Sistema y Prompt-Zero (Completada)
+- **Versión Playbook**: v1.0
 - **Última Actualización**: 2024-12-19
 - **Director del Ecosistema**: Jorge Daniel Salgado
+- **Repositorio**: https://github.com/Loveless2k/ai-ramtun-app
 
 ## 🎮 Visión del Venture
 **Ramtun** es una plataforma educativa que transforma el aprendizaje tradicional en experiencias gamificadas mediante crucigramas generados por IA, diseñada para profesores que buscan captar la atención de sus estudiantes en aulas de educación básica y media.
