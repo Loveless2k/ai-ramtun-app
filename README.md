@@ -13,8 +13,8 @@
 
 ## 📋 Artefactos del Playbook
 
-### 🎯 [Lean Canvas](./docs/lean-canvas.md) - `En Construcción`
-### ⚠️ [Risk Ledger](./docs/risk-ledger.md) - `Pendiente`
+### 🎯 [Lean Canvas](./docs/lean-canvas.md) - `Completado ✅`
+### ⚠️ [Risk Ledger](./docs/risk-ledger.md) - `Completado ✅`
 ### 🎯 [Prompt-Zero](./docs/prompt-zero.md) - `Pendiente`
 ### 📝 [Registro de Decisiones](./docs/decision-log.md) - `Iniciado`
 ### 📊 [Bitácora Ejecutiva](./docs/executive-log.md) - `Iniciado`
