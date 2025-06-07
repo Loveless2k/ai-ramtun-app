@@ -86,7 +86,7 @@ export default function Home() {
       </div>
 
       {/* Features Preview */}
-      <div className="bg-white py-20">
+      <div className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -94,10 +94,10 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-ramtun-dark mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Características Principales
             </h2>
-            <p className="text-xl text-ramtun-gray">
+            <p className="text-xl text-gray-700">
               Todo lo que necesitas para revolucionar tus clases
             </p>
           </motion.div>
@@ -105,17 +105,17 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: <SparklesIcon className="w-12 h-12 text-ramtun-primary" />,
+                icon: <SparklesIcon className="w-12 h-12 text-indigo-600" />,
                 title: "IA Generativa",
                 description: "Crea crucigramas personalizados en segundos usando inteligencia artificial especializada en educación chilena."
               },
               {
-                icon: <PuzzlePieceIcon className="w-12 h-12 text-ramtun-secondary" />,
+                icon: <PuzzlePieceIcon className="w-12 h-12 text-pink-600" />,
                 title: "Editor Visual",
                 description: "Interfaz intuitiva de drag & drop para personalizar y ajustar crucigramas según tus necesidades."
               },
               {
-                icon: <AcademicCapIcon className="w-12 h-12 text-ramtun-accent" />,
+                icon: <AcademicCapIcon className="w-12 h-12 text-emerald-600" />,
                 title: "Gamificación",
                 description: "Experiencia de juego inmersiva que mantiene a los estudiantes comprometidos y motivados."
               }
@@ -125,13 +125,13 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="bg-ramtun-light p-8 rounded-2xl hover:shadow-ramtun transition-all duration-300 hover:-translate-y-2"
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
               >
                 <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-ramtun-dark mb-3">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-ramtun-gray leading-relaxed">
+                <p className="text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -141,7 +141,7 @@ export default function Home() {
       </div>
 
       {/* Status Banner */}
-      <div className="bg-ramtun-dark text-white py-8">
+      <div className="bg-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -151,7 +151,7 @@ export default function Home() {
             <p className="text-lg">
               🚀 <strong>En Desarrollo</strong> - MVP en construcción con tecnología de vanguardia
             </p>
-            <p className="text-ramtun-gray mt-2">
+            <p className="text-gray-300 mt-2">
               Next.js 15 • Supabase • OpenAI GPT-4 • Tailwind CSS
             </p>
           </motion.div>
