@@ -16,6 +16,7 @@ export default function Navigation() {
 
   const navItems = [
     { name: 'Inicio', href: '/' },
+    { name: 'Generador', href: '/generator' },
     { name: 'Características', href: '#features' },
     { name: 'Precios', href: '#pricing' },
     { name: 'Contacto', href: '#contact' },
