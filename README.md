@@ -24,14 +24,14 @@
 ## 🏗️ Fases AAGD
 
 - [x] **Fase 0**: Fundación y Estrategia - `Completada ✅`
-- [x] **Fase 1**: Diseño del Sistema y Prompt-Zero - `En Progreso`
-- [ ] **Fase 2**: Construcción (Build & Debug)
+- [x] **Fase 1**: Diseño del Sistema y Prompt-Zero - `Completada ✅`
+- [x] **Fase 2**: Construcción (Build & Debug) - `En Progreso`
 - [ ] **Fase 3**: Orquestación e Integración
 - [ ] **Fase 4**: Despliegue y Evolución
 
 ## 🎭 Roles Atlas Activos
-- **[ARQUITECTO]** - Diseño de sistema y Prompt-Zero
-- **[DISEÑADOR UX/UI]** - Wireframes y flujos de usuario
+- **[INGENIERO LÍDER]** - Construcción y desarrollo del MVP
+- **[DISEÑADOR UX/UI]** - Implementación de interfaces
 
 ---
 *Generado por Atlas - Sistema Operativo para Ventures Digitales*
