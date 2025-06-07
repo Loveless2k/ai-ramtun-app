@@ -180,4 +180,28 @@ Flujos optimizados para cada tipo de usuario, priorizando simplicidad para profe
 
 ---
 
+## Decisión #009 - Corrección de Proceso Git en PowerShell
+**Fecha**: 2024-12-19
+**Responsable**: Atlas (Sistema)
+**Contexto**: Error en commits por incompatibilidad PowerShell vs Bash
+
+### Problema Identificado
+Los commits estaban fallando debido al uso del operador `&&` (bash) en PowerShell de Windows, causando error: "El token '&&' no es un separador de instrucciones válido".
+
+### Decisión Tomada
+**Proceso Corregido**:
+- Usar comandos Git separados en lugar de concatenados
+- `git add .` seguido de `git commit -m "mensaje"` en comandos independientes
+- Validar éxito de cada comando antes de proceder
+
+### Justificación
+PowerShell de Windows no soporta el operador `&&` de bash. Comandos separados garantizan compatibilidad y mejor control de errores.
+
+### Impacto
+- **Historial Git**: Recuperado correctamente con 3 commits válidos
+- **Trazabilidad**: Documentación de cambios preservada
+- **Proceso**: Atlas adaptado para entorno Windows PowerShell
+
+---
+
 *Última actualización: 2024-12-19*
