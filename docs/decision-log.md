@@ -103,4 +103,81 @@ Profesores chilenos activos en redes sociales, costo de adquisición bajo, escal
 
 ---
 
+## Decisión #006 - Prompt-Zero: Contrato de Intención IA
+**Fecha**: 2024-12-19
+**Responsable**: Jorge Daniel Salgado
+**Contexto**: Definición del "cerebro" de la IA educativa de Ramtun
+
+### Decisión Tomada
+**Prompt-Zero Completo** con especificaciones:
+- **Flujo de Generación**: Tema → Análisis contextual → Inferencia de materia → Generación adaptada
+- **Cantidad por Dificultad**: Fácil (8-12), Media (10-20), Difícil (15-25) preguntas
+- **Validación Docente**: Profesor puede editar, agregar, quitar antes de aprobar
+- **Ejemplo Validado**: "Revolución Francesa, 8° Básico, Dificultad Media"
+
+### Componentes Clave
+1. **Identidad IA**: Ramtun AI especializada en educación chilena
+2. **Contexto Curricular**: Alineación estricta con MINEDUC
+3. **Adaptabilidad Cognitiva**: Contenido apropiado por nivel
+4. **Criterios de Calidad**: Métricas específicas de éxito
+5. **Proceso de Revisión**: Interfaz de edición para profesores
+
+### Justificación
+El Prompt-Zero es el artefacto más crítico que garantiza que la IA genere contenido educativo de calidad, alineado con el curriculum chileno y apropiado para cada nivel cognitivo.
+
+### Impacto
+- **Calidad Garantizada**: Estándares educativos claros
+- **Escalabilidad**: Proceso replicable para cualquier tema
+- **Control Docente**: Profesor mantiene autoridad editorial
+- **Diferenciación**: Especialización en sistema educativo chileno
+
+---
+
+## Decisión #007 - Stack Tecnológico: Innovación Visual
+**Fecha**: 2024-12-19
+**Responsable**: Jorge Daniel Salgado
+**Contexto**: Selección de tecnologías para máximo impacto visual
+
+### Decisión Tomada
+**Stack Completo**:
+- **Frontend**: Next.js 14 + Tailwind CSS + Framer Motion + Three.js
+- **Backend**: Supabase (PostgreSQL + Vector + Auth + Edge Functions)
+- **IA**: OpenAI GPT-4 + Embeddings
+- **Deployment**: Vercel + Supabase Cloud
+- **Plataforma**: Web App Responsive (móvil + PC)
+
+### Justificación
+Combinación que maximiza innovación visual, performance y developer experience con Augment Code. Stack moderno que permite interfaces únicas y persuasivas.
+
+### Impacto
+- **Diferenciación Visual**: Crucigramas 3D únicos en mercado
+- **Performance Premium**: Experiencia fluida en todos dispositivos
+- **Escalabilidad**: Arquitectura que crece con el negocio
+- **Desarrollo Ágil**: Stack optimizado para prototipado rápido
+
+---
+
+## Decisión #008 - Arquitectura de Componentes UX
+**Fecha**: 2024-12-19
+**Responsable**: Jorge Daniel Salgado
+**Contexto**: Diseño de wireframes y flujos de usuario
+
+### Decisión Tomada
+**4 Componentes Principales**:
+1. **Sistema de Autenticación**: OAuth social + Magic links
+2. **Dashboard Profesores**: Métricas + Generador rápido + Biblioteca
+3. **Editor Visual**: Drag & drop + Auto-layout + Preview tiempo real
+4. **App Juego Estudiantes**: Gamificación + Colaborativo + Celebración
+
+### Justificación
+Flujos optimizados para cada tipo de usuario, priorizando simplicidad para profesores y engagement para estudiantes.
+
+### Impacto
+- **UX Diferenciada**: Cada rol tiene experiencia optimizada
+- **Adopción Rápida**: Interfaces intuitivas reducen fricción
+- **Engagement Alto**: Gamificación mantiene atención estudiantil
+- **Escalabilidad**: Componentes modulares y reutilizables
+
+---
+
 *Última actualización: 2024-12-19*
