@@ -22,7 +22,7 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+    <nav className="fixed top-0 w-full bg-white/98 backdrop-blur-md border-b border-gray-300 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -31,8 +31,8 @@ export default function Navigation() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-2"
           >
-            <PuzzlePieceIcon className="w-8 h-8 text-ramtun-primary" />
-            <span className="text-2xl font-bold text-ramtun-dark">Ramtun</span>
+            <PuzzlePieceIcon className="w-8 h-8 text-indigo-600" />
+            <span className="text-2xl font-bold text-gray-900">Ramtun</span>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -44,7 +44,7 @@ export default function Navigation() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-ramtun-gray hover:text-ramtun-primary transition-colors duration-200 font-medium"
+                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium"
               >
                 {item.name}
               </motion.a>
