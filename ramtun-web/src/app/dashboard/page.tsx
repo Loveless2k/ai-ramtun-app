@@ -259,11 +259,11 @@ export default function DashboardPage() {
             Gestiona tus crucigramas y analiza el progreso de tus {mockStats.activeStudents} estudiantes
           </p>
         </div>
-        {activeTab !== 'crosswords' && activeTab !== 'generator' && (
+        {activeTab !== 'generator' && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.location.href = '/generator'}
+            onClick={() => setActiveTab('generator')}
             className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
           >
             <PlusIcon className="w-5 h-5" />
@@ -569,17 +569,8 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Mis Crucigramas</h2>
-          <p className="text-gray-600">Gestiona y analiza tus crucigramas creados</p>
+          <p className="text-gray-600">Gestiona y analiza tus crucigramas creados ({sortedCrosswords.length} total)</p>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => window.location.href = '/generator'}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center space-x-2 shadow-lg"
-        >
-          <PlusIcon className="w-5 h-5" />
-          <span>Nuevo Crucigrama</span>
-        </motion.button>
       </div>
 
       {/* Filters and Sort */}
@@ -695,7 +686,7 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.location.href = '/generator'}
+            onClick={() => setActiveTab('generator')}
             className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
           >
             Crear mi primer crucigrama
