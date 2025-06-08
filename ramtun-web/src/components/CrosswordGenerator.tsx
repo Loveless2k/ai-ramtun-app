@@ -94,15 +94,15 @@ export default function CrosswordGenerator() {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Form */}
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <Card className="p-6 border-2 border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3">
             Configuración del Crucigrama
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Topic */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Tema Educativo
               </label>
               <input
@@ -110,20 +110,20 @@ export default function CrosswordGenerator() {
                 value={formData.topic}
                 onChange={(e) => handleInputChange('topic', e.target.value)}
                 placeholder="Ej: Revolución Francesa, Sistema Solar, Fracciones..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500"
                 required
               />
             </div>
 
             {/* Education Level */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Nivel Educativo
               </label>
               <select
                 value={formData.educationLevel}
                 onChange={(e) => handleInputChange('educationLevel', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
               >
                 <option value="basica">Educación Básica (1° - 8°)</option>
                 <option value="media">Educación Media (1° - 4°)</option>
@@ -132,15 +132,15 @@ export default function CrosswordGenerator() {
 
             {/* Grade */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Curso
               </label>
               <select
                 value={formData.grade}
                 onChange={(e) => handleInputChange('grade', parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
               >
-                {formData.educationLevel === 'basica' 
+                {formData.educationLevel === 'basica'
                   ? Array.from({length: 8}, (_, i) => (
                       <option key={i+1} value={i+1}>{i+1}° Básico</option>
                     ))
@@ -153,7 +153,7 @@ export default function CrosswordGenerator() {
 
             {/* Difficulty */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Dificultad
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -162,10 +162,10 @@ export default function CrosswordGenerator() {
                     key={level}
                     type="button"
                     onClick={() => handleInputChange('difficulty', level)}
-                    className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium ${
                       formData.difficulty === level
                         ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                        : 'border-gray-300 hover:border-gray-400'
+                        : 'border-gray-300 hover:border-gray-400 text-gray-700 bg-white hover:bg-gray-50'
                     }`}
                   >
                     {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -176,8 +176,8 @@ export default function CrosswordGenerator() {
 
             {/* Question Count */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cantidad de Preguntas: {formData.questionCount}
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Cantidad de Preguntas: <span className="text-indigo-600 font-bold">{formData.questionCount}</span>
               </label>
               <input
                 type="range"
@@ -185,9 +185,12 @@ export default function CrosswordGenerator() {
                 max="20"
                 value={formData.questionCount}
                 onChange={(e) => handleInputChange('questionCount', parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #4f46e5 0%, #4f46e5 ${((formData.questionCount - 5) / 15) * 100}%, #e5e7eb ${((formData.questionCount - 5) / 15) * 100}%, #e5e7eb 100%)`
+                }}
               />
-              <div className="flex justify-between text-sm text-gray-500 mt-1">
+              <div className="flex justify-between text-sm text-gray-700 font-medium mt-2">
                 <span>5</span>
                 <span>20</span>
               </div>
@@ -208,8 +211,8 @@ export default function CrosswordGenerator() {
         </Card>
 
         {/* Results */}
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <Card className="p-6 border-2 border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3">
             Resultado
           </h2>
           
@@ -288,9 +291,10 @@ export default function CrosswordGenerator() {
           )}
 
           {!result && !isGenerating && !error && (
-            <div className="text-center py-12 text-gray-500">
-              <SparklesIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Completa el formulario y genera tu primer crucigrama</p>
+            <div className="text-center py-12">
+              <SparklesIcon className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <p className="text-gray-700 font-medium text-lg">Completa el formulario y genera tu primer crucigrama</p>
+              <p className="text-gray-500 text-sm mt-2">La IA creará preguntas personalizadas para tu nivel educativo</p>
             </div>
           )}
         </Card>
