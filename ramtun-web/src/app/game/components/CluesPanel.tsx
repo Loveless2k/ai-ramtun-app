@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRightIcon,
@@ -37,6 +37,64 @@ interface CluesPanelProps {
   isCompleted: boolean
 }
 
+// Componente input aislado que no causa re-renders del padre
+function IsolatedInput({
+  questionId,
+  answerLength,
+  onSubmit,
+  initialValue = ''
+}: {
+  questionId: string
+  answerLength: number
+  onSubmit: (questionId: string, answer: string) => void
+  initialValue?: string
+}) {
+  const [value, setValue] = useState(initialValue)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleSubmit = useCallback(() => {
+    if (value.trim()) {
+      onSubmit(questionId, value.trim())
+      setValue('')
+    }
+  }, [questionId, value, onSubmit])
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit()
+    }
+  }, [handleSubmit])
+
+  return (
+    <div
+      className="flex space-x-2"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <input
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyPress={handleKeyPress}
+        onClick={(e) => e.stopPropagation()}
+        placeholder={`${answerLength} letras`}
+        maxLength={answerLength}
+        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+      />
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          handleSubmit()
+        }}
+        disabled={!value.trim()}
+        className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        OK
+      </button>
+    </div>
+  )
+}
+
 export default function CluesPanel({
   questions,
   selectedQuestion,
@@ -48,28 +106,9 @@ export default function CluesPanel({
   isCompleted
 }: CluesPanelProps) {
   const [showAnswers, setShowAnswers] = useState(false)
-  const [inputValues, setInputValues] = useState<Record<string, string>>({})
 
   const horizontalQuestions = questions.filter(q => q.position.direction === 'horizontal')
   const verticalQuestions = questions.filter(q => q.position.direction === 'vertical')
-
-  const handleInputChange = (questionId: string, value: string) => {
-    setInputValues(prev => ({ ...prev, [questionId]: value }))
-  }
-
-  const handleInputSubmit = (questionId: string) => {
-    const answer = inputValues[questionId] || ''
-    if (answer.trim()) {
-      onAnswerSubmit(questionId, answer.trim())
-      setInputValues(prev => ({ ...prev, [questionId]: '' }))
-    }
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent, questionId: string) => {
-    if (e.key === 'Enter') {
-      handleInputSubmit(questionId)
-    }
-  }
 
   const getQuestionStatus = (questionId: string) => {
     if (correctAnswers[questionId] === true) return 'correct'
@@ -131,12 +170,17 @@ export default function CluesPanel({
             <motion.div
               key={question.id}
               className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${getStatusColor(status, isSelected)}`}
-              onClick={() => onQuestionSelect(question.id)}
+              onClick={(e) => {
+                // Only select question if clicking on the container itself, not on interactive elements
+                if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.question-content')) {
+                  onQuestionSelect(question.id)
+                }
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-start justify-between">
-                <div className="flex-1">
+                <div className="flex-1 question-content">
                   <div className="flex items-center space-x-2 mb-1">
                     <span className="font-bold text-indigo-600">{question.number}</span>
                     <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
@@ -157,24 +201,12 @@ export default function CluesPanel({
                   
                   {/* Answer Input */}
                   {!isCompleted && status !== 'correct' && (
-                    <div className="flex space-x-2">
-                      <input
-                        type="text"
-                        value={inputValues[question.id] || ''}
-                        onChange={(e) => handleInputChange(question.id, e.target.value)}
-                        onKeyPress={(e) => handleKeyPress(e, question.id)}
-                        placeholder={`${question.answer.length} letras`}
-                        maxLength={question.answer.length}
-                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
-                      />
-                      <button
-                        onClick={() => handleInputSubmit(question.id)}
-                        disabled={!inputValues[question.id]?.trim()}
-                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        OK
-                      </button>
-                    </div>
+                    <IsolatedInput
+                      questionId={question.id}
+                      answerLength={question.answer.length}
+                      onSubmit={onAnswerSubmit}
+                      initialValue={userAnswers[question.id] || ''}
+                    />
                   )}
                   
                   {/* Show user answer */}

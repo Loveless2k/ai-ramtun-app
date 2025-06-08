@@ -143,7 +143,10 @@ export default function GameHeader({
             {/* Timer */}
             <div className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
               <ClockIcon className="w-4 h-4 text-gray-600" />
-              <span className="font-mono text-sm font-medium text-gray-900">
+              <span
+                id="game-timer-display"
+                className="font-mono text-sm font-medium text-gray-900"
+              >
                 {displayTime}
               </span>
             </div>

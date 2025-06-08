@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 import GameHeader from '../components/GameHeader'
 import CrosswordGrid from '../components/CrosswordGrid'
 import CluesPanel from '../components/CluesPanel'
 import GameResults from '../components/GameResults'
+import GameTimer from '../components/GameTimer'
 
 interface CrosswordQuestion {
   id: string
@@ -158,15 +159,10 @@ export default function GamePage() {
     }
   }, [gameId])
 
-  // Timer
-  useEffect(() => {
-    if (!isPaused && !isCompleted && gameData) {
-      const timer = setInterval(() => {
-        setTimeElapsed(prev => prev + 1)
-      }, 1000)
-      return () => clearInterval(timer)
-    }
-  }, [isPaused, isCompleted, gameData])
+  // Callback para actualizar tiempo desde el componente timer aislado
+  const handleTimeUpdate = useCallback((newTime: number) => {
+    setTimeElapsed(newTime)
+  }, [])
 
   // Check completion
   useEffect(() => {
@@ -252,6 +248,14 @@ export default function GamePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Timer aislado que actualiza DOM directamente */}
+      <GameTimer
+        isPaused={isPaused}
+        isCompleted={isCompleted}
+        onTimeUpdate={handleTimeUpdate}
+        timerId="game-timer-display"
+      />
+
       <GameHeader
         title={gameData.title}
         subject={gameData.subject}
