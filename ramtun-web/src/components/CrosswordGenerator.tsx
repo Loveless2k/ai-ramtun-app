@@ -372,6 +372,9 @@ export default function CrosswordGenerator() {
               {/* Actions */}
               <div className="flex gap-4">
                 <button
+                  onClick={() => {
+                    alert('🚧 Editor Visual en Desarrollo\n\nEsta funcionalidad estará disponible en la próxima versión:\n\n✨ Editor drag & drop\n🎨 Personalización visual\n📐 Ajuste de layout\n\n¡Mantente atento a las actualizaciones!')
+                  }}
                   className="flex-1 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105"
                   style={{
                     backgroundColor: '#4F46E5',
@@ -394,6 +397,22 @@ export default function CrosswordGenerator() {
                   </span>
                 </button>
                 <button
+                  onClick={() => {
+                    // Funcionalidad básica de descarga como texto
+                    const content = result.questions.map((q, i) =>
+                      `${i + 1}. ${q.question}\nRespuesta: ${q.answer}\nCategoría: ${q.category}\nDificultad: ${q.difficulty}\n`
+                    ).join('\n');
+
+                    const blob = new Blob([`CRUCIGRAMA GENERADO - ${result.subject}\n\nTema: ${formData.topic}\nNivel: ${formData.educationLevel}\nCurso: ${formData.grade}\nDificultad: ${formData.difficulty}\nCantidad: ${result.questions.length} preguntas\n\n${content}`], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `crucigrama-${formData.topic.toLowerCase().replace(/\s+/g, '-')}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }}
                   className="flex-1 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105"
                   style={{
                     backgroundColor: '#ffffff',
@@ -412,7 +431,7 @@ export default function CrosswordGenerator() {
                     fontSize: '16px',
                     lineHeight: '1.3'
                   }}>
-                    Descargar PDF
+                    Descargar TXT
                   </span>
                 </button>
               </div>
