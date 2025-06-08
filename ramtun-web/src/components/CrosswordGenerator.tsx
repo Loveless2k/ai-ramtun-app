@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { SparklesIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { Button } from './ui/Button'
@@ -28,6 +29,8 @@ interface CrosswordResult {
 }
 
 export default function CrosswordGenerator() {
+  const searchParams = useSearchParams()
+
   const [formData, setFormData] = useState({
     topic: '',
     educationLevel: 'basica' as 'basica' | 'media',
@@ -35,11 +38,72 @@ export default function CrosswordGenerator() {
     difficulty: 'medio' as 'facil' | 'medio' | 'dificil',
     questionCount: 10
   })
-  
+
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<CrosswordResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [generatedWith, setGeneratedWith] = useState<'openai' | 'demo' | null>(null)
+  const [isFromQuickGenerator, setIsFromQuickGenerator] = useState(false)
+
+  // Autocompletar desde parámetros URL
+  useEffect(() => {
+    const topic = searchParams.get('topic')
+    const source = searchParams.get('source')
+    const level = searchParams.get('level')
+    const grade = searchParams.get('grade')
+    const difficulty = searchParams.get('difficulty')
+
+    if (topic) {
+      setFormData(prev => ({
+        ...prev,
+        topic: topic,
+        educationLevel: (level === 'media' ? 'media' : 'basica') as 'basica' | 'media',
+        grade: grade ? parseInt(grade) : prev.grade,
+        difficulty: (difficulty === 'facil' || difficulty === 'dificil' ? difficulty : 'medio') as 'facil' | 'medio' | 'dificil'
+      }))
+
+      // Marcar si viene del generador rápido
+      if (source === 'quick-generator') {
+        setIsFromQuickGenerator(true)
+        // Auto-generar después de un breve delay para mostrar el autocompletado
+        setTimeout(() => {
+          handleAutoGenerate()
+        }, 1500)
+      }
+    }
+  }, [searchParams])
+
+  const handleAutoGenerate = async () => {
+    if (!formData.topic.trim()) return
+
+    setIsGenerating(true)
+    setError(null)
+    setResult(null)
+
+    try {
+      const response = await fetch('/api/generate-crossword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to generate crossword')
+      }
+
+      const data = await response.json()
+      setResult(data)
+      setGeneratedWith(data.generated_with || 'demo')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsGenerating(false)
+      setIsFromQuickGenerator(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,6 +156,25 @@ export default function CrosswordGenerator() {
         <p className="text-xl text-gray-600">
           Crea crucigramas educativos personalizados en segundos
         </p>
+
+        {/* Quick Generator Indicator */}
+        {isFromQuickGenerator && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4 max-w-md mx-auto"
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <SparklesIcon className="w-5 h-5 text-indigo-600" />
+              <p className="text-indigo-800 font-medium">
+                ¡Generando automáticamente desde Dashboard!
+              </p>
+            </div>
+            <p className="text-indigo-600 text-sm mt-1 text-center">
+              Tema autocompletado: "{formData.topic}"
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       <div className="grid lg:grid-cols-2 gap-8">
@@ -114,14 +197,19 @@ export default function CrosswordGenerator() {
                 placeholder="Ej: Revolución Francesa, Sistema Solar, Fracciones..."
                 className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500 transition-colors ${
                   formData.topic.trim()
-                    ? 'border-gray-300'
+                    ? searchParams.get('topic') ? 'border-indigo-300 bg-indigo-50' : 'border-gray-300'
                     : 'border-gray-300 focus:border-amber-400 focus:ring-amber-200'
                 }`}
                 required
               />
               {formData.topic.trim() && (
-                <p className="text-green-600 text-xs mt-1 font-medium">
-                  ✓ Tema válido - Listo para generar
+                <p className={`text-xs mt-1 font-medium ${
+                  searchParams.get('topic') ? 'text-indigo-600' : 'text-green-600'
+                }`}>
+                  {searchParams.get('topic')
+                    ? '🚀 Autocompletado desde Dashboard - Listo para generar'
+                    : '✓ Tema válido - Listo para generar'
+                  }
                 </p>
               )}
             </div>

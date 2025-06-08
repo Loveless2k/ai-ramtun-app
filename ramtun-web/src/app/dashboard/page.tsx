@@ -185,11 +185,19 @@ export default function DashboardPage() {
     if (!quickTopic.trim()) return
 
     setIsGenerating(true)
-    // Simular generación
+    // Simular procesamiento del tema
     setTimeout(() => {
       setIsGenerating(false)
-      window.location.href = `/generator?topic=${encodeURIComponent(quickTopic)}`
-    }, 2000)
+      // Redirigir con parámetros completos para autocompletado
+      const params = new URLSearchParams({
+        topic: quickTopic.trim(),
+        source: 'quick-generator',
+        level: 'basica',
+        grade: '8',
+        difficulty: 'medio'
+      })
+      window.location.href = `/generator?${params.toString()}`
+    }, 1500)
   }
 
   const tabs = [
