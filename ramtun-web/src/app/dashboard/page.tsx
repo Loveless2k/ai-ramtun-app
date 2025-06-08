@@ -134,6 +134,34 @@ const mockRecentCrosswords: CrosswordStats[] = [
     createdAt: '2024-01-10',
     lastPlayed: '2024-01-18',
     status: 'Activo'
+  },
+  {
+    id: '5',
+    title: 'Guerra del Pacífico',
+    subject: 'Historia',
+    grade: '8° Básico',
+    difficulty: 'Difícil',
+    questions: 18,
+    plays: 0,
+    avgScore: 0,
+    avgTime: '0 min',
+    createdAt: '2024-01-21',
+    lastPlayed: '2024-01-21',
+    status: 'Borrador'
+  },
+  {
+    id: '6',
+    title: 'Tabla Periódica Antigua',
+    subject: 'Ciencias',
+    grade: '1° Medio',
+    difficulty: 'Medio',
+    questions: 12,
+    plays: 234,
+    avgScore: 76,
+    avgTime: '14 min',
+    createdAt: '2023-12-15',
+    lastPlayed: '2023-12-20',
+    status: 'Archivado'
   }
 ]
 
@@ -220,7 +248,7 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6 space-y-8">
-      {/* Header with Create Button */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard Profesor</h1>
@@ -228,15 +256,17 @@ export default function DashboardPage() {
             Gestiona tus crucigramas y analiza el progreso de tus {mockStats.activeStudents} estudiantes
           </p>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => window.location.href = '/generator'}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
-        >
-          <PlusIcon className="w-5 h-5" />
-          <span>Crear Crucigrama</span>
-        </motion.button>
+        {activeTab !== 'crosswords' && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.location.href = '/generator'}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>Crear Crucigrama</span>
+          </motion.button>
+        )}
       </div>
 
       {/* Navigation Tabs */}
@@ -604,34 +634,37 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
               </span>
             </div>
 
-            <div className="space-y-2 mb-4">
+            <div className="space-y-3 mb-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Jugadas:</span>
-                <span className="font-medium">{crossword.plays}</span>
+                <span className="text-gray-700 font-medium">Jugadas:</span>
+                <span className="font-bold text-gray-900">{crossword.plays}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Promedio:</span>
-                <span className="font-medium">{crossword.avgScore}%</span>
+                <span className="text-gray-700 font-medium">Promedio:</span>
+                <span className="font-bold text-gray-900">{crossword.avgScore}%</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Tiempo promedio:</span>
-                <span className="font-medium">{crossword.avgTime}</span>
+                <span className="text-gray-700 font-medium">Tiempo promedio:</span>
+                <span className="font-bold text-gray-900">{crossword.avgTime}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Última jugada:</span>
-                <span className="font-medium">{new Date(crossword.lastPlayed).toLocaleDateString()}</span>
+                <span className="text-gray-700 font-medium">Última jugada:</span>
+                <span className="font-bold text-gray-900">{new Date(crossword.lastPlayed).toLocaleDateString()}</span>
               </div>
             </div>
 
             <div className="flex space-x-2">
               <button
-                onClick={() => window.location.href = `/game/${crossword.id}`}
+                onClick={() => window.location.href = `/crossword/${crossword.id}`}
                 className="flex-1 bg-indigo-50 text-indigo-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors flex items-center justify-center space-x-1"
               >
                 <EyeIcon className="w-4 h-4" />
                 <span>Ver</span>
               </button>
-              <button className="flex-1 bg-gray-50 text-gray-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center justify-center space-x-1">
+              <button
+                onClick={() => alert('🚧 Editor de Crucigramas en Desarrollo\n\nEsta funcionalidad estará disponible en la próxima versión:\n\n✨ Editor visual drag & drop\n🎨 Personalización de diseño\n📝 Edición de preguntas\n🔧 Ajustes de dificultad\n\n¡Mantente atento a las actualizaciones!')}
+                className="flex-1 bg-gray-50 text-gray-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center justify-center space-x-1"
+              >
                 <PencilIcon className="w-4 h-4" />
                 <span>Editar</span>
               </button>
