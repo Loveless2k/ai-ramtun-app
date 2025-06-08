@@ -203,7 +203,7 @@ export default function PerfilPage() {
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
 
@@ -216,7 +216,7 @@ export default function PerfilPage() {
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
 
@@ -229,7 +229,7 @@ export default function PerfilPage() {
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
 
@@ -242,7 +242,7 @@ export default function PerfilPage() {
                     value={formData.school}
                     onChange={(e) => handleInputChange('school', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
 
@@ -255,7 +255,7 @@ export default function PerfilPage() {
                     value={formData.position}
                     onChange={(e) => handleInputChange('position', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
 
@@ -268,7 +268,7 @@ export default function PerfilPage() {
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
                     disabled={!isEditing}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   />
                 </div>
               </div>
@@ -282,7 +282,7 @@ export default function PerfilPage() {
                   onChange={(e) => handleInputChange('bio', e.target.value)}
                   disabled={!isEditing}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-50 text-gray-900 placeholder-gray-500 bg-white"
                   placeholder="Cuéntanos un poco sobre ti..."
                 />
               </div>
@@ -376,7 +376,7 @@ export default function PerfilPage() {
                     <select
                       value={formData.privacy.profileVisibility}
                       onChange={(e) => handlePreferenceChange('privacy', 'profileVisibility', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 bg-white"
                     >
                       <option value="public">Público</option>
                       <option value="school">Solo mi escuela</option>

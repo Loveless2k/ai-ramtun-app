@@ -185,7 +185,7 @@ export default function DashboardPage() {
                 value={quickTopic}
                 onChange={(e) => setQuickTopic(e.target.value)}
                 placeholder="Ej: Revolución Francesa, Sistema Solar..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 placeholder-gray-500 bg-white"
                 onKeyPress={(e) => e.key === 'Enter' && handleQuickGenerate()}
               />
             </div>
