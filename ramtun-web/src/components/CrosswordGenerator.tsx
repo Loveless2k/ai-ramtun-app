@@ -247,25 +247,33 @@ export default function CrosswordGenerator() {
             )}
 
             {/* Submit Button - ALWAYS VISIBLE */}
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              size="lg"
-              className={`w-full transition-all duration-300 ${
-                !formData.topic.trim()
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:scale-105 shadow-lg hover:shadow-xl'
-              }`}
               disabled={isGenerating || !formData.topic.trim()}
-              icon={isGenerating ? <ClockIcon className="w-5 h-5 animate-spin" /> : <SparklesIcon className="w-5 h-5" />}
+              className={`w-full h-12 px-8 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
+                !formData.topic.trim()
+                  ? 'opacity-50 cursor-not-allowed bg-gray-400 text-white'
+                  : 'hover:scale-105 shadow-lg hover:shadow-xl bg-indigo-600 hover:bg-indigo-700 text-white'
+              }`}
+              style={{
+                color: '#ffffff !important',
+                backgroundColor: !formData.topic.trim() ? '#9CA3AF' : '#4F46E5'
+              }}
             >
-              {isGenerating
-                ? 'Generando Crucigrama...'
-                : !formData.topic.trim()
-                  ? 'Ingresa un Tema para Continuar'
-                  : '🚀 Generar Crucigrama con IA'
-              }
-            </Button>
+              {isGenerating ? (
+                <ClockIcon className="w-5 h-5 animate-spin text-white" />
+              ) : (
+                <SparklesIcon className="w-5 h-5 text-white" />
+              )}
+              <span style={{ color: '#ffffff', fontWeight: '600' }}>
+                {isGenerating
+                  ? 'Generando Crucigrama...'
+                  : !formData.topic.trim()
+                    ? 'Ingresa un Tema para Continuar'
+                    : '🚀 Generar Crucigrama con IA'
+                }
+              </span>
+            </button>
           </form>
         </Card>
 
