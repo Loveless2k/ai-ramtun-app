@@ -91,6 +91,59 @@ export default function Home() {
         </motion.div>
       </div>
 
+      {/* Video Demo Section */}
+      <div className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Ve Ramtun en Acción
+            </h2>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+              Descubre cómo nuestros estudiantes disfrutan aprendiendo con crucigramas interactivos
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gray-900">
+              <video
+                className="w-full h-auto"
+                controls
+                poster="/hero_section_ramtun_poster.jpg"
+                preload="metadata"
+              >
+                <source src="/hero_section_ramtun.mp4" type="video/mp4" />
+                Tu navegador no soporta el elemento de video.
+              </video>
+
+              {/* Video Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+            </div>
+
+            {/* Video Caption */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-center mt-6"
+            >
+              <p className="text-gray-600 italic">
+                🎮 Estudiante disfrutando de un crucigrama de Sistema Solar
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Features Preview */}
       <div className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
