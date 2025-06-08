@@ -8,7 +8,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import CluesPanel from '../components/CluesPanel'
 import GameResults from '../components/GameResults'
 import GameTimer from '../components/GameTimer'
-import { generatePerfectRevolutionCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
+import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
 
 interface CrosswordQuestion {
   id: string
@@ -26,61 +26,20 @@ interface CrosswordQuestion {
 
 // Función para obtener datos del juego usando el algoritmo perfecto
 const getGameData = (gameId: string): CrosswordData | null => {
-  switch (gameId) {
-    case 'revolucion-francesa':
-      return generatePerfectRevolutionCrossword()
-    default:
-      return null
+  // Intentar generar con algoritmo perfecto primero
+  const perfectCrossword = generatePerfectCrossword(gameId)
+  if (perfectCrossword) {
+    console.log(`✅ Crucigrama perfecto generado para: ${gameId}`)
+    return perfectCrossword
   }
+
+  console.log(`⚠️ No hay algoritmo perfecto para: ${gameId}, usando datos mock`)
+  return null
 }
 
-// Mock game data para otros juegos - En producción vendría de la API
+// Mock game data para juegos sin algoritmo perfecto - En producción vendría de la API
 const mockGameData: Record<string, CrosswordData> = {
-  'sistema-solar': {
-    id: 'sistema-solar',
-    title: 'Sistema Solar',
-    subject: 'Ciencias',
-    difficulty: 'Fácil',
-    estimatedTime: '8-10 min',
-    questions: [
-      {
-        id: '1',
-        question: 'Planeta más cercano al Sol',
-        answer: 'MERCURIO',
-        category: 'Planetas',
-        difficulty: 'Fácil',
-        position: { row: 2, col: 2, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Planeta conocido como el planeta rojo',
-        answer: 'MARTE',
-        category: 'Planetas',
-        difficulty: 'Fácil',
-        position: { row: 4, col: 4, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Estrella central de nuestro sistema',
-        answer: 'SOL',
-        category: 'Estrellas',
-        difficulty: 'Fácil',
-        position: { row: 1, col: 6, direction: 'vertical' },
-        number: 3
-      },
-      {
-        id: '4',
-        question: 'Planeta más grande del sistema solar',
-        answer: 'JUPITER',
-        category: 'Planetas',
-        difficulty: 'Fácil',
-        position: { row: 6, col: 1, direction: 'horizontal' },
-        number: 4
-      }
-    ]
-  }
+  // Datos de respaldo para juegos que aún no tienen algoritmo perfecto implementado
 }
 
 export default function GamePage() {

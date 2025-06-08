@@ -434,10 +434,26 @@ export class PerfectCrosswordGenerator {
   }
 }
 
-// Función para generar crucigrama de Revolución Francesa usando el algoritmo perfecto
-export function generatePerfectRevolutionCrossword(): CrosswordData {
+// Función universal para generar cualquier crucigrama usando el algoritmo perfecto
+export function generatePerfectCrossword(gameId: string): CrosswordData | null {
   const generator = new PerfectCrosswordGenerator(15)
-  
+
+  switch (gameId) {
+    case 'revolucion-francesa':
+      return generateRevolutionCrossword(generator)
+    case 'sistema-solar':
+      return generateSolarSystemCrossword(generator)
+    case 'independencia-chile':
+      return generateChileIndependenceCrossword(generator)
+    case 'geometria-basica':
+      return generateGeometryCrossword(generator)
+    default:
+      return null
+  }
+}
+
+// Revolución Francesa
+function generateRevolutionCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
   const questions = [
     {
       id: '1',
@@ -477,10 +493,7 @@ export function generatePerfectRevolutionCrossword(): CrosswordData {
   ]
 
   const generatedQuestions = generator.generatePerfectCrossword(questions)
-  
-  // Debug
-  generator.printGrid()
-  
+
   return {
     id: 'revolucion-francesa',
     title: 'Revolución Francesa',
@@ -489,4 +502,186 @@ export function generatePerfectRevolutionCrossword(): CrosswordData {
     estimatedTime: '12-15 min',
     questions: generatedQuestions
   }
+}
+
+// Sistema Solar
+function generateSolarSystemCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
+  const questions = [
+    {
+      id: '1',
+      question: 'Planeta más cercano al Sol',
+      answer: 'MERCURIO',
+      category: 'Planetas',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '2',
+      question: 'Planeta conocido como el planeta rojo',
+      answer: 'MARTE',
+      category: 'Planetas',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '3',
+      question: 'Estrella central de nuestro sistema',
+      answer: 'SOL',
+      category: 'Estrellas',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '4',
+      question: 'Planeta más grande del sistema solar',
+      answer: 'JUPITER',
+      category: 'Planetas',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '5',
+      question: 'Planeta con anillos visibles',
+      answer: 'SATURNO',
+      category: 'Planetas',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '6',
+      question: 'Satélite natural de la Tierra',
+      answer: 'LUNA',
+      category: 'Satélites',
+      difficulty: 'Fácil'
+    }
+  ]
+
+  const generatedQuestions = generator.generatePerfectCrossword(questions)
+
+  return {
+    id: 'sistema-solar',
+    title: 'Sistema Solar',
+    subject: 'Ciencias',
+    difficulty: 'Fácil',
+    estimatedTime: '8-10 min',
+    questions: generatedQuestions
+  }
+}
+
+// Independencia de Chile
+function generateChileIndependenceCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
+  const questions = [
+    {
+      id: '1',
+      question: 'Padre de la Patria chilena',
+      answer: 'OHIGGINS',
+      category: 'Personajes',
+      difficulty: 'Medio'
+    },
+    {
+      id: '2',
+      question: 'Batalla decisiva de la independencia',
+      answer: 'MAIPU',
+      category: 'Batallas',
+      difficulty: 'Medio'
+    },
+    {
+      id: '3',
+      question: 'Libertador de América',
+      answer: 'SANMARTIN',
+      category: 'Personajes',
+      difficulty: 'Medio'
+    },
+    {
+      id: '4',
+      question: 'Primera Junta de Gobierno',
+      answer: 'PATRIA',
+      category: 'Eventos',
+      difficulty: 'Medio'
+    },
+    {
+      id: '5',
+      question: 'Cruce de esta cordillera fue clave',
+      answer: 'ANDES',
+      category: 'Geografía',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '6',
+      question: 'Año de la independencia',
+      answer: 'DIECIOCHO',
+      category: 'Fechas',
+      difficulty: 'Difícil'
+    }
+  ]
+
+  const generatedQuestions = generator.generatePerfectCrossword(questions)
+
+  return {
+    id: 'independencia-chile',
+    title: 'Independencia de Chile',
+    subject: 'Historia',
+    difficulty: 'Medio',
+    estimatedTime: '15-18 min',
+    questions: generatedQuestions
+  }
+}
+
+// Geometría Básica
+function generateGeometryCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
+  const questions = [
+    {
+      id: '1',
+      question: 'Figura de tres lados',
+      answer: 'TRIANGULO',
+      category: 'Figuras',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '2',
+      question: 'Figura de cuatro lados iguales',
+      answer: 'CUADRADO',
+      category: 'Figuras',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '3',
+      question: 'Línea que divide un círculo por la mitad',
+      answer: 'DIAMETRO',
+      category: 'Círculo',
+      difficulty: 'Medio'
+    },
+    {
+      id: '4',
+      question: 'Ángulo de 90 grados',
+      answer: 'RECTO',
+      category: 'Ángulos',
+      difficulty: 'Fácil'
+    },
+    {
+      id: '5',
+      question: 'Perímetro de un círculo',
+      answer: 'CIRCUNFERENCIA',
+      category: 'Círculo',
+      difficulty: 'Medio'
+    },
+    {
+      id: '6',
+      question: 'Figura de seis lados',
+      answer: 'HEXAGONO',
+      category: 'Figuras',
+      difficulty: 'Medio'
+    }
+  ]
+
+  const generatedQuestions = generator.generatePerfectCrossword(questions)
+
+  return {
+    id: 'geometria-basica',
+    title: 'Geometría Básica',
+    subject: 'Matemáticas',
+    difficulty: 'Medio',
+    estimatedTime: '10-12 min',
+    questions: generatedQuestions
+  }
+}
+
+// Función legacy para compatibilidad
+export function generatePerfectRevolutionCrossword(): CrosswordData {
+  return generatePerfectCrossword('revolucion-francesa')!
 }
