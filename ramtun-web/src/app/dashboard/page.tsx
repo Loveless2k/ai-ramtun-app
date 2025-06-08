@@ -27,6 +27,8 @@ import {
   AcademicCapIcon as AcademicCapSolid,
   PuzzlePieceIcon as PuzzlePieceSolid
 } from '@heroicons/react/24/solid'
+import CrosswordGenerator from '@/components/CrosswordGenerator'
+import { useDashboard } from './layout'
 
 // Types
 interface CrosswordStats {
@@ -198,7 +200,7 @@ const mockRecentActivity: RecentActivity[] = [
 ]
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'crosswords' | 'analytics' | 'library'>('overview')
+  const { activeTab, setActiveTab } = useDashboard()
   const [quickTopic, setQuickTopic] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [crosswords, setCrosswords] = useState<CrosswordStats[]>(mockRecentCrosswords)
@@ -230,6 +232,7 @@ export default function DashboardPage() {
 
   const tabs = [
     { id: 'overview', name: 'Resumen', icon: ChartBarIcon, iconSolid: ChartBarSolid },
+    { id: 'generator', name: 'Generador', icon: SparklesIcon, iconSolid: SparklesIcon },
     { id: 'crosswords', name: 'Mis Crucigramas', icon: BookOpenIcon, iconSolid: BookOpenSolid },
     { id: 'analytics', name: 'Analytics', icon: ChartBarIcon, iconSolid: ChartBarSolid },
     { id: 'library', name: 'Biblioteca', icon: AcademicCapIcon, iconSolid: AcademicCapSolid }
@@ -256,7 +259,7 @@ export default function DashboardPage() {
             Gestiona tus crucigramas y analiza el progreso de tus {mockStats.activeStudents} estudiantes
           </p>
         </div>
-        {activeTab !== 'crosswords' && (
+        {activeTab !== 'crosswords' && activeTab !== 'generator' && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -309,6 +312,9 @@ export default function DashboardPage() {
               isGenerating={isGenerating}
               handleQuickGenerate={handleQuickGenerate}
             />
+          )}
+          {activeTab === 'generator' && (
+            <GeneratorTab />
           )}
           {activeTab === 'crosswords' && (
             <CrosswordsTab crosswords={crosswords} setCrosswords={setCrosswords} />
@@ -911,6 +917,25 @@ function LibraryTab() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Generator Tab Component
+function GeneratorTab() {
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Generador de Crucigramas IA</h2>
+          <p className="text-gray-600">Crea crucigramas educativos personalizados con inteligencia artificial</p>
+        </div>
+      </div>
+
+      {/* Generator Component */}
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <CrosswordGenerator />
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, createContext, useContext } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -15,12 +15,26 @@ import {
   AcademicCapIcon
 } from '@heroicons/react/24/outline'
 
+// Context for dashboard tab state
+const DashboardContext = createContext<{
+  activeTab: string
+  setActiveTab: (tab: string) => void
+} | null>(null)
+
+export const useDashboard = () => {
+  const context = useContext(DashboardContext)
+  if (!context) {
+    throw new Error('useDashboard must be used within DashboardLayout')
+  }
+  return context
+}
+
 const navigation = [
-  { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
-  { name: 'Generador', href: '/generator', icon: SparklesIcon },
-  { name: 'Biblioteca', href: '/dashboard/biblioteca', icon: BookOpenIcon },
-  { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
-  { name: 'Perfil', href: '/dashboard/perfil', icon: UserIcon },
+  { name: 'Inicio', tab: 'overview', icon: HomeIcon },
+  { name: 'Generador', tab: 'generator', icon: SparklesIcon },
+  { name: 'Biblioteca', tab: 'library', icon: BookOpenIcon },
+  { name: 'Analytics', tab: 'analytics', icon: ChartBarIcon },
+  { name: 'Perfil', tab: 'profile', icon: UserIcon },
 ]
 
 export default function DashboardLayout({
@@ -29,10 +43,12 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview')
   const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <DashboardContext.Provider value={{ activeTab, setActiveTab }}>
+      <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
@@ -51,21 +67,23 @@ export default function DashboardLayout({
           </div>
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = activeTab === item.tab
               return (
-                <Link
+                <button
                   key={item.name}
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  onClick={() => {
+                    setActiveTab(item.tab)
+                    setSidebarOpen(false)
+                  }}
+                  className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive
                       ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
-                  onClick={() => setSidebarOpen(false)}
                 >
                   <item.icon className="w-5 h-5 mr-3" />
                   {item.name}
-                </Link>
+                </button>
               )
             })}
           </nav>
@@ -83,12 +101,12 @@ export default function DashboardLayout({
           </div>
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = activeTab === item.tab
               return (
-                <Link
+                <button
                   key={item.name}
-                  href={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  onClick={() => setActiveTab(item.tab)}
+                  className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive
                       ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -96,7 +114,7 @@ export default function DashboardLayout({
                 >
                   <item.icon className="w-5 h-5 mr-3" />
                   {item.name}
-                </Link>
+                </button>
               )
             })}
           </nav>
@@ -161,6 +179,7 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    </div>
+      </div>
+    </DashboardContext.Provider>
   )
 }
