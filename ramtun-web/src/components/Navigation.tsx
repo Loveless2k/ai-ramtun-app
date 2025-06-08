@@ -76,13 +76,17 @@ export default function Navigation() {
               </div>
             ) : (
               <>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={() => window.location.href = '/auth/login'}
+                  className="h-9 px-4 text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105"
+                  style={{
+                    color: '#4F46E5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    border: '1px solid rgba(79, 70, 229, 0.2)'
+                  }}
                 >
                   Iniciar Sesión
-                </Button>
+                </button>
                 <Button
                   variant="primary"
                   size="sm"

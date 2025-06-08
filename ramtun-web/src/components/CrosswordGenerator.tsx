@@ -250,7 +250,7 @@ export default function CrosswordGenerator() {
             <button
               type="submit"
               disabled={isGenerating || !formData.topic.trim()}
-              className={`w-full h-14 px-12 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-4 ${
+              className={`w-full rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
                 !formData.topic.trim()
                   ? 'opacity-50 cursor-not-allowed bg-gray-400 text-white'
                   : 'hover:scale-105 shadow-lg hover:shadow-xl bg-indigo-600 hover:bg-indigo-700 text-white'
@@ -258,26 +258,29 @@ export default function CrosswordGenerator() {
               style={{
                 color: '#ffffff !important',
                 backgroundColor: !formData.topic.trim() ? '#9CA3AF' : '#4F46E5',
-                padding: '16px 48px',
-                minHeight: '56px'
+                padding: '20px 48px',
+                minHeight: '64px'
               }}
             >
               {isGenerating ? (
                 <ClockIcon className="w-6 h-6 animate-spin text-white" />
-              ) : (
+              ) : !formData.topic.trim() ? (
                 <SparklesIcon className="w-6 h-6 text-white" />
+              ) : (
+                <span style={{ fontSize: '24px' }}>🚀</span>
               )}
               <span style={{
                 color: '#ffffff',
                 fontWeight: '700',
                 fontSize: '18px',
-                letterSpacing: '0.5px'
+                letterSpacing: '0.5px',
+                lineHeight: '1.2'
               }}>
                 {isGenerating
                   ? 'Generando Crucigrama...'
                   : !formData.topic.trim()
                     ? 'Ingresa un Tema para Continuar'
-                    : '🚀 Generar Crucigrama con IA'
+                    : 'Generar Crucigrama con IA'
                 }
               </span>
             </button>
@@ -369,32 +372,46 @@ export default function CrosswordGenerator() {
               {/* Actions */}
               <div className="flex gap-4">
                 <button
-                  className="flex-1 h-12 px-6 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+                  className="flex-1 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105"
                   style={{
                     backgroundColor: '#4F46E5',
                     color: '#ffffff',
-                    border: '2px solid #4F46E5'
+                    border: '2px solid #4F46E5',
+                    padding: '16px 24px',
+                    minHeight: '56px'
                   }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  <span style={{ color: '#ffffff', fontWeight: '600' }}>
+                  <span style={{
+                    color: '#ffffff',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    lineHeight: '1.3'
+                  }}>
                     Editar Crucigrama
                   </span>
                 </button>
                 <button
-                  className="flex-1 h-12 px-6 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+                  className="flex-1 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-3 hover:scale-105"
                   style={{
                     backgroundColor: '#ffffff',
                     color: '#4F46E5',
-                    border: '2px solid #4F46E5'
+                    border: '2px solid #4F46E5',
+                    padding: '16px 24px',
+                    minHeight: '56px'
                   }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  <span style={{ color: '#4F46E5', fontWeight: '600' }}>
+                  <span style={{
+                    color: '#4F46E5',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    lineHeight: '1.3'
+                  }}>
                     Descargar PDF
                   </span>
                 </button>
