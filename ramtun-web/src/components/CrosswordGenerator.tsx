@@ -103,16 +103,25 @@ export default function CrosswordGenerator() {
             {/* Topic */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Tema Educativo
+                Tema Educativo <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.topic}
                 onChange={(e) => handleInputChange('topic', e.target.value)}
                 placeholder="Ej: Revolución Francesa, Sistema Solar, Fracciones..."
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500 transition-colors ${
+                  formData.topic.trim()
+                    ? 'border-gray-300'
+                    : 'border-gray-300 focus:border-amber-400 focus:ring-amber-200'
+                }`}
                 required
               />
+              {formData.topic.trim() && (
+                <p className="text-green-600 text-xs mt-1 font-medium">
+                  ✓ Tema válido - Listo para generar
+                </p>
+              )}
             </div>
 
             {/* Education Level */}
@@ -196,16 +205,66 @@ export default function CrosswordGenerator() {
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Helper Banner */}
+            {!formData.topic.trim() && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-amber-800 text-sm font-medium mb-3">
+                  💡 Ingresa un tema educativo para generar tu crucigrama
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange('topic', 'Revolución Francesa')}
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                  >
+                    Revolución Francesa
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange('topic', 'Sistema Solar')}
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                  >
+                    Sistema Solar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleInputChange('topic', 'Fracciones')}
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                  >
+                    Fracciones
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Success Indicator */}
+            {formData.topic.trim() && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <p className="text-green-800 text-sm font-medium">
+                  ✅ Configuración completa - Listo para generar crucigrama
+                </p>
+              </div>
+            )}
+
+            {/* Submit Button - ALWAYS VISIBLE */}
             <Button
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full"
+              className={`w-full transition-all duration-300 ${
+                !formData.topic.trim()
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:scale-105 shadow-lg hover:shadow-xl'
+              }`}
               disabled={isGenerating || !formData.topic.trim()}
               icon={isGenerating ? <ClockIcon className="w-5 h-5 animate-spin" /> : <SparklesIcon className="w-5 h-5" />}
             >
-              {isGenerating ? 'Generando Crucigrama...' : 'Generar Crucigrama'}
+              {isGenerating
+                ? 'Generando Crucigrama...'
+                : !formData.topic.trim()
+                  ? 'Ingresa un Tema para Continuar'
+                  : '🚀 Generar Crucigrama con IA'
+              }
             </Button>
           </form>
         </Card>
