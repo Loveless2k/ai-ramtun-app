@@ -8,6 +8,7 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import CluesPanel from '../components/CluesPanel'
 import GameResults from '../components/GameResults'
 import GameTimer from '../components/GameTimer'
+import { generatePerfectRevolutionCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
 
 interface CrosswordQuestion {
   id: string
@@ -23,71 +24,18 @@ interface CrosswordQuestion {
   number: number
 }
 
-interface GameData {
-  id: string
-  title: string
-  subject: string
-  difficulty: string
-  questions: CrosswordQuestion[]
-  estimatedTime: string
+// Función para obtener datos del juego usando el algoritmo perfecto
+const getGameData = (gameId: string): CrosswordData | null => {
+  switch (gameId) {
+    case 'revolucion-francesa':
+      return generatePerfectRevolutionCrossword()
+    default:
+      return null
+  }
 }
 
-// Mock game data - En producción vendría de la API
-const mockGameData: Record<string, GameData> = {
-  'revolucion-francesa': {
-    id: 'revolucion-francesa',
-    title: 'Revolución Francesa',
-    subject: 'Historia',
-    difficulty: 'Medio',
-    estimatedTime: '12-15 min',
-    questions: [
-      {
-        id: '1',
-        question: 'Rey de Francia ejecutado durante la revolución',
-        answer: 'LUIS',
-        category: 'Personajes',
-        difficulty: 'Medio',
-        position: { row: 2, col: 3, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Fortaleza tomada el 14 de julio de 1789',
-        answer: 'BASTILLA',
-        category: 'Eventos',
-        difficulty: 'Medio',
-        position: { row: 1, col: 5, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Líder del período del Terror',
-        answer: 'ROBESPIERRE',
-        category: 'Personajes',
-        difficulty: 'Difícil',
-        position: { row: 4, col: 1, direction: 'horizontal' },
-        number: 3
-      },
-      {
-        id: '4',
-        question: 'Clase social privilegiada antes de la revolución',
-        answer: 'NOBLEZA',
-        category: 'Sociedad',
-        difficulty: 'Fácil',
-        position: { row: 6, col: 4, direction: 'vertical' },
-        number: 4
-      },
-      {
-        id: '5',
-        question: 'Documento que declaraba los derechos fundamentales',
-        answer: 'DECLARACION',
-        category: 'Documentos',
-        difficulty: 'Medio',
-        position: { row: 8, col: 2, direction: 'horizontal' },
-        number: 5
-      }
-    ]
-  },
+// Mock game data para otros juegos - En producción vendría de la API
+const mockGameData: Record<string, CrosswordData> = {
   'sistema-solar': {
     id: 'sistema-solar',
     title: 'Sistema Solar',
@@ -138,8 +86,8 @@ const mockGameData: Record<string, GameData> = {
 export default function GamePage() {
   const params = useParams()
   const gameId = params.id as string
-  
-  const [gameData, setGameData] = useState<GameData | null>(null)
+
+  const [gameData, setGameData] = useState<CrosswordData | null>(null)
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({})
   const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>({})
@@ -150,9 +98,9 @@ export default function GamePage() {
   const [isCompleted, setIsCompleted] = useState(false)
   const [score, setScore] = useState(0)
 
-  // Load game data
+  // Load game data using perfect algorithm
   useEffect(() => {
-    const data = mockGameData[gameId]
+    const data = getGameData(gameId) || mockGameData[gameId]
     if (data) {
       setGameData(data)
       setSelectedQuestion(data.questions[0]?.id || null)
