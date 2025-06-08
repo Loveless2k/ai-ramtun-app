@@ -57,8 +57,11 @@ export default function Home() {
               >
                 Comenzar como Profesor
               </button>
-              <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm">
-                Ver Demo
+              <button
+                onClick={() => window.location.href = '/student'}
+                className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm"
+              >
+                Jugar como Estudiante
               </button>
             </motion.div>
           </motion.div>

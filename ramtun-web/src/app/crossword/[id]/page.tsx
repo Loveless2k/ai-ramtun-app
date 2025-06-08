@@ -193,8 +193,8 @@ export default function CrosswordPreviewPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    // Simular inicio de juego
-                    alert(`🎮 Iniciando crucigrama "${crossword.title}"\n\n🚧 La interfaz de juego estará disponible en la próxima versión.\n\nCaracterísticas del juego:\n• ${crossword.questions} preguntas\n• Tiempo estimado: ${crossword.estimatedTime}\n• Dificultad: ${crossword.difficulty}`)
+                    // Redirigir a la aplicación de juego
+                    window.location.href = `/game/${crossword.id}`
                   }}
                   className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-3"
                 >

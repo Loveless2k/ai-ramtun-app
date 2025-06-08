@@ -39,7 +39,173 @@ const getGameData = (gameId: string): CrosswordData | null => {
 
 // Mock game data para juegos sin algoritmo perfecto - En producción vendría de la API
 const mockGameData: Record<string, CrosswordData> = {
-  // Datos de respaldo para juegos que aún no tienen algoritmo perfecto implementado
+  '1': {
+    id: '1',
+    title: 'Revolución Francesa',
+    subject: 'Historia',
+    difficulty: 'Medio',
+    questions: [
+      {
+        id: '1',
+        question: 'Rey de Francia ejecutado en 1793',
+        answer: 'LUIS',
+        category: 'Historia',
+        difficulty: 'Medio',
+        position: { row: 1, col: 1, direction: 'horizontal' },
+        number: 1
+      },
+      {
+        id: '2',
+        question: 'Fortaleza tomada el 14 de julio de 1789',
+        answer: 'BASTILLA',
+        category: 'Historia',
+        difficulty: 'Medio',
+        position: { row: 1, col: 1, direction: 'vertical' },
+        number: 2
+      },
+      {
+        id: '3',
+        question: 'Reina francesa conocida por "Que coman pasteles"',
+        answer: 'MARIA',
+        category: 'Historia',
+        difficulty: 'Medio',
+        position: { row: 3, col: 2, direction: 'horizontal' },
+        number: 3
+      },
+      {
+        id: '4',
+        question: 'Período de terror dirigido por Robespierre',
+        answer: 'TERROR',
+        category: 'Historia',
+        difficulty: 'Medio',
+        position: { row: 2, col: 5, direction: 'vertical' },
+        number: 4
+      }
+    ]
+  },
+  '2': {
+    id: '2',
+    title: 'Sistema Solar',
+    subject: 'Ciencias',
+    difficulty: 'Fácil',
+    questions: [
+      {
+        id: '1',
+        question: 'Planeta más cercano al Sol',
+        answer: 'MERCURIO',
+        category: 'Ciencias',
+        difficulty: 'Fácil',
+        position: { row: 1, col: 1, direction: 'horizontal' },
+        number: 1
+      },
+      {
+        id: '2',
+        question: 'Planeta rojo del sistema solar',
+        answer: 'MARTE',
+        category: 'Ciencias',
+        difficulty: 'Fácil',
+        position: { row: 1, col: 3, direction: 'vertical' },
+        number: 2
+      },
+      {
+        id: '3',
+        question: 'Estrella central de nuestro sistema',
+        answer: 'SOL',
+        category: 'Ciencias',
+        difficulty: 'Fácil',
+        position: { row: 3, col: 1, direction: 'horizontal' },
+        number: 3
+      },
+      {
+        id: '4',
+        question: 'Planeta con anillos visibles',
+        answer: 'SATURNO',
+        category: 'Ciencias',
+        difficulty: 'Fácil',
+        position: { row: 2, col: 6, direction: 'vertical' },
+        number: 4
+      }
+    ]
+  },
+  '3': {
+    id: '3',
+    title: 'Fracciones Básicas',
+    subject: 'Matemáticas',
+    difficulty: 'Fácil',
+    questions: [
+      {
+        id: '1',
+        question: 'Parte de un entero dividido en partes iguales',
+        answer: 'FRACCION',
+        category: 'Matemáticas',
+        difficulty: 'Fácil',
+        position: { row: 1, col: 1, direction: 'horizontal' },
+        number: 1
+      },
+      {
+        id: '2',
+        question: 'Número de arriba en una fracción',
+        answer: 'NUMERADOR',
+        category: 'Matemáticas',
+        difficulty: 'Fácil',
+        position: { row: 1, col: 1, direction: 'vertical' },
+        number: 2
+      },
+      {
+        id: '3',
+        question: 'Número de abajo en una fracción',
+        answer: 'DENOMINADOR',
+        category: 'Matemáticas',
+        difficulty: 'Fácil',
+        position: { row: 3, col: 2, direction: 'horizontal' },
+        number: 3
+      }
+    ]
+  },
+  '4': {
+    id: '4',
+    title: 'Geometría Básica',
+    subject: 'Matemáticas',
+    difficulty: 'Medio',
+    questions: [
+      {
+        id: '1',
+        question: 'Figura con tres lados',
+        answer: 'TRIANGULO',
+        category: 'Matemáticas',
+        difficulty: 'Medio',
+        position: { row: 1, col: 1, direction: 'horizontal' },
+        number: 1
+      },
+      {
+        id: '2',
+        question: 'Figura con cuatro lados iguales',
+        answer: 'CUADRADO',
+        category: 'Matemáticas',
+        difficulty: 'Medio',
+        position: { row: 1, col: 1, direction: 'vertical' },
+        number: 2
+      },
+      {
+        id: '3',
+        question: 'Línea que une dos puntos de un círculo',
+        answer: 'CUERDA',
+        category: 'Matemáticas',
+        difficulty: 'Medio',
+        position: { row: 3, col: 2, direction: 'horizontal' },
+        number: 3
+      },
+      {
+        id: '4',
+        question: 'Figura redonda perfecta',
+        answer: 'CIRCULO',
+        category: 'Matemáticas',
+        difficulty: 'Medio',
+        position: { row: 2, col: 5, direction: 'vertical' },
+        number: 4
+      }
+    ]
+  }
 }
 
 export default function GamePage() {
