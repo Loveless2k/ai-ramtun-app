@@ -39,6 +39,7 @@ export default function CrosswordGenerator() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<CrosswordResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [generatedWith, setGeneratedWith] = useState<'openai' | 'demo' | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,6 +63,7 @@ export default function CrosswordGenerator() {
 
       const data = await response.json()
       setResult(data)
+      setGeneratedWith(data.generated_with || 'demo')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -316,9 +318,20 @@ export default function CrosswordGenerator() {
             >
               {/* Metadata */}
               <div className="bg-indigo-50 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <AcademicCapIcon className="w-5 h-5 text-indigo-600 mr-2" />
-                  <span className="font-semibold text-indigo-900">{result.subject}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center">
+                    <AcademicCapIcon className="w-5 h-5 text-indigo-600 mr-2" />
+                    <span className="font-semibold text-indigo-900">{result.subject}</span>
+                  </div>
+                  {generatedWith && (
+                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                      generatedWith === 'openai'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {generatedWith === 'openai' ? '🤖 IA OpenAI' : '🎭 Modo Demo'}
+                    </span>
+                  )}
                 </div>
                 <p className="text-indigo-700">
                   <strong>Tema:</strong> {result.topic}
@@ -332,6 +345,11 @@ export default function CrosswordGenerator() {
                 <p className="text-indigo-700">
                   <strong>Tiempo estimado:</strong> {result.metadata.estimatedTime}
                 </p>
+                {generatedWith === 'demo' && (
+                  <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+                    💡 <strong>Modo Demo:</strong> Para usar IA real, configura tu API key de OpenAI en .env.local
+                  </div>
+                )}
               </div>
 
               {/* Questions */}

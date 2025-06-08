@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateCrossword, generateCrosswordDemo, CrosswordRequest } from '@/lib/openai'
+import { generateCrossword, generateCrosswordDemo, CrosswordRequest, validateOpenAIConfig } from '@/lib/openai'
+import { PerfectCrosswordGenerator } from '@/utils/perfectCrosswordGenerator'
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,19 +48,55 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if OpenAI API key is configured
-    const hasApiKey = process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your_openai_api_key'
-    
+    const hasApiKey = validateOpenAIConfig()
+
     let result
     if (hasApiKey) {
-      // Use real OpenAI API
-      result = await generateCrossword(crosswordRequest)
+      try {
+        // Use real OpenAI API
+        console.log('🤖 Usando OpenAI API para generar crucigrama')
+        result = await generateCrossword(crosswordRequest)
+
+        // Apply perfect crossword algorithm to the generated questions
+        if (result.questions.length > 0) {
+          console.log('🎯 Aplicando algoritmo perfecto a preguntas generadas por IA')
+          const generator = new PerfectCrosswordGenerator(15)
+
+          // Convert to format expected by perfect algorithm
+          const questionsForAlgorithm = result.questions.map(q => ({
+            id: q.id,
+            question: q.question,
+            answer: q.answer,
+            category: q.category,
+            difficulty: q.difficulty
+          }))
+
+          const perfectQuestions = generator.generatePerfectCrossword(questionsForAlgorithm)
+
+          // Update result with perfect positioning
+          result.questions = perfectQuestions.map((q, index) => ({
+            ...q,
+            position: q.position
+          }))
+
+          console.log('✅ Crucigrama perfecto generado con IA + algoritmo')
+        }
+
+      } catch (error) {
+        console.error('❌ Error con OpenAI API, fallback a modo demo:', error)
+        result = await generateCrosswordDemo(crosswordRequest)
+      }
     } else {
       // Use demo mode
-      console.log('Using demo mode - no OpenAI API key configured')
+      console.log('🎭 Usando modo demo - no hay API key de OpenAI configurada')
       result = await generateCrosswordDemo(crosswordRequest)
     }
 
-    return NextResponse.json(result)
+    return NextResponse.json({
+      ...result,
+      generated_with: hasApiKey ? 'openai' : 'demo',
+      timestamp: new Date().toISOString()
+    })
   } catch (error) {
     console.error('Error in generate-crossword API:', error)
     return NextResponse.json(
