@@ -52,7 +52,7 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <button
-                onClick={() => window.location.href = '/generator'}
+                onClick={() => window.location.href = '/dashboard'}
                 className="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-white"
               >
                 Comenzar como Profesor
