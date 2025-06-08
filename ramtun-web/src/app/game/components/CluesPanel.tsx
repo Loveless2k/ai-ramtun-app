@@ -130,9 +130,9 @@ export default function CluesPanel({
 
   const getStatusColor = (status: string, isSelected: boolean) => {
     if (isSelected) {
-      return 'bg-blue-100 border-blue-300'
+      return 'bg-blue-50 border-blue-500 ring-2 ring-blue-200 shadow-md'
     }
-    
+
     switch (status) {
       case 'correct':
         return 'bg-green-50 border-green-200'

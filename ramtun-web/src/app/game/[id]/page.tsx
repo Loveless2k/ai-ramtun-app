@@ -214,7 +214,7 @@ export default function GamePage() {
 
     // Generate hint (first letter + length)
     const hint = `Comienza con "${question.answer[0]}" y tiene ${question.answer.length} letras`
-    
+
     setHints(prev => ({ ...prev, [selectedQuestion]: hint }))
     setHintsRemaining(prev => prev - 1)
   }
@@ -269,6 +269,8 @@ export default function GamePage() {
         onResume={() => setIsPaused(false)}
         onHint={handleHint}
         hintsRemaining={hintsRemaining}
+        selectedQuestion={selectedQuestion}
+        questions={gameData.questions}
       />
 
       <div className="max-w-7xl mx-auto p-4">

@@ -26,6 +26,14 @@ interface GameHeaderProps {
   onResume: () => void
   onHint: () => void
   hintsRemaining: number
+  selectedQuestion?: string | null
+  questions?: Array<{
+    id: string
+    question: string
+    answer: string
+    number: number
+    position: { direction: 'horizontal' | 'vertical' }
+  }>
 }
 
 export default function GameHeader({
@@ -40,7 +48,9 @@ export default function GameHeader({
   onPause,
   onResume,
   onHint,
-  hintsRemaining
+  hintsRemaining,
+  selectedQuestion,
+  questions
 }: GameHeaderProps) {
   const [displayTime, setDisplayTime] = useState('')
 
@@ -150,6 +160,17 @@ export default function GameHeader({
                 {displayTime}
               </span>
             </div>
+
+            {/* Selected Question Indicator */}
+            {selectedQuestion && questions && (
+              <div className="flex items-center space-x-2 bg-blue-50 border border-blue-200 px-3 py-2 rounded-lg">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-medium text-blue-700">
+                  Pregunta {questions.find(q => q.id === selectedQuestion)?.number || '?'}
+                  {questions.find(q => q.id === selectedQuestion)?.position.direction === 'horizontal' ? 'H' : 'V'}
+                </span>
+              </div>
+            )}
 
             {/* Hint Button */}
             <button
