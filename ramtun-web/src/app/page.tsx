@@ -52,16 +52,16 @@ export default function Home() {
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <button
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => window.location.href = '/auth/login'}
                 className="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-white"
               >
-                Comenzar como Profesor
+                Iniciar Sesión
               </button>
               <button
-                onClick={() => window.location.href = '/student'}
+                onClick={() => window.location.href = '/auth/register'}
                 className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm"
               >
-                Jugar como Estudiante
+                Crear Cuenta
               </button>
             </motion.div>
           </motion.div>
