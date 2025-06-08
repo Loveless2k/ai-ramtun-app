@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import {
   ChartBarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   UserGroupIcon,
   ClockIcon,
   StarIcon,
@@ -70,9 +70,9 @@ export default function AnalyticsPage() {
 
   const getImprovementIcon = (improvement: number) => {
     if (improvement > 0) {
-      return <TrendingUpIcon className="w-4 h-4 text-green-500" />
+      return <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
     } else if (improvement < 0) {
-      return <TrendingDownIcon className="w-4 h-4 text-red-500" />
+      return <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
     }
     return null
   }
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="mt-4">
             <div className="flex items-center">
-              <TrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
+              <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
               <span className="text-sm text-green-600 font-medium">+12% vs semana anterior</span>
             </div>
           </div>
@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="mt-4">
             <div className="flex items-center">
-              <TrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
+              <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
               <span className="text-sm text-green-600 font-medium">+3.2% vs mes anterior</span>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="mt-4">
             <div className="flex items-center">
-              <TrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
+              <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
               <span className="text-sm text-green-600 font-medium">+18% vs semana anterior</span>
             </div>
           </div>
