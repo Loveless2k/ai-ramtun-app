@@ -837,6 +837,7 @@ function AnalyticsTab({ metrics }: { metrics: DashboardMetrics }) {
 
 // Library Tab Component
 function LibraryTab() {
+  const { setActiveTab } = useDashboard()
   const subjects = [
     { name: 'Historia', count: 8, icon: BookOpenIcon, color: 'bg-red-100 text-red-600' },
     { name: 'Ciencias', count: 6, icon: AcademicCapIcon, color: 'bg-green-100 text-green-600' },
@@ -851,7 +852,10 @@ function LibraryTab() {
           <h2 className="text-2xl font-bold text-gray-900">Biblioteca de Contenido</h2>
           <p className="text-gray-600">Explora y organiza crucigramas por materia y nivel</p>
         </div>
-        <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+        <button
+          onClick={() => alert('🚧 Biblioteca Completa en Desarrollo\n\nPróximamente disponible:\n\n📚 Biblioteca compartida entre profesores\n🔍 Filtros por materia, nivel y dificultad\n⭐ Sistema de calificaciones y reseñas\n📤 Importar/exportar crucigramas\n🤝 Colaboración entre educadores\n\n¡Mantente atento a las actualizaciones!')}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+        >
           Explorar Biblioteca
         </button>
       </div>
@@ -862,7 +866,8 @@ function LibraryTab() {
           <motion.div
             key={subject.name}
             whileHover={{ scale: 1.05 }}
-            className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 cursor-pointer"
+            onClick={() => alert(`🚧 Biblioteca de ${subject.name} en Desarrollo\n\nPróximamente:\n\n📚 ${subject.count} crucigramas de ${subject.name}\n🔍 Filtros por nivel educativo\n⭐ Calificaciones de otros profesores\n📤 Compartir y colaborar\n\n¡Mantente atento a las actualizaciones!`)}
+            className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-shadow"
           >
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-lg ${subject.color}`}>
@@ -903,17 +908,95 @@ function LibraryTab() {
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Sugerencias IA</h3>
           <div className="space-y-3">
-            <div className="p-3 bg-indigo-50 rounded-lg">
-              <p className="text-sm font-medium text-indigo-900">Revolución Industrial</p>
-              <p className="text-xs text-indigo-600">Basado en tu historial de Historia</p>
+            <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="text-sm font-medium text-indigo-900">Revolución Industrial</p>
+                  <p className="text-xs text-indigo-600">Basado en tu historial de Historia</p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    // Cambiar al tab generator con tema preconfigurado
+                    setActiveTab('generator')
+                    // Simular autocompletado (en una implementación real, esto se haría con context)
+                    setTimeout(() => {
+                      const params = new URLSearchParams({
+                        topic: 'Revolución Industrial',
+                        source: 'ai-suggestion',
+                        level: 'media',
+                        grade: '1',
+                        difficulty: 'medio'
+                      })
+                      window.location.href = `/generator?${params.toString()}`
+                    }, 100)
+                  }}
+                  className="bg-indigo-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-indigo-700 transition-colors"
+                >
+                  Crear
+                </motion.button>
+              </div>
             </div>
-            <div className="p-3 bg-green-50 rounded-lg">
-              <p className="text-sm font-medium text-green-900">Ecosistemas</p>
-              <p className="text-xs text-green-600">Popular en Ciencias 6° Básico</p>
+            <div className="p-3 bg-green-50 rounded-lg border border-green-100">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="text-sm font-medium text-green-900">Ecosistemas</p>
+                  <p className="text-xs text-green-600">Popular en Ciencias 6° Básico</p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    // Cambiar al tab generator con tema preconfigurado
+                    setActiveTab('generator')
+                    // Simular autocompletado
+                    setTimeout(() => {
+                      const params = new URLSearchParams({
+                        topic: 'Ecosistemas',
+                        source: 'ai-suggestion',
+                        level: 'basica',
+                        grade: '6',
+                        difficulty: 'facil'
+                      })
+                      window.location.href = `/generator?${params.toString()}`
+                    }, 100)
+                  }}
+                  className="bg-green-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-green-700 transition-colors"
+                >
+                  Crear
+                </motion.button>
+              </div>
             </div>
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm font-medium text-blue-900">Álgebra Básica</p>
-              <p className="text-xs text-blue-600">Recomendado para tu nivel</p>
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Álgebra Básica</p>
+                  <p className="text-xs text-blue-600">Recomendado para tu nivel</p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    // Cambiar al tab generator con tema preconfigurado
+                    setActiveTab('generator')
+                    // Simular autocompletado
+                    setTimeout(() => {
+                      const params = new URLSearchParams({
+                        topic: 'Álgebra Básica',
+                        source: 'ai-suggestion',
+                        level: 'media',
+                        grade: '1',
+                        difficulty: 'medio'
+                      })
+                      window.location.href = `/generator?${params.toString()}`
+                    }, 100)
+                  }}
+                  className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Crear
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
