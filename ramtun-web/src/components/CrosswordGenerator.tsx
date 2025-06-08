@@ -250,22 +250,29 @@ export default function CrosswordGenerator() {
             <button
               type="submit"
               disabled={isGenerating || !formData.topic.trim()}
-              className={`w-full h-12 px-8 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
+              className={`w-full h-14 px-12 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-4 ${
                 !formData.topic.trim()
                   ? 'opacity-50 cursor-not-allowed bg-gray-400 text-white'
                   : 'hover:scale-105 shadow-lg hover:shadow-xl bg-indigo-600 hover:bg-indigo-700 text-white'
               }`}
               style={{
                 color: '#ffffff !important',
-                backgroundColor: !formData.topic.trim() ? '#9CA3AF' : '#4F46E5'
+                backgroundColor: !formData.topic.trim() ? '#9CA3AF' : '#4F46E5',
+                padding: '16px 48px',
+                minHeight: '56px'
               }}
             >
               {isGenerating ? (
-                <ClockIcon className="w-5 h-5 animate-spin text-white" />
+                <ClockIcon className="w-6 h-6 animate-spin text-white" />
               ) : (
-                <SparklesIcon className="w-5 h-5 text-white" />
+                <SparklesIcon className="w-6 h-6 text-white" />
               )}
-              <span style={{ color: '#ffffff', fontWeight: '600' }}>
+              <span style={{
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '18px',
+                letterSpacing: '0.5px'
+              }}>
                 {isGenerating
                   ? 'Generando Crucigrama...'
                   : !formData.topic.trim()
@@ -328,31 +335,69 @@ export default function CrosswordGenerator() {
               <div className="space-y-3">
                 <h3 className="font-semibold text-gray-900">Preguntas Generadas:</h3>
                 {result.questions.map((question, index) => (
-                  <div key={question.id} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-sm font-medium text-gray-500">
+                  <div key={question.id} className="border-2 border-gray-200 rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-4">
+                      <span className="text-sm font-semibold text-gray-700 bg-gray-50 px-3 py-1 rounded-full">
                         #{index + 1} - {question.category}
                       </span>
-                      <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                      <span
+                        className="text-sm font-bold px-4 py-2 rounded-full border-2"
+                        style={{
+                          backgroundColor: '#EEF2FF',
+                          borderColor: '#4F46E5',
+                          color: '#4F46E5'
+                        }}
+                      >
                         {question.difficulty}
                       </span>
                     </div>
-                    <p className="text-gray-900 mb-2">{question.question}</p>
-                    <p className="text-lg font-bold text-indigo-600">
+                    <p className="text-gray-900 mb-4 text-base leading-relaxed">{question.question}</p>
+                    <div
+                      className="text-lg font-bold px-4 py-2 rounded-lg"
+                      style={{
+                        backgroundColor: '#F0F9FF',
+                        borderLeft: '4px solid #0EA5E9',
+                        color: '#0369A1'
+                      }}
+                    >
                       Respuesta: {question.answer}
-                    </p>
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3">
-                <Button variant="primary" size="sm" className="flex-1">
-                  Editar Crucigrama
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  Descargar PDF
-                </Button>
+              <div className="flex gap-4">
+                <button
+                  className="flex-1 h-12 px-6 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+                  style={{
+                    backgroundColor: '#4F46E5',
+                    color: '#ffffff',
+                    border: '2px solid #4F46E5'
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span style={{ color: '#ffffff', fontWeight: '600' }}>
+                    Editar Crucigrama
+                  </span>
+                </button>
+                <button
+                  className="flex-1 h-12 px-6 rounded-lg font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    color: '#4F46E5',
+                    border: '2px solid #4F46E5'
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span style={{ color: '#4F46E5', fontWeight: '600' }}>
+                    Descargar PDF
+                  </span>
+                </button>
               </div>
             </motion.div>
           )}
