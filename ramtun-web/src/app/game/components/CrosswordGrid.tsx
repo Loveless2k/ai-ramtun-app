@@ -48,6 +48,7 @@ export default function CrosswordGrid({
   const [gridSize, setGridSize] = useState({ rows: 15, cols: 15 })
   const [focusedCell, setFocusedCell] = useState<{ row: number, col: number } | null>(null)
   const gridRef = useRef<HTMLDivElement>(null)
+  const [currentInput, setCurrentInput] = useState('')
 
   // Initialize grid
   useEffect(() => {
@@ -147,6 +148,88 @@ export default function CrosswordGrid({
       const nextIndex = (currentIndex + 1) % cell.questionIds.length
       onQuestionSelect(cell.questionIds[nextIndex])
     }
+
+    // Focus the grid for keyboard input
+    if (gridRef.current) {
+      gridRef.current.focus()
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (!selectedQuestion || !focusedCell) return
+
+    const key = e.key.toUpperCase()
+
+    // Only allow letters
+    if (key.length === 1 && /[A-Z]/.test(key)) {
+      const question = questions.find(q => q.id === selectedQuestion)
+      if (!question) return
+
+      const { row: qRow, col: qCol, direction } = question.position
+      let letterIndex = 0
+
+      if (direction === 'horizontal') {
+        letterIndex = focusedCell.col - qCol
+      } else {
+        letterIndex = focusedCell.row - qRow
+      }
+
+      if (letterIndex >= 0 && letterIndex < question.answer.length) {
+        const currentAnswer = userAnswers[selectedQuestion] || ''
+        const newAnswer = currentAnswer.padEnd(question.answer.length, ' ')
+        const answerArray = newAnswer.split('')
+        answerArray[letterIndex] = key
+        const updatedAnswer = answerArray.join('').trimEnd()
+
+        onAnswerChange(selectedQuestion, updatedAnswer)
+
+        // Move to next cell
+        moveToNextCell(question, letterIndex)
+      }
+    } else if (key === 'BACKSPACE') {
+      const question = questions.find(q => q.id === selectedQuestion)
+      if (!question) return
+
+      const { row: qRow, col: qCol, direction } = question.position
+      let letterIndex = 0
+
+      if (direction === 'horizontal') {
+        letterIndex = focusedCell.col - qCol
+      } else {
+        letterIndex = focusedCell.row - qRow
+      }
+
+      if (letterIndex >= 0 && letterIndex < question.answer.length) {
+        const currentAnswer = userAnswers[selectedQuestion] || ''
+        const newAnswer = currentAnswer.padEnd(question.answer.length, ' ')
+        const answerArray = newAnswer.split('')
+        answerArray[letterIndex] = ' '
+        const updatedAnswer = answerArray.join('').trimEnd()
+
+        onAnswerChange(selectedQuestion, updatedAnswer)
+
+        // Move to previous cell
+        moveToPreviousCell(question, letterIndex)
+      }
+    }
+  }
+
+  const moveToNextCell = (question: CrosswordQuestion, currentIndex: number) => {
+    if (currentIndex < question.answer.length - 1) {
+      const { row: qRow, col: qCol, direction } = question.position
+      const nextRow = direction === 'vertical' ? qRow + currentIndex + 1 : qRow
+      const nextCol = direction === 'horizontal' ? qCol + currentIndex + 1 : qCol
+      setFocusedCell({ row: nextRow, col: nextCol })
+    }
+  }
+
+  const moveToPreviousCell = (question: CrosswordQuestion, currentIndex: number) => {
+    if (currentIndex > 0) {
+      const { row: qRow, col: qCol, direction } = question.position
+      const prevRow = direction === 'vertical' ? qRow + currentIndex - 1 : qRow
+      const prevCol = direction === 'horizontal' ? qCol + currentIndex - 1 : qCol
+      setFocusedCell({ row: prevRow, col: prevCol })
+    }
   }
 
   const getCellClassName = (cell: GridCell, row: number, col: number) => {
@@ -178,44 +261,51 @@ export default function CrosswordGrid({
     return className
   }
 
-  const getVisibleAnswer = (cell: GridCell) => {
+  const getVisibleAnswer = (cell: GridCell, row: number, col: number) => {
     if (!cell.isActive) return ''
-    
-    // Show correct letter if completed or if user has entered correct letter
-    if (isCompleted || cell.isCorrect === true) {
+
+    // Show correct letter if completed
+    if (isCompleted) {
       return cell.letter
     }
-    
-    // Show user's input if any
-    if (selectedQuestion && cell.questionIds.includes(selectedQuestion)) {
-      const question = questions.find(q => q.id === selectedQuestion)
-      if (question) {
-        const userAnswer = userAnswers[selectedQuestion] || ''
-        const { row: qRow, col: qCol, direction } = question.position
-        
-        let letterIndex = 0
-        if (direction === 'horizontal') {
-          letterIndex = focusedCell ? focusedCell.col - qCol : 0
-        } else {
-          letterIndex = focusedCell ? focusedCell.row - qRow : 0
+
+    // Find which question this cell belongs to and get the letter from user input
+    for (const questionId of cell.questionIds) {
+      const question = questions.find(q => q.id === questionId)
+      if (!question) continue
+
+      const userAnswer = userAnswers[questionId] || ''
+      const { row: qRow, col: qCol, direction } = question.position
+
+      let letterIndex = 0
+      if (direction === 'horizontal') {
+        letterIndex = col - qCol
+      } else {
+        letterIndex = row - qRow
+      }
+
+      if (letterIndex >= 0 && letterIndex < question.answer.length) {
+        const letter = userAnswer[letterIndex]
+        if (letter && letter.trim()) {
+          return letter.toUpperCase()
         }
-        
-        return userAnswer[letterIndex]?.toUpperCase() || ''
       }
     }
-    
+
     return ''
   }
 
   return (
     <div className="flex justify-center p-4">
-      <div 
+      <div
         ref={gridRef}
         className="inline-block bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200"
-        style={{ 
+        style={{
           maxWidth: '100%',
           overflow: 'auto'
         }}
+        tabIndex={0}
+        onKeyDown={handleKeyPress}
       >
         <div className="grid gap-0" style={{ gridTemplateColumns: `repeat(${gridSize.cols}, 1fr)` }}>
           {grid.map((row, rowIndex) =>
@@ -236,7 +326,7 @@ export default function CrosswordGrid({
                 
                 {/* Cell letter */}
                 <span className="text-center">
-                  {getVisibleAnswer(cell)}
+                  {getVisibleAnswer(cell, rowIndex, colIndex)}
                 </span>
               </motion.div>
             ))
