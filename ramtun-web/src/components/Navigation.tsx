@@ -1,14 +1,71 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bars3Icon, XMarkIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
 import { Button } from './ui/Button'
 import { useAuth } from '../lib/auth'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  // Manejar scroll al cargar página con hash
+  useEffect(() => {
+    const handleHashScroll = () => {
+      const hash = window.location.hash
+      if (hash && pathname === '/') {
+        const element = document.getElementById(hash.substring(1))
+        if (element) {
+          // Pequeño delay para asegurar que la página esté completamente cargada
+          setTimeout(() => {
+            const yOffset = -80 // Offset para compensar la navegación fija
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+            window.scrollTo({ top: y, behavior: 'smooth' })
+          }, 100)
+        }
+      }
+    }
+
+    // Ejecutar al cargar la página
+    handleHashScroll()
+
+    // Escuchar cambios en el hash
+    window.addEventListener('hashchange', handleHashScroll)
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashScroll)
+    }
+  }, [pathname])
+
+  // Función para manejar navegación con anchors
+  const handleAnchorNavigation = (href: string, e?: React.MouseEvent) => {
+    if (e) e.preventDefault()
+
+    // Si el href contiene un anchor (/#section)
+    if (href.includes('#')) {
+      const [path, anchor] = href.split('#')
+
+      // Si estamos en la homepage, hacer scroll suave
+      if (pathname === '/' && path === '/') {
+        const element = document.getElementById(anchor)
+        if (element) {
+          const yOffset = -80 // Offset para compensar la navegación fija
+          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+          window.scrollTo({ top: y, behavior: 'smooth' })
+        }
+      } else {
+        // Si estamos en otra página, navegar a la homepage con el anchor
+        router.push(href)
+      }
+    } else {
+      // Para enlaces normales, usar navegación estándar
+      router.push(href)
+    }
+  }
 
   // Navegación contextual según estado de autenticación
   const getNavItems = () => {
@@ -23,9 +80,9 @@ export default function Navigation() {
       : { name: 'Jugar', href: '/game', badge: 'Demo Gratis' } // Usuario no autenticado ve demo
 
     const endItems = [
-      { name: 'Características', href: '#features' },
-      { name: 'Precios', href: '#pricing' },
-      { name: 'Contacto', href: '#contact' },
+      { name: 'Características', href: '/#features' },
+      { name: 'Precios', href: '/#pricing' },
+      { name: 'Contacto', href: '/#contact' },
     ]
 
     return [...baseItems, playItem, ...endItems]
@@ -53,10 +110,11 @@ export default function Navigation() {
               <motion.a
                 key={item.name}
                 href={item.href}
+                onClick={(e) => handleAnchorNavigation(item.href, e)}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium relative"
+                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium relative cursor-pointer"
               >
                 {item.name}
                 {item.badge && (
@@ -159,8 +217,11 @@ export default function Navigation() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="block text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium py-2 relative"
-                  onClick={() => setIsOpen(false)}
+                  className="block text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium py-2 relative cursor-pointer"
+                  onClick={(e) => {
+                    handleAnchorNavigation(item.href, e)
+                    setIsOpen(false)
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <span>{item.name}</span>
