@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import {
@@ -16,9 +16,59 @@ import {
 
 export default function StudentSettingsPage() {
   const router = useRouter()
+  const [isClient, setIsClient] = useState(false)
   const [notifications, setNotifications] = useState(true)
   const [soundEffects, setSoundEffects] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+
+    // Cargar preferencias guardadas del localStorage
+    try {
+      const savedNotifications = localStorage.getItem('ramtun_notifications')
+      const savedSoundEffects = localStorage.getItem('ramtun_sound_effects')
+      const savedDarkMode = localStorage.getItem('ramtun_dark_mode')
+
+      if (savedNotifications !== null) setNotifications(JSON.parse(savedNotifications))
+      if (savedSoundEffects !== null) setSoundEffects(JSON.parse(savedSoundEffects))
+      if (savedDarkMode !== null) setDarkMode(JSON.parse(savedDarkMode))
+    } catch (error) {
+      console.error('Error loading settings:', error)
+    }
+  }, [])
+
+  // Guardar preferencias cuando cambien
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem('ramtun_notifications', JSON.stringify(notifications))
+    }
+  }, [notifications, isClient])
+
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem('ramtun_sound_effects', JSON.stringify(soundEffects))
+    }
+  }, [soundEffects, isClient])
+
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem('ramtun_dark_mode', JSON.stringify(darkMode))
+    }
+  }, [darkMode, isClient])
+
+  // Mostrar loading hasta que se hidrate
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando configuración...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">

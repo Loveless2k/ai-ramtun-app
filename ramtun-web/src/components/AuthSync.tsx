@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 /**
@@ -9,10 +9,16 @@ import { usePathname } from 'next/navigation'
  */
 export default function AuthSync() {
   const pathname = usePathname()
+  const [isClient, setIsClient] = useState(false)
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
-    // Solo ejecutar en el cliente
-    if (typeof window === 'undefined') return
+    // Solo ejecutar en el cliente después de hidratación
+    if (!isClient || typeof window === 'undefined') return
 
     // Detectar contexto basado en la URL
     const isInTeacherDashboard = pathname.startsWith('/dashboard')
@@ -41,7 +47,7 @@ export default function AuthSync() {
         }))
       }, 50) // Pequeño delay para evitar race conditions
     }
-  }, [pathname])
+  }, [isClient, pathname])
 
   return null // Este componente no renderiza nada
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../hooks/useAuth'
 
@@ -17,9 +17,15 @@ interface RoleProtectionProps {
 export default function RoleProtection({ children, allowedRoles, redirectTo }: RoleProtectionProps) {
   const router = useRouter()
   const { isAuthenticated, isLoading, user } = useAuth()
+  const [isClient, setIsClient] = useState(false)
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
-    if (!isLoading) {
+    if (isClient && !isLoading) {
       // Si no está autenticado, redirigir a login
       if (!isAuthenticated || !user) {
         console.log('Usuario no autenticado, redirigiendo a login')
@@ -31,17 +37,29 @@ export default function RoleProtection({ children, allowedRoles, redirectTo }: R
       if (!allowedRoles.includes(user.role)) {
         const correctDashboard = user.role === 'teacher' ? '/dashboard' : '/student'
         const targetUrl = redirectTo || correctDashboard
-        
+
         console.log(`Usuario con rol ${user.role} intentó acceder a área no autorizada, redirigiendo a: ${targetUrl}`)
-        
+
         // Mostrar mensaje de error antes de redirigir
         alert(`⚠️ Acceso Denegado\n\nTu cuenta es de tipo "${user.role === 'teacher' ? 'Profesor' : 'Estudiante'}".\nSerás redirigido a tu dashboard correspondiente.`)
-        
+
         router.replace(targetUrl)
         return
       }
     }
-  }, [isAuthenticated, isLoading, user, router, allowedRoles, redirectTo])
+  }, [isClient, isAuthenticated, isLoading, user, router, allowedRoles, redirectTo])
+
+  // No renderizar hasta que se hidrate
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    )
+  }
 
   // Mostrar loading mientras verificamos
   if (isLoading) {
