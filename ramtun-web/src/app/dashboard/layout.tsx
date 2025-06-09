@@ -15,6 +15,7 @@ import {
   AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import AuthSync from '../../components/AuthSync'
+import RoleProtection from '../../components/RoleProtection'
 
 // Context for dashboard tab state
 const DashboardContext = createContext<{
@@ -50,7 +51,8 @@ export default function DashboardLayout({
   return (
     <DashboardContext.Provider value={{ activeTab, setActiveTab }}>
       <AuthSync />
-      <div className="min-h-screen bg-gray-50">
+      <RoleProtection allowedRoles={['teacher']}>
+        <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
@@ -179,6 +181,7 @@ export default function DashboardLayout({
         </main>
       </div>
       </div>
+      </RoleProtection>
     </DashboardContext.Provider>
   )
 }

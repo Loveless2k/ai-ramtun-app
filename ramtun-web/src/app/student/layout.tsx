@@ -1,6 +1,7 @@
 'use client'
 
 import AuthSync from '../../components/AuthSync'
+import RoleProtection from '../../components/RoleProtection'
 
 export default function StudentLayout({
   children,
@@ -10,7 +11,9 @@ export default function StudentLayout({
   return (
     <>
       <AuthSync />
-      {children}
+      <RoleProtection allowedRoles={['student']}>
+        {children}
+      </RoleProtection>
     </>
   )
 }

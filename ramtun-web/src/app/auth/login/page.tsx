@@ -31,9 +31,25 @@ function LoginPageContent() {
     setError('')
 
     try {
-      await signInWithEmail(email, password)
-      // Redirect based on user type
-      router.push(userType === 'teacher' ? '/dashboard' : '/student')
+      const result = await signInWithEmail(email, password)
+
+      if (result?.user) {
+        // Obtener el rol REAL del usuario desde Supabase
+        const userRole = result.user.user_metadata?.role
+
+        if (!userRole) {
+          throw new Error('Usuario sin rol asignado. Contacta al administrador.')
+        }
+
+        // Validar que el rol seleccionado coincida con el rol real
+        if (userRole !== userType) {
+          throw new Error(`Tu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}". No puedes acceder como "${userType === 'teacher' ? 'Profesor' : 'Estudiante'}".`)
+        }
+
+        // Redirigir según el rol REAL del usuario (no el selector)
+        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
+        router.push(redirectUrl)
+      }
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión')
     } finally {
@@ -46,8 +62,25 @@ function LoginPageContent() {
     setError('')
 
     try {
-      await signInWithGoogle()
-      router.push(userType === 'teacher' ? '/dashboard' : '/student')
+      const result = await signInWithGoogle()
+
+      if (result?.user) {
+        // Obtener el rol REAL del usuario desde Supabase
+        const userRole = result.user.user_metadata?.role
+
+        if (!userRole) {
+          throw new Error('Usuario sin rol asignado. Contacta al administrador.')
+        }
+
+        // Validar que el rol seleccionado coincida con el rol real
+        if (userRole !== userType) {
+          throw new Error(`Tu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}". No puedes acceder como "${userType === 'teacher' ? 'Profesor' : 'Estudiante'}".`)
+        }
+
+        // Redirigir según el rol REAL del usuario (no el selector)
+        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
+        router.push(redirectUrl)
+      }
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión con Google')
     } finally {
@@ -79,6 +112,9 @@ function LoginPageContent() {
 
         {/* User Type Selector */}
         <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Tipo de cuenta que vas a usar:
+          </label>
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               type="button"
@@ -105,6 +141,9 @@ function LoginPageContent() {
               <span className="font-medium">Estudiante</span>
             </button>
           </div>
+          <p className="text-xs text-gray-500 mt-2">
+            ⚠️ Debes seleccionar el tipo que corresponde a tu cuenta. Si seleccionas incorrectamente, el login fallará.
+          </p>
         </div>
 
         {/* Error Message */}

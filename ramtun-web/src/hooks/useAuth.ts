@@ -72,11 +72,23 @@ export function useAuth(): AuthState {
 
           if (userData) {
             const user = JSON.parse(userData)
-            setAuthState({
-              user,
-              isLoading: false,
-              isAuthenticated: true
-            })
+
+            // Verificar que el usuario tenga un rol válido
+            if (user.role && ['teacher', 'student'].includes(user.role)) {
+              setAuthState({
+                user,
+                isLoading: false,
+                isAuthenticated: true
+              })
+            } else {
+              // Usuario sin rol válido, limpiar sesión
+              localStorage.removeItem('ramtun_user')
+              setAuthState({
+                user: null,
+                isLoading: false,
+                isAuthenticated: false
+              })
+            }
           } else {
             setAuthState({
               user: null,

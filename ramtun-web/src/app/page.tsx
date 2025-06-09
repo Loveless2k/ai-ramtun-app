@@ -118,8 +118,12 @@ export default function Home() {
               <video
                 className="w-full h-auto"
                 controls
+                autoPlay
+                muted
+                loop
+                playsInline
                 poster="/hero_section_ramtun_poster.jpg"
-                preload="metadata"
+                preload="auto"
               >
                 <source src="/hero_section_ramtun.mp4" type="video/mp4" />
                 Tu navegador no soporta el elemento de video.
