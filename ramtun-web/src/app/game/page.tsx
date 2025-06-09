@@ -8,7 +8,6 @@ import {
   PlayIcon,
   StarIcon,
   ClockIcon,
-  AcademicCapIcon,
   UserGroupIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline'
@@ -229,7 +228,7 @@ export default function GamePage() {
                     </span>
                   </div>
                 )}
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="text-4xl">{game.thumbnail}</div>
                   <div className="flex-1">
@@ -249,7 +248,7 @@ export default function GamePage() {
               {/* Card Content */}
               <div className="px-6 pb-4">
                 <p className="text-gray-600 text-sm mb-4">{game.description}</p>
-                
+
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="text-center p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-center space-x-1 text-gray-900 font-semibold">

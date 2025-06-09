@@ -76,8 +76,8 @@ function RegisterPageContent() {
 
       // Redirect to verification page or dashboard
       router.push('/auth/verify-email')
-    } catch (err: any) {
-      setError(err.message || 'Error al crear la cuenta')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al crear la cuenta')
     } finally {
       setIsLoading(false)
     }

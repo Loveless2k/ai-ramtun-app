@@ -24,7 +24,6 @@ interface GameResultsProps {
   timeElapsed: number
   hintsUsed: number
   onPlayAgain: () => void
-  gameId: string
 }
 
 export default function GameResults({
@@ -36,8 +35,7 @@ export default function GameResults({
   correctAnswers,
   timeElapsed,
   hintsUsed,
-  onPlayAgain,
-  gameId
+  onPlayAgain
 }: GameResultsProps) {
   const getStars = (score: number) => {
     if (score >= 90) return 5

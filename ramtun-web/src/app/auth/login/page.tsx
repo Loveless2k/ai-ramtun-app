@@ -50,8 +50,8 @@ function LoginPageContent() {
         const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
         router.push(redirectUrl)
       }
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
     } finally {
       setIsLoading(false)
     }
@@ -81,8 +81,8 @@ function LoginPageContent() {
         const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
         router.push(redirectUrl)
       }
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión con Google')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al iniciar sesión con Google')
     } finally {
       setIsLoading(false)
     }

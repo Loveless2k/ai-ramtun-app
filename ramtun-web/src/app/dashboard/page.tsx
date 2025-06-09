@@ -1,13 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   PuzzlePieceIcon,
   UserGroupIcon,
   CheckCircleIcon,
-  StarIcon,
   SparklesIcon,
   ClockIcon,
   EyeIcon,
@@ -17,15 +15,12 @@ import {
   ChartBarIcon,
   BookOpenIcon,
   AcademicCapIcon,
-  TrophyIcon,
-  ArrowTrendingUpIcon,
-  CalendarIcon
+  TrophyIcon
 } from '@heroicons/react/24/outline'
 import {
   ChartBarIcon as ChartBarSolid,
   BookOpenIcon as BookOpenSolid,
-  AcademicCapIcon as AcademicCapSolid,
-  PuzzlePieceIcon as PuzzlePieceSolid
+  AcademicCapIcon as AcademicCapSolid
 } from '@heroicons/react/24/solid'
 import CrosswordGenerator from '@/components/CrosswordGenerator'
 import { useDashboard } from './layout'
@@ -64,7 +59,7 @@ interface RecentActivity {
   crossword: string
   score?: number
   time: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   color: string
 }
 
@@ -280,7 +275,7 @@ export default function DashboardPage() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
                   activeTab === tab.id
                     ? 'border-indigo-500 text-indigo-600'
@@ -497,7 +492,7 @@ function OverviewTab({
                   <p className="text-sm font-medium text-gray-900">
                     {activity.student} {activity.type === 'completion' ? 'completó' :
                      activity.type === 'high_score' ? `obtuvo ${activity.score}% en` :
-                     'iniciaron'} "{activity.crossword}"
+                     'iniciaron'} &quot;{activity.crossword}&quot;
                   </p>
                   <p className="text-xs text-gray-500">{activity.time}</p>
                 </div>
@@ -584,7 +579,7 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
           ].map((filterOption) => (
             <button
               key={filterOption.key}
-              onClick={() => setFilter(filterOption.key as any)}
+              onClick={() => setFilter(filterOption.key as 'all' | 'active' | 'draft' | 'archived')}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === filterOption.key
                   ? 'bg-indigo-100 text-indigo-700'
@@ -598,7 +593,7 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
 
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
+          onChange={(e) => setSortBy(e.target.value as 'recent' | 'popular' | 'score')}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         >
           <option value="recent">Más recientes</option>
@@ -699,15 +694,16 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
 
 // Analytics Tab Component
 function AnalyticsTab({ metrics }: { metrics: DashboardMetrics }) {
-  const chartData = [
-    { name: 'Lun', jugadas: 12, completados: 8 },
-    { name: 'Mar', jugadas: 19, completados: 15 },
-    { name: 'Mié', jugadas: 15, completados: 12 },
-    { name: 'Jue', jugadas: 22, completados: 18 },
-    { name: 'Vie', jugadas: 28, completados: 24 },
-    { name: 'Sáb', jugadas: 8, completados: 6 },
-    { name: 'Dom', jugadas: 5, completados: 4 }
-  ]
+  // Chart data for future implementation
+  // const chartData = [
+  //   { name: 'Lun', jugadas: 12, completados: 8 },
+  //   { name: 'Mar', jugadas: 19, completados: 15 },
+  //   { name: 'Mié', jugadas: 15, completados: 12 },
+  //   { name: 'Jue', jugadas: 22, completados: 18 },
+  //   { name: 'Vie', jugadas: 28, completados: 24 },
+  //   { name: 'Sáb', jugadas: 8, completados: 6 },
+  //   { name: 'Dom', jugadas: 5, completados: 4 }
+  // ]
 
   return (
     <div className="space-y-6">

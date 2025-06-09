@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
           const perfectQuestions = generator.generatePerfectCrossword(questionsForAlgorithm)
 
           // Update result with perfect positioning
-          result.questions = perfectQuestions.map((q, index) => ({
+          result.questions = perfectQuestions.map((q) => ({
             ...q,
             position: q.position
           }))

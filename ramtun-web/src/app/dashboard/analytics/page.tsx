@@ -170,7 +170,7 @@ export default function AnalyticsPage() {
           </div>
           
           <div className="space-y-4">
-            {mockAnalytics.weeklyData.map((day, index) => (
+            {mockAnalytics.weeklyData.map((day) => (
               <div key={day.day} className="flex items-center space-x-4">
                 <div className="w-12 text-sm font-medium text-gray-600">{day.day}</div>
                 <div className="flex-1">

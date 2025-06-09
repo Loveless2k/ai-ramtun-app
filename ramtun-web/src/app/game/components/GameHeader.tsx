@@ -254,7 +254,7 @@ export default function GameHeader({
           <div className="bg-white rounded-xl p-8 text-center shadow-xl">
             <PauseIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-gray-900 mb-2">Juego Pausado</h3>
-            <p className="text-gray-600 mb-6">Haz clic en "Reanudar" para continuar</p>
+            <p className="text-gray-600 mb-6">Haz clic en &quot;Reanudar&quot; para continuar</p>
             <button
               onClick={onResume}
               className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"

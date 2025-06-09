@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { EnvelopeIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
@@ -22,9 +22,9 @@ export default function VerifyEmailPage() {
     if (token && type === 'signup') {
       handleEmailVerification(token)
     }
-  }, [searchParams])
+  }, [searchParams, handleEmailVerification])
 
-  const handleEmailVerification = async (token: string) => {
+  const handleEmailVerification = useCallback(async (token: string) => {
     setIsVerifying(true)
     
     try {
@@ -53,19 +53,19 @@ export default function VerifyEmailPage() {
           }
         }, 2000)
       }
-    } catch (error) {
+    } catch {
       setVerificationStatus('error')
       setMessage('Error inesperado durante la verificación.')
     } finally {
       setIsVerifying(false)
     }
-  }
+  }, [router, supabase.auth])
 
   const resendVerificationEmail = async () => {
     try {
       // This would need the user's email - for now just show a message
       setMessage('Para reenviar el email de verificación, intenta registrarte nuevamente.')
-    } catch (error) {
+    } catch {
       setMessage('Error al reenviar el email de verificación.')
     }
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 interface CrosswordQuestion {
@@ -45,22 +45,21 @@ export default function CrosswordGrid({
   isCompleted
 }: CrosswordGridProps) {
   const [grid, setGrid] = useState<GridCell[][]>([])
-  const [gridSize, setGridSize] = useState({ rows: 15, cols: 15 })
+  const gridSize = useMemo(() => ({ rows: 15, cols: 15 }), [])
   const [focusedCell, setFocusedCell] = useState<{ row: number, col: number } | null>(null)
   const gridRef = useRef<HTMLDivElement>(null)
-  const [currentInput, setCurrentInput] = useState('')
 
   // Initialize grid
   useEffect(() => {
     initializeGrid()
-  }, [questions])
+  }, [questions, initializeGrid])
 
   // Update grid when answers change
   useEffect(() => {
     updateGridWithAnswers()
-  }, [userAnswers, correctAnswers, selectedQuestion])
+  }, [userAnswers, correctAnswers, selectedQuestion, updateGridWithAnswers])
 
-  const initializeGrid = () => {
+  const initializeGrid = useCallback(() => {
     const newGrid: GridCell[][] = Array(gridSize.rows).fill(null).map(() =>
       Array(gridSize.cols).fill(null).map(() => ({
         letter: null,
@@ -98,9 +97,9 @@ export default function CrosswordGrid({
     })
 
     setGrid(newGrid)
-  }
+  }, [questions, gridSize])
 
-  const updateGridWithAnswers = () => {
+  const updateGridWithAnswers = useCallback(() => {
     setGrid(prevGrid => {
       const newGrid = prevGrid.map(row => 
         row.map(cell => ({
@@ -133,7 +132,7 @@ export default function CrosswordGrid({
 
       return newGrid
     })
-  }
+  }, [questions, userAnswers, correctAnswers, isCompleted])
 
   const handleCellClick = (row: number, col: number) => {
     const cell = grid[row][col]

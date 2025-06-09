@@ -2,10 +2,8 @@
 
 import { useState, createContext, useContext } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import {
   HomeIcon,
-  PuzzlePieceIcon,
   BookOpenIcon,
   ChartBarIcon,
   UserIcon,
@@ -21,7 +19,7 @@ import RoleProtection from '../../components/RoleProtection'
 interface NavigationItem {
   name: string
   tab: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   isRoute?: boolean
   href?: string
 }
@@ -55,7 +53,6 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
-  const pathname = usePathname()
 
   return (
     <DashboardContext.Provider value={{ activeTab, setActiveTab }}>

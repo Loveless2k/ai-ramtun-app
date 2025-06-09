@@ -1,16 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import {
   UserIcon,
   CogIcon,
   BellIcon,
   ShieldCheckIcon,
   AcademicCapIcon,
-  BuildingOfficeIcon,
   MapPinIcon,
-  PhoneIcon,
-  EnvelopeIcon,
   CameraIcon,
   CheckIcon
 } from '@heroicons/react/24/outline'
@@ -65,7 +63,7 @@ export default function PerfilPage() {
     }, 1500)
   }
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -98,7 +96,7 @@ export default function PerfilPage() {
             <div className="relative">
               <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center">
                 {formData.avatar ? (
-                  <img src={formData.avatar} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
+                  <Image src={formData.avatar} alt="Avatar" width={96} height={96} className="w-24 h-24 rounded-full object-cover" />
                 ) : (
                   <UserIcon className="w-12 h-12 text-indigo-600" />
                 )}

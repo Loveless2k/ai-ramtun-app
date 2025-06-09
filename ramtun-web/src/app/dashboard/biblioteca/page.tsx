@@ -5,16 +5,12 @@ import Link from 'next/link'
 import {
   PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   EyeIcon,
   PencilIcon,
   TrashIcon,
-  ShareIcon,
-  DocumentDuplicateIcon,
-  CalendarIcon,
-  UserGroupIcon,
-  CheckCircleIcon
+  ShareIcon
 } from '@heroicons/react/24/outline'
+import { PuzzlePieceIcon } from '@heroicons/react/24/solid'
 
 // Mock data - En producción vendría de la API
 const mockCrosswords = [

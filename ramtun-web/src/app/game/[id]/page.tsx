@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 import GameHeader from '../components/GameHeader'
@@ -12,20 +12,6 @@ import AccessGuard from '../../../components/AccessGuard'
 import DemoConversionModal from '../../../components/DemoConversionModal'
 import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
 import { useAuth, isCrosswordPublic } from '../../../lib/auth'
-
-interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: string
-  position: {
-    row: number
-    col: number
-    direction: 'horizontal' | 'vertical'
-  }
-  number: number
-}
 
 // Función para obtener datos del juego usando el algoritmo perfecto
 const getGameData = (gameId: string): CrosswordData | null => {
@@ -264,7 +250,7 @@ export default function GamePage() {
         }
       }
     }
-  }, [correctAnswers, gameData, isAuthenticated, isPublicCrossword])
+  }, [correctAnswers, gameData, isAuthenticated, isPublicCrossword, calculateScore])
 
   const calculateScore = useCallback(() => {
     if (!gameData) return
@@ -441,7 +427,6 @@ export default function GamePage() {
           timeElapsed={timeElapsed}
           hintsUsed={3 - hintsRemaining}
           onPlayAgain={handlePlayAgain}
-          gameId={gameId}
         />
       )}
 

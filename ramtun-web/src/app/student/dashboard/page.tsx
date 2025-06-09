@@ -11,7 +11,6 @@ import {
   PlayIcon,
   StarIcon,
   ClockIcon,
-  AcademicCapIcon,
   BookOpenIcon,
   FireIcon,
   CheckCircleIcon,
