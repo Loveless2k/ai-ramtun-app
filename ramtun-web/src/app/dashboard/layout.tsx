@@ -17,6 +17,15 @@ import {
 import AuthSync from '../../components/AuthSync'
 import RoleProtection from '../../components/RoleProtection'
 
+// Navigation item type
+interface NavigationItem {
+  name: string
+  tab: string
+  icon: any
+  isRoute?: boolean
+  href?: string
+}
+
 // Context for dashboard tab state
 const DashboardContext = createContext<{
   activeTab: string
@@ -31,12 +40,12 @@ export const useDashboard = () => {
   return context
 }
 
-const navigation = [
+const navigation: NavigationItem[] = [
   { name: 'Inicio', tab: 'overview', icon: HomeIcon },
   { name: 'Generador', tab: 'generator', icon: SparklesIcon },
   { name: 'Biblioteca', tab: 'library', icon: BookOpenIcon },
   { name: 'Analytics', tab: 'analytics', icon: ChartBarIcon },
-  { name: 'Perfil', tab: 'profile', icon: UserIcon },
+  { name: 'Perfil', tab: 'profile', icon: UserIcon, isRoute: true, href: '/dashboard/perfil' },
 ]
 
 export default function DashboardLayout({
@@ -72,6 +81,21 @@ export default function DashboardLayout({
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive = activeTab === item.tab
+
+              if (item.isRoute && item.href) {
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
+                  >
+                    <item.icon className="w-5 h-5 mr-3" />
+                    {item.name}
+                  </Link>
+                )
+              }
+
               return (
                 <button
                   key={item.name}
@@ -106,6 +130,20 @@ export default function DashboardLayout({
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const isActive = activeTab === item.tab
+
+              if (item.isRoute && item.href) {
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
+                  >
+                    <item.icon className="w-5 h-5 mr-3" />
+                    {item.name}
+                  </Link>
+                )
+              }
+
               return (
                 <button
                   key={item.name}
