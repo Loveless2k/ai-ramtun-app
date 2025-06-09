@@ -49,16 +49,7 @@ export default function CrosswordGrid({
   const [focusedCell, setFocusedCell] = useState<{ row: number, col: number } | null>(null)
   const gridRef = useRef<HTMLDivElement>(null)
 
-  // Initialize grid
-  useEffect(() => {
-    initializeGrid()
-  }, [questions, initializeGrid])
-
-  // Update grid when answers change
-  useEffect(() => {
-    updateGridWithAnswers()
-  }, [userAnswers, correctAnswers, selectedQuestion, updateGridWithAnswers])
-
+  // Define initializeGrid before using it in useEffect
   const initializeGrid = useCallback(() => {
     const newGrid: GridCell[][] = Array(gridSize.rows).fill(null).map(() =>
       Array(gridSize.cols).fill(null).map(() => ({
@@ -99,6 +90,7 @@ export default function CrosswordGrid({
     setGrid(newGrid)
   }, [questions, gridSize])
 
+  // Define updateGridWithAnswers before using it in useEffect
   const updateGridWithAnswers = useCallback(() => {
     setGrid(prevGrid => {
       const newGrid = prevGrid.map(row => 
@@ -133,6 +125,16 @@ export default function CrosswordGrid({
       return newGrid
     })
   }, [questions, userAnswers, correctAnswers, isCompleted])
+
+  // Initialize grid
+  useEffect(() => {
+    initializeGrid()
+  }, [questions, initializeGrid])
+
+  // Update grid when answers change
+  useEffect(() => {
+    updateGridWithAnswers()
+  }, [userAnswers, correctAnswers, selectedQuestion, updateGridWithAnswers])
 
   const handleCellClick = (row: number, col: number) => {
     const cell = grid[row][col]
