@@ -59,11 +59,14 @@ export async function POST(request: NextRequest) {
     const hasApiKey = validateOpenAIConfig()
 
     let result
+    let actuallyUsedOpenAI = false
+
     if (hasApiKey) {
       try {
         // Use real OpenAI API
         console.log('🤖 Usando OpenAI API para generar crucigrama')
         result = await generateCrossword(crosswordRequest)
+        actuallyUsedOpenAI = true
 
         // Apply perfect crossword algorithm to the generated questions
         if (result.questions.length > 0) {
@@ -93,16 +96,18 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.error('❌ Error con OpenAI API, fallback a modo demo:', error)
         result = await generateCrosswordDemo(crosswordRequest)
+        actuallyUsedOpenAI = false // Importante: marcar que NO se usó OpenAI
       }
     } else {
       // Use demo mode
       console.log('🎭 Usando modo demo - no hay API key de OpenAI configurada')
       result = await generateCrosswordDemo(crosswordRequest)
+      actuallyUsedOpenAI = false
     }
 
     return NextResponse.json({
       ...result,
-      generated_with: hasApiKey ? 'openai' : 'demo',
+      generated_with: actuallyUsedOpenAI ? 'openai' : 'demo',
       timestamp: new Date().toISOString()
     })
   } catch (error) {

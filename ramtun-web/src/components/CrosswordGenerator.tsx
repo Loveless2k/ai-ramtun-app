@@ -418,12 +418,12 @@ export default function CrosswordGenerator() {
                     <span className="font-semibold text-indigo-900">{result.subject}</span>
                   </div>
                   {generatedWith && (
-                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                    <span className={`text-xs font-medium px-3 py-1 rounded-full border ${
                       generatedWith === 'openai'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-green-100 text-green-800 border-green-200'
+                        : 'bg-orange-100 text-orange-800 border-orange-200'
                     }`}>
-                      {generatedWith === 'openai' ? '🤖 IA OpenAI' : '🎭 Modo Demo'}
+                      {generatedWith === 'openai' ? '🤖 IA OpenAI' : '🎭 DEMO'}
                     </span>
                   )}
                 </div>
@@ -440,8 +440,17 @@ export default function CrosswordGenerator() {
                   <strong>Tiempo estimado:</strong> {result.metadata.estimatedTime}
                 </p>
                 {generatedWith === 'demo' && (
-                  <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
-                    💡 <strong>Modo Demo:</strong> Para usar IA real, configura tu API key de OpenAI en .env.local
+                  <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg text-sm text-orange-800">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-orange-600 mt-0.5">🎭</span>
+                      <div>
+                        <p className="font-semibold">Modo Demo Activo</p>
+                        <p className="text-xs mt-1 text-orange-700">
+                          Estás viendo contenido de demostración. Para generar crucigramas con IA real,
+                          configura tu API key de OpenAI en el archivo .env.local
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
