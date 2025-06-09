@@ -15,7 +15,8 @@ import {
   ChartBarIcon,
   BookOpenIcon,
   AcademicCapIcon,
-  TrophyIcon
+  TrophyIcon,
+  PlayIcon
 } from '@heroicons/react/24/outline'
 import {
   ChartBarIcon as ChartBarSolid,
@@ -414,7 +415,7 @@ function OverviewTab({
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Quick Generator */}
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center space-x-3 mb-6">
@@ -464,6 +465,36 @@ function OverviewTab({
                   Generar con IA
                 </>
               )}
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Play/Test Crosswords */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <PlayIcon className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Probar Crucigramas</h3>
+              <p className="text-sm text-gray-600">Juega y valida la experiencia de tus estudiantes</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-700">
+              Accede al área de juegos para probar cualquier crucigrama y experimentar
+              exactamente lo que verán tus estudiantes.
+            </p>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => window.location.href = '/play'}
+              className="w-full flex items-center justify-center px-6 py-3 rounded-lg font-semibold bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl transition-all"
+            >
+              <PlayIcon className="w-5 h-5 mr-2" />
+              Ir a Área de Juegos
             </motion.button>
           </div>
         </div>

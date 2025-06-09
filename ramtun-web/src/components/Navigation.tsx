@@ -17,9 +17,9 @@ export default function Navigation() {
       { name: 'Generador', href: '/generator' },
     ]
 
-    // Item "Jugar" contextual
+    // Item "Jugar" contextual - accesible para todos los usuarios autenticados
     const playItem = isAuthenticated
-      ? { name: 'Jugar', href: '/student' } // Usuario autenticado va a su área
+      ? { name: 'Jugar', href: '/play' } // Usuario autenticado va a área de juegos
       : { name: 'Jugar', href: '/game', badge: 'Demo Gratis' } // Usuario no autenticado ve demo
 
     const endItems = [

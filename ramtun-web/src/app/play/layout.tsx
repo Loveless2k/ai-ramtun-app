@@ -3,7 +3,7 @@
 import AuthSync from '../../components/AuthSync'
 import RoleProtection from '../../components/RoleProtection'
 
-export default function StudentLayout({
+export default function PlayLayout({
   children,
 }: {
   children: React.ReactNode

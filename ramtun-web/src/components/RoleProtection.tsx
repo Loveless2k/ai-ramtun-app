@@ -36,15 +36,19 @@ export default function RoleProtection({ children, allowedRoles, redirectTo }: R
       // Si está autenticado pero no tiene el rol correcto
       const userRole = user.user_metadata?.role
       if (!userRole || !allowedRoles.includes(userRole)) {
-        const correctDashboard = userRole === 'teacher' ? '/dashboard' : '/student'
+        const correctDashboard = userRole === 'teacher' ? '/dashboard' : '/play'
         const targetUrl = redirectTo || correctDashboard
 
         console.log(`Usuario con rol ${userRole} intentó acceder a área no autorizada, redirigiendo a: ${targetUrl}`)
 
-        // Mostrar mensaje de error antes de redirigir
-        alert(`⚠️ Acceso Denegado\n\nTu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}".\nSerás redirigido a tu dashboard correspondiente.`)
+        // Evitar loops infinitos - solo mostrar alerta si no estamos ya en la página de destino
+        const currentPath = window.location.pathname
+        if (currentPath !== targetUrl) {
+          // Mostrar mensaje de error antes de redirigir
+          alert(`⚠️ Acceso Denegado\n\nTu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}".\nSerás redirigido a tu dashboard correspondiente.`)
 
-        router.replace(targetUrl)
+          router.replace(targetUrl)
+        }
         return
       }
     }

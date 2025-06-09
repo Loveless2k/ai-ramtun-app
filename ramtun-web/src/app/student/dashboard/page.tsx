@@ -211,7 +211,7 @@ export default function StudentDashboard() {
       {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-4">
         <button
-          onClick={() => window.location.href = '/student'}
+          onClick={() => window.location.href = '/play'}
           className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
         >
           <PlayIcon className="w-8 h-8 mb-3" />
