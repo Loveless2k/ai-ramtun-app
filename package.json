@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@tailwindcss/line-clamp": "^0.4.4",
-    "openai": "^5.1.1"
-  }
-}
