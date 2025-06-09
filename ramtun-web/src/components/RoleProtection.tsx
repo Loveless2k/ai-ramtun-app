@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../lib/auth'
 
 interface RoleProtectionProps {
   children: React.ReactNode
@@ -34,14 +34,15 @@ export default function RoleProtection({ children, allowedRoles, redirectTo }: R
       }
 
       // Si está autenticado pero no tiene el rol correcto
-      if (!allowedRoles.includes(user.role)) {
-        const correctDashboard = user.role === 'teacher' ? '/dashboard' : '/student'
+      const userRole = user.user_metadata?.role
+      if (!userRole || !allowedRoles.includes(userRole)) {
+        const correctDashboard = userRole === 'teacher' ? '/dashboard' : '/student'
         const targetUrl = redirectTo || correctDashboard
 
-        console.log(`Usuario con rol ${user.role} intentó acceder a área no autorizada, redirigiendo a: ${targetUrl}`)
+        console.log(`Usuario con rol ${userRole} intentó acceder a área no autorizada, redirigiendo a: ${targetUrl}`)
 
         // Mostrar mensaje de error antes de redirigir
-        alert(`⚠️ Acceso Denegado\n\nTu cuenta es de tipo "${user.role === 'teacher' ? 'Profesor' : 'Estudiante'}".\nSerás redirigido a tu dashboard correspondiente.`)
+        alert(`⚠️ Acceso Denegado\n\nTu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}".\nSerás redirigido a tu dashboard correspondiente.`)
 
         router.replace(targetUrl)
         return
@@ -86,7 +87,8 @@ export default function RoleProtection({ children, allowedRoles, redirectTo }: R
   }
 
   // Si no tiene el rol correcto, no mostrar contenido
-  if (!allowedRoles.includes(user.role)) {
+  const userRole = user.user_metadata?.role
+  if (!userRole || !allowedRoles.includes(userRole)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center">
         <div className="text-center">

@@ -16,7 +16,7 @@ import {
   Cog6ToothIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline'
-import { useAuth, isCrosswordPublic } from '../../hooks/useAuth'
+import { useAuth, isCrosswordPublic } from '../../lib/auth'
 
 interface AvailableCrossword {
   id: string

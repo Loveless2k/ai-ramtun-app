@@ -11,7 +11,7 @@ import GameTimer from '../components/GameTimer'
 import AccessGuard from '../../../components/AccessGuard'
 import DemoConversionModal from '../../../components/DemoConversionModal'
 import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
-import { useAuth, isCrosswordPublic } from '../../../hooks/useAuth'
+import { useAuth, isCrosswordPublic } from '../../../lib/auth'
 
 interface CrosswordQuestion {
   id: string

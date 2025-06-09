@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../lib/auth'
 
 interface AuthRedirectProps {
   children: React.ReactNode
@@ -26,10 +26,11 @@ export default function AuthRedirect({ children, redirectTo }: AuthRedirectProps
   useEffect(() => {
     if (isClient && !isLoading && isAuthenticated && user) {
       // Determinar a dónde redirigir basado en el rol del usuario
-      const defaultRedirect = user.role === 'teacher' ? '/dashboard' : '/student/dashboard'
+      const userRole = user.user_metadata?.role
+      const defaultRedirect = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
       const targetUrl = redirectTo || defaultRedirect
 
-      console.log(`Usuario ya autenticado (${user.role}), redirigiendo a: ${targetUrl}`)
+      console.log(`Usuario ya autenticado (${userRole}), redirigiendo a: ${targetUrl}`)
       router.replace(targetUrl)
     }
   }, [isClient, isAuthenticated, isLoading, user, router, redirectTo])

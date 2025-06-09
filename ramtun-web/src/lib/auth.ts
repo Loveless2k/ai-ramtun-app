@@ -15,10 +15,28 @@ interface AuthUser extends User {
   }
 }
 
-export const useAuth = () => {
+interface AuthState {
+  user: AuthUser | null
+  isLoading: boolean
+  isAuthenticated: boolean
+}
+
+export const useAuth = (): AuthState & {
+  signInWithGoogle: () => Promise<any>
+  signInWithEmail: (email: string, password: string) => Promise<any>
+  signUpWithEmail: (email: string, password: string, metadata?: any) => Promise<any>
+  signOut: () => Promise<void>
+  resetPassword: (email: string) => Promise<any>
+} => {
   const [user, setUser] = useState<AuthUser | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // Check if Supabase is properly configured
   const isSupabaseConfigured = () => {
@@ -28,9 +46,34 @@ export const useAuth = () => {
   }
 
   useEffect(() => {
+    // Solo ejecutar después de hidratación
+    if (!isClient) return
+
     if (!isSupabaseConfigured()) {
-      // Demo mode - no real auth
-      setLoading(false)
+      // Demo mode - crear usuarios demo basados en URL
+      const createDemoUser = () => {
+        const isInTeacherDashboard = window.location.pathname.startsWith('/dashboard')
+        const isInStudentArea = window.location.pathname.startsWith('/student')
+
+        if (isInTeacherDashboard || isInStudentArea) {
+          const role = isInTeacherDashboard ? 'teacher' : 'student'
+          const demoUser: AuthUser = {
+            id: `demo-${role}`,
+            email: role === 'teacher' ? 'profesor@demo.com' : 'estudiante@demo.com',
+            user_metadata: {
+              first_name: role === 'teacher' ? 'Profesor' : 'Estudiante',
+              last_name: 'Demo',
+              role: role,
+              school_name: 'Escuela Demo'
+            }
+          } as AuthUser
+
+          setUser(demoUser)
+        }
+        setIsLoading(false)
+      }
+
+      createDemoUser()
       return
     }
 
@@ -41,11 +84,20 @@ export const useAuth = () => {
     const getInitialSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        setUser(session?.user as AuthUser || null)
+        const user = session?.user as AuthUser || null
+
+        // Validar que el usuario tenga rol asignado
+        if (user && !user.user_metadata?.role) {
+          console.warn('Usuario sin rol asignado:', user.email)
+          // Podrías redirigir a una página de configuración de perfil
+        }
+
+        setUser(user)
       } catch (error) {
         console.error('Error getting session:', error)
+        setUser(null)
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     }
 
@@ -54,13 +106,20 @@ export const useAuth = () => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user as AuthUser || null)
-        setLoading(false)
+        const user = session?.user as AuthUser || null
+
+        // Validar rol en cambios de sesión
+        if (user && !user.user_metadata?.role) {
+          console.warn('Usuario sin rol en cambio de sesión:', user.email)
+        }
+
+        setUser(user)
+        setIsLoading(false)
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [isClient])
 
   const signInWithGoogle = async () => {
     if (!isSupabaseConfigured()) {
@@ -124,7 +183,9 @@ export const useAuth = () => {
 
   const signOut = async () => {
     if (!isSupabaseConfigured()) {
-      // Demo mode
+      // Demo mode - limpiar estado local
+      setUser(null)
+      setIsLoading(false)
       console.log('Demo: Sign out')
       router.push('/auth/login')
       return
@@ -133,6 +194,9 @@ export const useAuth = () => {
     const supabase = createClientComponentClient()
     const { error } = await supabase.auth.signOut()
     if (error) throw error
+
+    // Limpiar estado local
+    setUser(null)
     router.push('/auth/login')
   }
 
@@ -155,7 +219,8 @@ export const useAuth = () => {
 
   return {
     user,
-    loading,
+    isLoading,
+    isAuthenticated: !!user,
     signInWithGoogle,
     signInWithEmail,
     signUpWithEmail,
@@ -171,4 +236,22 @@ export const getServerSession = async () => {
 
   const { data: { session } } = await supabase.auth.getSession()
   return session
+}
+
+// Función para verificar si un crucigrama es accesible sin login
+export function isCrosswordPublic(gameId: string): boolean {
+  // Solo "Sistema Solar" (ID: 2) es público
+  const publicCrosswords = ['2']
+  return publicCrosswords.includes(gameId)
+}
+
+// Función para obtener información del crucigrama demo
+export function getDemoCrosswordInfo() {
+  return {
+    id: '2',
+    title: 'Sistema Solar',
+    subject: 'Ciencias',
+    description: 'Descubre los planetas y cuerpos celestes en este crucigrama demo.',
+    isDemo: true
+  }
 }

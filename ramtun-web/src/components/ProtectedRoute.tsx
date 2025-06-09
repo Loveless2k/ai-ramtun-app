@@ -15,7 +15,7 @@ export default function ProtectedRoute({
   requiredRole,
   redirectTo = '/auth/login'
 }: ProtectedRouteProps) {
-  const { user, loading } = useAuth()
+  const { user, isLoading } = useAuth()
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
 
@@ -25,7 +25,7 @@ export default function ProtectedRoute({
   }, [])
 
   useEffect(() => {
-    if (isClient && !loading) {
+    if (isClient && !isLoading) {
       // If no user, redirect to login
       if (!user) {
         router.push(redirectTo)
@@ -46,7 +46,7 @@ export default function ProtectedRoute({
         }
       }
     }
-  }, [isClient, user, loading, requiredRole, router, redirectTo])
+  }, [isClient, user, isLoading, requiredRole, router, redirectTo])
 
   // No renderizar hasta que se hidrate
   if (!isClient) {
@@ -61,7 +61,7 @@ export default function ProtectedRoute({
   }
 
   // Show loading while checking auth
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
         <div className="text-center">

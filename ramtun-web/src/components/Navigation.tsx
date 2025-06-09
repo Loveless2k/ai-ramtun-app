@@ -4,11 +4,11 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bars3Icon, XMarkIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
 import { Button } from './ui/Button'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../lib/auth'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const { user, isAuthenticated, isLoading } = useAuth()
+  const { user, isAuthenticated, isLoading, signOut } = useAuth()
 
   // Navegación contextual según estado de autenticación
   const getNavItems = () => {
@@ -78,12 +78,15 @@ export default function Navigation() {
             ) : isAuthenticated && user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium text-gray-700">
-                  Hola, {user.name || user.email}
+                  Hola, {user.user_metadata?.first_name || user.email}
                 </span>
                 <button
-                  onClick={() => {
-                    localStorage.removeItem('ramtun_user')
-                    window.location.href = '/'
+                  onClick={async () => {
+                    try {
+                      await signOut()
+                    } catch (error) {
+                      console.error('Error al cerrar sesión:', error)
+                    }
                   }}
                   className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
                 >
@@ -93,7 +96,8 @@ export default function Navigation() {
                   variant="primary"
                   size="sm"
                   onClick={() => {
-                    const dashboardUrl = user.role === 'teacher' ? '/dashboard' : '/student/dashboard'
+                    const userRole = user.user_metadata?.role
+                    const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
                     window.location.href = dashboardUrl
                   }}
                 >
@@ -178,7 +182,7 @@ export default function Navigation() {
                 ) : isAuthenticated && user ? (
                   <>
                     <p className="text-sm font-medium text-gray-700">
-                      Hola, {user.name || user.email}
+                      Hola, {user.user_metadata?.first_name || user.email}
                     </p>
                     <div className="space-y-2">
                       <Button
@@ -186,7 +190,8 @@ export default function Navigation() {
                         size="sm"
                         className="w-full"
                         onClick={() => {
-                          const dashboardUrl = user.role === 'teacher' ? '/dashboard' : '/student/dashboard'
+                          const userRole = user.user_metadata?.role
+                          const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
                           window.location.href = dashboardUrl
                           setIsOpen(false)
                         }}
@@ -194,10 +199,13 @@ export default function Navigation() {
                         Dashboard
                       </Button>
                       <button
-                        onClick={() => {
-                          localStorage.removeItem('ramtun_user')
-                          window.location.href = '/'
-                          setIsOpen(false)
+                        onClick={async () => {
+                          try {
+                            await signOut()
+                            setIsOpen(false)
+                          } catch (error) {
+                            console.error('Error al cerrar sesión:', error)
+                          }
                         }}
                         className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
                       >
