@@ -12,15 +12,16 @@ import {
   LockClosedIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
+import AuthRedirect from '../../../components/AuthRedirect'
 
-export default function LoginPage() {
+function LoginPageContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [userType, setUserType] = useState<'teacher' | 'student'>('teacher')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  
+
   const { signInWithEmail, signInWithGoogle } = useAuth()
   const router = useRouter()
 
@@ -242,5 +243,13 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <AuthRedirect>
+      <LoginPageContent />
+    </AuthRedirect>
   )
 }

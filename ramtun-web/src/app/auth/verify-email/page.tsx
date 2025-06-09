@@ -49,7 +49,7 @@ export default function VerifyEmailPage() {
           if (userRole === 'teacher') {
             router.push('/dashboard')
           } else {
-            router.push('/student')
+            router.push('/student/dashboard')
           }
         }, 2000)
       }

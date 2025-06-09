@@ -14,8 +14,9 @@ import {
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
+import AuthRedirect from '../../../components/AuthRedirect'
 
-export default function RegisterPage() {
+function RegisterPageContent() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -72,7 +73,7 @@ export default function RegisterPage() {
       }
 
       await signUpWithEmail(formData.email, formData.password, metadata)
-      
+
       // Redirect to verification page or dashboard
       router.push('/auth/verify-email')
     } catch (err: any) {
@@ -163,7 +164,7 @@ export default function RegisterPage() {
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   required
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
                   placeholder="Juan"
                 />
               </div>
@@ -178,7 +179,7 @@ export default function RegisterPage() {
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 required
-                className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
                 placeholder="Pérez"
               />
             </div>
@@ -199,7 +200,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 required
-                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
                 placeholder="tu@email.com"
               />
             </div>
@@ -355,5 +356,13 @@ export default function RegisterPage() {
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <AuthRedirect>
+      <RegisterPageContent />
+    </AuthRedirect>
   )
 }

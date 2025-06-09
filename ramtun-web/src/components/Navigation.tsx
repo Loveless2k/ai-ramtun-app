@@ -4,24 +4,34 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bars3Icon, XMarkIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
 import { Button } from './ui/Button'
-// Temporary mock for demo
-const useAuth = () => ({
-  user: null,
-  signOut: () => console.log('Sign out - Demo mode')
-})
+import { useAuth } from '../hooks/useAuth'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const { user, signOut } = useAuth()
+  const { user, isAuthenticated, isLoading } = useAuth()
 
-  const navItems = [
-    { name: 'Inicio', href: '/' },
-    { name: 'Generador', href: '/generator' },
-    { name: 'Jugar', href: '/game' },
-    { name: 'Características', href: '#features' },
-    { name: 'Precios', href: '#pricing' },
-    { name: 'Contacto', href: '#contact' },
-  ]
+  // Navegación contextual según estado de autenticación
+  const getNavItems = () => {
+    const baseItems = [
+      { name: 'Inicio', href: '/' },
+      { name: 'Generador', href: '/generator' },
+    ]
+
+    // Item "Jugar" contextual
+    const playItem = isAuthenticated
+      ? { name: 'Jugar', href: '/student' } // Usuario autenticado va a su área
+      : { name: 'Jugar', href: '/game', badge: 'Demo Gratis' } // Usuario no autenticado ve demo
+
+    const endItems = [
+      { name: 'Características', href: '#features' },
+      { name: 'Precios', href: '#pricing' },
+      { name: 'Contacto', href: '#contact' },
+    ]
+
+    return [...baseItems, playItem, ...endItems]
+  }
+
+  const navItems = getNavItems()
 
   return (
     <nav className="fixed top-0 w-full bg-white/98 backdrop-blur-md border-b border-gray-300 z-50 shadow-lg">
@@ -46,31 +56,46 @@ export default function Navigation() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium"
+                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium relative"
               >
                 {item.name}
+                {item.badge && (
+                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full font-medium">
+                    {item.badge}
+                  </span>
+                )}
               </motion.a>
             ))}
           </div>
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {user ? (
+            {isLoading ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
+                <span className="text-sm text-gray-500">Cargando...</span>
+              </div>
+            ) : isAuthenticated && user ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-ramtun-gray">
-                  Hola, {user.email}
+                <span className="text-sm font-medium text-gray-700">
+                  Hola, {user.name || user.email}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={signOut}
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('ramtun_user')
+                    window.location.href = '/'
+                  }}
+                  className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
                 >
                   Cerrar Sesión
-                </Button>
+                </button>
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => window.location.href = '/dashboard'}
+                  onClick={() => {
+                    const dashboardUrl = user.role === 'teacher' ? '/dashboard' : '/student/dashboard'
+                    window.location.href = dashboardUrl
+                  }}
                 >
                   Dashboard
                 </Button>
@@ -130,18 +155,30 @@ export default function Navigation() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="block text-ramtun-gray hover:text-ramtun-primary transition-colors duration-200 font-medium py-2"
+                  className="block text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium py-2 relative"
                   onClick={() => setIsOpen(false)}
                 >
-                  {item.name}
+                  <div className="flex items-center justify-between">
+                    <span>{item.name}</span>
+                    {item.badge && (
+                      <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
                 </motion.a>
               ))}
               
               <div className="pt-4 border-t border-gray-200 space-y-3">
-                {user ? (
+                {isLoading ? (
+                  <div className="flex items-center justify-center space-x-2 py-4">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
+                    <span className="text-sm text-gray-500">Cargando...</span>
+                  </div>
+                ) : isAuthenticated && user ? (
                   <>
-                    <p className="text-sm text-ramtun-gray">
-                      Hola, {user.email}
+                    <p className="text-sm font-medium text-gray-700">
+                      Hola, {user.name || user.email}
                     </p>
                     <div className="space-y-2">
                       <Button
@@ -149,23 +186,23 @@ export default function Navigation() {
                         size="sm"
                         className="w-full"
                         onClick={() => {
-                          window.location.href = '/dashboard'
+                          const dashboardUrl = user.role === 'teacher' ? '/dashboard' : '/student/dashboard'
+                          window.location.href = dashboardUrl
                           setIsOpen(false)
                         }}
                       >
                         Dashboard
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
+                      <button
                         onClick={() => {
-                          signOut()
+                          localStorage.removeItem('ramtun_user')
+                          window.location.href = '/'
                           setIsOpen(false)
                         }}
+                        className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
                       >
                         Cerrar Sesión
-                      </Button>
+                      </button>
                     </div>
                   </>
                 ) : (

@@ -8,7 +8,10 @@ import CrosswordGrid from '../components/CrosswordGrid'
 import CluesPanel from '../components/CluesPanel'
 import GameResults from '../components/GameResults'
 import GameTimer from '../components/GameTimer'
+import AccessGuard from '../../../components/AccessGuard'
+import DemoConversionModal from '../../../components/DemoConversionModal'
 import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
+import { useAuth, isCrosswordPublic } from '../../../hooks/useAuth'
 
 interface CrosswordQuestion {
   id: string
@@ -211,6 +214,7 @@ const mockGameData: Record<string, CrosswordData> = {
 export default function GamePage() {
   const params = useParams()
   const gameId = params.id as string
+  const { isAuthenticated, isLoading } = useAuth()
 
   const [gameData, setGameData] = useState<CrosswordData | null>(null)
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null)
@@ -222,6 +226,11 @@ export default function GamePage() {
   const [isPaused, setIsPaused] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [score, setScore] = useState(0)
+  const [showConversionModal, setShowConversionModal] = useState(false)
+
+  // Check if user has access to this crossword
+  const isPublicCrossword = isCrosswordPublic(gameId)
+  const hasAccess = isAuthenticated || isPublicCrossword
 
   // Load game data using perfect algorithm
   useEffect(() => {
@@ -242,13 +251,20 @@ export default function GamePage() {
     if (gameData) {
       const totalQuestions = gameData.questions.length
       const correctCount = Object.values(correctAnswers).filter(Boolean).length
-      
+
       if (correctCount === totalQuestions && correctCount > 0) {
         setIsCompleted(true)
         calculateScore()
+
+        // Show conversion modal for demo users
+        if (!isAuthenticated && isPublicCrossword) {
+          setTimeout(() => {
+            setShowConversionModal(true)
+          }, 2000) // Show after 2 seconds to let them see the results first
+        }
       }
     }
-  }, [correctAnswers, gameData])
+  }, [correctAnswers, gameData, isAuthenticated, isPublicCrossword])
 
   const calculateScore = useCallback(() => {
     if (!gameData) return
@@ -304,6 +320,29 @@ export default function GamePage() {
     if (gameData) {
       setSelectedQuestion(gameData.questions[0]?.id || null)
     }
+  }
+
+  // Show loading while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Verificando acceso...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show access guard if user doesn't have access
+  if (!hasAccess) {
+    return (
+      <AccessGuard
+        gameId={gameId}
+        gameTitle={gameData?.title || 'Crucigrama'}
+        gameSubject={gameData?.subject || 'Educativo'}
+      />
+    )
   }
 
   if (!gameData) {
@@ -405,6 +444,14 @@ export default function GamePage() {
           gameId={gameId}
         />
       )}
+
+      {/* Demo Conversion Modal */}
+      <DemoConversionModal
+        isOpen={showConversionModal}
+        onClose={() => setShowConversionModal(false)}
+        score={score}
+        timeElapsed={timeElapsed}
+      />
     </div>
   )
 }

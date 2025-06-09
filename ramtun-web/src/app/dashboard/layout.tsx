@@ -14,6 +14,7 @@ import {
   SparklesIcon,
   AcademicCapIcon
 } from '@heroicons/react/24/outline'
+import AuthSync from '../../components/AuthSync'
 
 // Context for dashboard tab state
 const DashboardContext = createContext<{
@@ -48,6 +49,7 @@ export default function DashboardLayout({
 
   return (
     <DashboardContext.Provider value={{ activeTab, setActiveTab }}>
+      <AuthSync />
       <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
@@ -155,21 +157,18 @@ export default function DashboardLayout({
                 <h1 className="text-lg font-semibold text-gray-900">
                   Dashboard de Profesor
                 </h1>
+                <p className="text-sm text-gray-500">Gestiona tus crucigramas y analiza el progreso de tus estudiantes</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5-5-5h5v-12" />
-                </svg>
-              </button>
-              <Link
-                href="/"
-                className="text-sm font-medium text-gray-700 hover:text-indigo-600"
-              >
-                Volver al Inicio
-              </Link>
+              {/* Indicador de estado */}
+              <div className="text-right">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">En línea</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

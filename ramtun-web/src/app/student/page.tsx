@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import {
   AcademicCapIcon,
   ClockIcon,
@@ -9,8 +10,13 @@ import {
   PlayIcon,
   StarIcon,
   BookOpenIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  HomeIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  LockClosedIcon
 } from '@heroicons/react/24/outline'
+import { useAuth, isCrosswordPublic } from '../../hooks/useAuth'
 
 interface AvailableCrossword {
   id: string
@@ -28,6 +34,8 @@ interface AvailableCrossword {
 }
 
 export default function StudentPage() {
+  const router = useRouter()
+  const { isAuthenticated } = useAuth()
   const [crosswords, setCrosswords] = useState<AvailableCrossword[]>([])
   const [selectedSubject, setSelectedSubject] = useState<string>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all')
@@ -154,6 +162,40 @@ export default function StudentPage() {
               <p className="text-lg font-semibold text-indigo-600">Estudiante Demo</p>
             </div>
           </div>
+
+          {/* Navigation Tabs */}
+          <div className="mt-6 border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => router.push('/student')}
+                className="border-indigo-500 text-indigo-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+              >
+                <BookOpenIcon className="w-4 h-4" />
+                <span>Crucigramas</span>
+              </button>
+              <button
+                onClick={() => router.push('/student/dashboard')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+              >
+                <HomeIcon className="w-4 h-4" />
+                <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => router.push('/student/progress')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+              >
+                <ChartBarIcon className="w-4 h-4" />
+                <span>Progreso</span>
+              </button>
+              <button
+                onClick={() => router.push('/student/settings')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+              >
+                <Cog6ToothIcon className="w-4 h-4" />
+                <span>Configuración</span>
+              </button>
+            </nav>
+          </div>
         </div>
       </div>
 
@@ -239,16 +281,32 @@ export default function StudentPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCrosswords.map((crossword, index) => {
             const SubjectIcon = getSubjectIcon(crossword.subject)
+            const isPublic = isCrosswordPublic(crossword.id)
+            const hasAccess = isAuthenticated || isPublic
+
             return (
               <motion.div
                 key={crossword.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 relative overflow-hidden flex flex-col h-full"
+                className={`bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-200 relative overflow-hidden flex flex-col h-full ${
+                  !hasAccess ? 'opacity-75' : ''
+                }`}
               >
                 {/* Badges */}
                 <div className="absolute top-4 right-4 flex space-x-2">
+                  {!hasAccess && (
+                    <span className="bg-gray-500 text-white text-xs px-2 py-1 rounded-full font-medium flex items-center space-x-1">
+                      <LockClosedIcon className="w-3 h-3" />
+                      <span>Premium</span>
+                    </span>
+                  )}
+                  {isPublic && (
+                    <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                      Demo
+                    </span>
+                  )}
                   {crossword.isNew && (
                     <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                       Nuevo
@@ -322,10 +380,23 @@ export default function StudentPage() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => window.location.href = `/game/${crossword.id}`}
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2"
+                    className={`w-full py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 ${
+                      hasAccess
+                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                        : 'bg-gray-100 text-gray-600 border-2 border-gray-300'
+                    }`}
                   >
-                    <PlayIcon className="w-5 h-5" />
-                    <span>Jugar Ahora</span>
+                    {hasAccess ? (
+                      <>
+                        <PlayIcon className="w-5 h-5" />
+                        <span>{isPublic ? 'Probar Demo' : 'Jugar Ahora'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <LockClosedIcon className="w-5 h-5" />
+                        <span>Requiere Cuenta</span>
+                      </>
+                    )}
                   </motion.button>
                 </div>
               </motion.div>
