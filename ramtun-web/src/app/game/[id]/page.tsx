@@ -232,6 +232,24 @@ export default function GamePage() {
     setTimeElapsed(newTime)
   }, [])
 
+  // Define calculateScore before using it in useEffect
+  const calculateScore = useCallback(() => {
+    if (!gameData) return
+
+    const totalQuestions = gameData.questions.length
+    const correctCount = Object.values(correctAnswers).filter(Boolean).length
+    const accuracy = (correctCount / totalQuestions) * 100
+
+    // Bonus por tiempo (máximo 20 puntos)
+    const timeBonus = Math.max(0, 20 - Math.floor(timeElapsed / 30))
+
+    // Bonus por no usar pistas (máximo 10 puntos)
+    const hintBonus = Math.max(0, 10 - (3 - hintsRemaining) * 3)
+
+    const finalScore = Math.min(100, Math.round(accuracy + timeBonus + hintBonus))
+    setScore(finalScore)
+  }, [correctAnswers, gameData, timeElapsed, hintsRemaining])
+
   // Check completion
   useEffect(() => {
     if (gameData) {
@@ -251,23 +269,6 @@ export default function GamePage() {
       }
     }
   }, [correctAnswers, gameData, isAuthenticated, isPublicCrossword, calculateScore])
-
-  const calculateScore = useCallback(() => {
-    if (!gameData) return
-
-    const totalQuestions = gameData.questions.length
-    const correctCount = Object.values(correctAnswers).filter(Boolean).length
-    const accuracy = (correctCount / totalQuestions) * 100
-
-    // Bonus por tiempo (máximo 20 puntos)
-    const timeBonus = Math.max(0, 20 - Math.floor(timeElapsed / 30))
-    
-    // Bonus por no usar pistas (máximo 10 puntos)
-    const hintBonus = Math.max(0, 10 - (3 - hintsRemaining) * 3)
-
-    const finalScore = Math.min(100, Math.round(accuracy + timeBonus + hintBonus))
-    setScore(finalScore)
-  }, [correctAnswers, gameData, timeElapsed, hintsRemaining])
 
   const handleAnswerSubmit = (questionId: string, answer: string) => {
     if (!gameData) return

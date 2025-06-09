@@ -204,11 +204,15 @@ export default function CrosswordGenerator() {
               />
               {formData.topic.trim() && (
                 <p className={`text-xs mt-1 font-medium ${
-                  searchParams.get('topic') ? 'text-indigo-600' : 'text-green-600'
+                  formData.topic.trim().length < 3
+                    ? 'text-red-600'
+                    : searchParams.get('topic') ? 'text-indigo-600' : 'text-green-600'
                 }`}>
-                  {searchParams.get('topic')
-                    ? '🚀 Autocompletado desde Dashboard - Listo para generar'
-                    : '✓ Tema válido - Listo para generar'
+                  {formData.topic.trim().length < 3
+                    ? '⚠️ El tema debe tener al menos 3 caracteres'
+                    : searchParams.get('topic')
+                      ? '🚀 Autocompletado desde Dashboard - Listo para generar'
+                      : '✓ Tema válido - Listo para generar'
                   }
                 </p>
               )}
@@ -339,22 +343,22 @@ export default function CrosswordGenerator() {
             {/* Submit Button - ALWAYS VISIBLE */}
             <button
               type="submit"
-              disabled={isGenerating || !formData.topic.trim()}
+              disabled={isGenerating || !formData.topic.trim() || formData.topic.trim().length < 3}
               className={`w-full rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
-                !formData.topic.trim()
+                !formData.topic.trim() || formData.topic.trim().length < 3
                   ? 'opacity-50 cursor-not-allowed bg-gray-400 text-white'
                   : 'hover:scale-105 shadow-lg hover:shadow-xl bg-indigo-600 hover:bg-indigo-700 text-white'
               }`}
               style={{
                 color: '#ffffff !important',
-                backgroundColor: !formData.topic.trim() ? '#9CA3AF' : '#4F46E5',
+                backgroundColor: (!formData.topic.trim() || formData.topic.trim().length < 3) ? '#9CA3AF' : '#4F46E5',
                 padding: '20px 48px',
                 minHeight: '64px'
               }}
             >
               {isGenerating ? (
                 <ClockIcon className="w-6 h-6 animate-spin text-white" />
-              ) : !formData.topic.trim() ? (
+              ) : (!formData.topic.trim() || formData.topic.trim().length < 3) ? (
                 <SparklesIcon className="w-6 h-6 text-white" />
               ) : (
                 <span style={{ fontSize: '24px' }}>🚀</span>
@@ -370,7 +374,9 @@ export default function CrosswordGenerator() {
                   ? 'Generando Crucigrama...'
                   : !formData.topic.trim()
                     ? 'Ingresa un Tema para Continuar'
-                    : 'Generar Crucigrama con IA'
+                    : formData.topic.trim().length < 3
+                      ? 'Tema debe tener al menos 3 caracteres'
+                      : 'Generar Crucigrama con IA'
                 }
               </span>
             </button>

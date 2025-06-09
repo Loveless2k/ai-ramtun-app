@@ -217,7 +217,7 @@ export default function GamePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group"
+              className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full min-h-[480px]"
             >
               {/* Card Header */}
               <div className="relative p-6 pb-4">
@@ -246,8 +246,8 @@ export default function GamePage() {
               </div>
 
               {/* Card Content */}
-              <div className="px-6 pb-4">
-                <p className="text-gray-600 text-sm mb-4">{game.description}</p>
+              <div className="px-6 pb-4 flex-1 flex flex-col">
+                <p className="text-gray-600 text-sm mb-4 flex-1">{game.description}</p>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="text-center p-3 bg-gray-50 rounded-lg">
@@ -279,7 +279,7 @@ export default function GamePage() {
               </div>
 
               {/* Card Footer */}
-              <div className="px-6 pb-6">
+              <div className="px-6 pb-6 mt-auto">
                 <Link
                   href={`/game/${game.id}`}
                   className="w-full flex items-center justify-center px-4 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors group-hover:scale-105 transform duration-200"

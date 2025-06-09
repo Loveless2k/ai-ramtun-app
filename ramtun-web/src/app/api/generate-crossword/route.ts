@@ -16,6 +16,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate topic length and content
+    if (typeof topic !== 'string' || topic.trim().length < 3) {
+      return NextResponse.json(
+        { error: 'Topic must be at least 3 characters long' },
+        { status: 400 }
+      )
+    }
+
     // Validate education level and grade
     if (educationLevel === 'basica' && (grade < 1 || grade > 8)) {
       return NextResponse.json(
