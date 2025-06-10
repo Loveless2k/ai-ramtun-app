@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
+
 import {
   ShoppingBagIcon,
   StarIcon,
@@ -10,22 +10,17 @@ import {
   ClockIcon,
   RocketLaunchIcon,
   SparklesIcon,
-  MagnifyingGlassIcon,
-  ForwardIcon,
   LockClosedIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline'
-import { useAuth } from '../../../lib/auth'
+
 import { PowerUp, getAvailablePowerUps } from '../../../lib/gamification'
 
 export default function PowerUpsPage() {
-  const router = useRouter()
-  const { user } = useAuth()
   const [powerUps, setPowerUps] = useState<PowerUp[]>([])
   const [myPowerUps, setMyPowerUps] = useState<{[key: string]: number}>({})
   const [playerPoints, setPlayerPoints] = useState(1850)
-  const [playerLevel, setPlayerLevel] = useState(6)
+  const [playerLevel] = useState(6)
   const [isLoading, setIsLoading] = useState(true)
   const [purchaseModal, setPurchaseModal] = useState<{
     show: boolean

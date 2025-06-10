@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import {
@@ -41,7 +41,7 @@ export default function StudentPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   // Mock data - En producción vendría de la API
-  const mockCrosswords: AvailableCrossword[] = [
+  const mockCrosswords: AvailableCrossword[] = useMemo(() => [
     {
       id: '1',
       title: 'Revolución Francesa',
@@ -93,7 +93,7 @@ export default function StudentPage() {
       avgScore: 71,
       isNew: true
     }
-  ]
+  ], [])
 
   useEffect(() => {
     // Simular carga de datos
@@ -101,7 +101,7 @@ export default function StudentPage() {
       setCrosswords(mockCrosswords)
       setIsLoading(false)
     }, 1000)
-  }, [])
+  }, [mockCrosswords])
 
   const subjects = ['all', 'Historia', 'Ciencias', 'Matemáticas', 'Lenguaje']
   const difficulties = ['all', 'Fácil', 'Medio', 'Difícil']

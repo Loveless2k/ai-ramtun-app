@@ -16,7 +16,7 @@ interface AccessGuardProps {
   gameSubject: string
 }
 
-export default function AccessGuard({ gameId, gameTitle, gameSubject }: AccessGuardProps) {
+export default function AccessGuard({ gameTitle, gameSubject }: Omit<AccessGuardProps, 'gameId'>) {
   const router = useRouter()
 
   return (
@@ -70,7 +70,7 @@ export default function AccessGuard({ gameId, gameTitle, gameSubject }: AccessGu
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-blue-800">
             💡 <strong>¿Quieres probar primero?</strong><br />
-            Juega nuestro crucigrama demo "Sistema Solar" sin registrarte.
+            Juega nuestro crucigrama demo &quot;Sistema Solar&quot; sin registrarte.
           </p>
         </div>
 

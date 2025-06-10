@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { SparklesIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
@@ -24,35 +24,7 @@ export default function CrosswordGenerator() {
   const [generatedWith, setGeneratedWith] = useState<'openai' | 'demo' | null>(null)
   const [isFromQuickGenerator, setIsFromQuickGenerator] = useState(false)
 
-  // Autocompletar desde parámetros URL
-  useEffect(() => {
-    const topic = searchParams.get('topic')
-    const source = searchParams.get('source')
-    const level = searchParams.get('level')
-    const grade = searchParams.get('grade')
-    const difficulty = searchParams.get('difficulty')
-
-    if (topic) {
-      setFormData(prev => ({
-        ...prev,
-        topic: topic,
-        educationLevel: (level === 'media' ? 'media' : 'basica') as 'basica' | 'media',
-        grade: grade ? parseInt(grade) : prev.grade,
-        difficulty: (difficulty === 'facil' || difficulty === 'dificil' ? difficulty : 'medio') as 'facil' | 'medio' | 'dificil'
-      }))
-
-      // Marcar si viene del generador rápido
-      if (source === 'quick-generator') {
-        setIsFromQuickGenerator(true)
-        // Auto-generar después de un breve delay para mostrar el autocompletado
-        setTimeout(() => {
-          handleAutoGenerate()
-        }, 1500)
-      }
-    }
-  }, [searchParams])
-
-  const handleAutoGenerate = async () => {
+  const handleAutoGenerate = useCallback(async () => {
     if (!formData.topic.trim()) return
 
     setIsGenerating(true)
@@ -82,7 +54,35 @@ export default function CrosswordGenerator() {
       setIsGenerating(false)
       setIsFromQuickGenerator(false)
     }
-  }
+  }, [formData])
+
+  // Autocompletar desde parámetros URL
+  useEffect(() => {
+    const topic = searchParams.get('topic')
+    const source = searchParams.get('source')
+    const level = searchParams.get('level')
+    const grade = searchParams.get('grade')
+    const difficulty = searchParams.get('difficulty')
+
+    if (topic) {
+      setFormData(prev => ({
+        ...prev,
+        topic: topic,
+        educationLevel: (level === 'media' ? 'media' : 'basica') as 'basica' | 'media',
+        grade: grade ? parseInt(grade) : prev.grade,
+        difficulty: (difficulty === 'facil' || difficulty === 'dificil' ? difficulty : 'medio') as 'facil' | 'medio' | 'dificil'
+      }))
+
+      // Marcar si viene del generador rápido
+      if (source === 'quick-generator') {
+        setIsFromQuickGenerator(true)
+        // Auto-generar después de un breve delay para mostrar el autocompletado
+        setTimeout(() => {
+          handleAutoGenerate()
+        }, 1500)
+      }
+    }
+  }, [searchParams, handleAutoGenerate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -114,7 +114,7 @@ export default function CrosswordGenerator() {
     }
   }
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -150,7 +150,7 @@ export default function CrosswordGenerator() {
               </p>
             </div>
             <p className="text-indigo-600 text-sm mt-1 text-center">
-              Tema autocompletado: "{formData.topic}"
+              Tema autocompletado: &quot;{formData.topic}&quot;
             </p>
           </motion.div>
         )}
