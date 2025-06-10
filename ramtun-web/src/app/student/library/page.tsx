@@ -18,6 +18,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 import { useAuth } from '../../../lib/auth'
+import StudentNavigation from '../../../components/StudentNavigation'
 
 interface Crossword {
   id: string
@@ -289,30 +290,14 @@ export default function StudentLibrary() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <BookOpenIcon className="w-6 h-6 text-indigo-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Biblioteca de Crucigramas</h1>
-                <p className="text-gray-600">Descubre y juega crucigramas educativos</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">
-                {sortedCrosswords.length} crucigramas disponibles
-              </p>
-              <p className="text-lg font-semibold text-indigo-600">
-                ¡Bienvenido, {user?.user_metadata?.name || 'Estudiante'}!
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudentNavigation
+        title="Biblioteca de Crucigramas"
+        subtitle={`Descubre y juega crucigramas educativos • ${sortedCrosswords.length} disponibles`}
+        icon={<BookOpenIcon className="w-6 h-6 text-indigo-600" />}
+        showBackButton={true}
+        backUrl="/student/dashboard"
+        backLabel="Volver al Dashboard"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Filters */}

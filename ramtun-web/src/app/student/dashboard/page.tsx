@@ -20,6 +20,7 @@ import {
   LightBulbIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
+import StudentNavigation from '../../../components/StudentNavigation'
 
 interface StudentStats {
   totalGames: number
@@ -726,75 +727,11 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <HomeIcon className="w-6 h-6 text-indigo-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard Estudiante</h1>
-                <p className="text-gray-600">Tu centro de control personal</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">¡Bienvenido!</p>
-              <p className="text-lg font-semibold text-indigo-600">Estudiante Demo</p>
-            </div>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="mt-6 border-b border-gray-200">
-            <nav className="-mb-px flex space-x-2 sm:space-x-4 lg:space-x-8 overflow-x-auto">
-              <button
-                onClick={() => router.push('/student')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <PlayIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Jugar</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/dashboard')}
-                className="border-indigo-500 text-indigo-600 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <HomeIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/library')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <BookOpenIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Biblioteca</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/leaderboard')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <TrophyIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Clasificaciones</span>
-                <span className="sm:hidden">Ranking</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/challenges')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <CalendarIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Desafíos</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/powerups')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
-              >
-                <LightBulbIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Power-ups</span>
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
+      <StudentNavigation
+        title="Dashboard Estudiante"
+        subtitle="Tu centro de control personal"
+        icon={<HomeIcon className="w-6 h-6 text-indigo-600" />}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">

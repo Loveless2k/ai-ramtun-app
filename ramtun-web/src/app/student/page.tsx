@@ -16,6 +16,7 @@ import {
   LockClosedIcon
 } from '@heroicons/react/24/outline'
 import { useAuth, isCrosswordPublic } from '../../lib/auth'
+import StudentNavigation from '../../components/StudentNavigation'
 
 interface AvailableCrossword {
   id: string
@@ -143,60 +144,11 @@ export default function StudentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <AcademicCapIcon className="w-6 h-6 text-indigo-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Ramtun Estudiante</h1>
-                <p className="text-gray-600">Selecciona un crucigrama para jugar</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">¡Bienvenido!</p>
-              <p className="text-lg font-semibold text-indigo-600">Estudiante Demo</p>
-            </div>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="mt-6 border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              <button
-                onClick={() => router.push('/student')}
-                className="border-indigo-500 text-indigo-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-              >
-                <BookOpenIcon className="w-4 h-4" />
-                <span>Crucigramas</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/dashboard')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-              >
-                <HomeIcon className="w-4 h-4" />
-                <span>Dashboard</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/progress')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-              >
-                <ChartBarIcon className="w-4 h-4" />
-                <span>Progreso</span>
-              </button>
-              <button
-                onClick={() => router.push('/student/settings')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
-              >
-                <Cog6ToothIcon className="w-4 h-4" />
-                <span>Configuración</span>
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
+      <StudentNavigation
+        title="Ramtun Estudiante"
+        subtitle="Selecciona un crucigrama para jugar"
+        icon={<PlayIcon className="w-6 h-6 text-indigo-600" />}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
