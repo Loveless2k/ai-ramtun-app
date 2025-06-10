@@ -511,7 +511,7 @@ export default function StudentDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         <button
           onClick={() => window.location.href = '/play'}
           className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
@@ -519,6 +519,14 @@ export default function StudentDashboard() {
           <PlayIcon className="w-8 h-8 mb-3" />
           <h3 className="text-lg font-semibold mb-2">Jugar Ahora</h3>
           <p className="text-indigo-100">Explora crucigramas disponibles</p>
+        </button>
+        <button
+          onClick={() => router.push('/student/library')}
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
+        >
+          <BookOpenIcon className="w-8 h-8 mb-3" />
+          <h3 className="text-lg font-semibold mb-2">Biblioteca</h3>
+          <p className="text-blue-100">Descubre nuevos crucigramas</p>
         </button>
         <button
           onClick={() => router.push('/student/progress')}
@@ -672,8 +680,8 @@ export default function StudentDashboard() {
                 onClick={() => router.push('/student')}
                 className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
               >
-                <BookOpenIcon className="w-4 h-4" />
-                <span>Crucigramas</span>
+                <PlayIcon className="w-4 h-4" />
+                <span>Jugar</span>
               </button>
               <button
                 onClick={() => router.push('/student/dashboard')}
@@ -681,6 +689,13 @@ export default function StudentDashboard() {
               >
                 <HomeIcon className="w-4 h-4" />
                 <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => router.push('/student/library')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+              >
+                <BookOpenIcon className="w-4 h-4" />
+                <span>Biblioteca</span>
               </button>
               <button
                 onClick={() => router.push('/student/progress')}
