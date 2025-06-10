@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+
 import { useParams, useRouter } from 'next/navigation'
 import {
   ArrowLeftIcon,
@@ -66,7 +66,6 @@ interface CrosswordDetail {
 export default function CrosswordDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { user } = useAuth()
   const [crossword, setCrossword] = useState<CrosswordDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
