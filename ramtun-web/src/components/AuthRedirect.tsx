@@ -30,8 +30,12 @@ export default function AuthRedirect({ children, redirectTo }: AuthRedirectProps
       const defaultRedirect = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
       const targetUrl = redirectTo || defaultRedirect
 
-      console.log(`Usuario ya autenticado (${userRole}), redirigiendo a: ${targetUrl}`)
-      router.replace(targetUrl)
+      console.log(`🔄 AuthRedirect: Usuario autenticado (${userRole}), redirigiendo a: ${targetUrl}`)
+
+      // Add a small delay to prevent conflicts with middleware
+      setTimeout(() => {
+        router.replace(targetUrl)
+      }, 100)
     }
   }, [isClient, isAuthenticated, isLoading, user, router, redirectTo])
 

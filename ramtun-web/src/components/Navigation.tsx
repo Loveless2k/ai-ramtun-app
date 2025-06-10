@@ -109,8 +109,12 @@ export default function Navigation() {
   const getNavItems = () => {
     const baseItems = [
       { name: 'Inicio', href: '/' },
-      { name: 'Generador', href: '/generator' },
     ]
+
+    // 🔒 PHASE 1: Generator only for authenticated teachers
+    if (isAuthenticated && user?.user_metadata?.role === 'teacher') {
+      baseItems.push({ name: 'Generador', href: '/generator' })
+    }
 
     // Item "Jugar" contextual - accesible para todos los usuarios autenticados
     const playItem = isAuthenticated

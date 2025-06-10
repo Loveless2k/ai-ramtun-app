@@ -1,10 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateCrossword, generateCrosswordDemo, validateOpenAIConfig } from '@/lib/openai'
 import { PerfectCrosswordGenerator } from '@/utils/perfectCrosswordGenerator'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import type { CrosswordRequest } from '@/types/crossword'
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔒 PHASE 1: Authentication and Authorization Check
+    const supabase = createRouteHandlerClient({ cookies })
+    const { data: { session } } = await supabase.auth.getSession()
+
+    // Check if user is authenticated
+    if (!session?.user) {
+      console.log('❌ API: Unauthenticated access attempt to crossword generator')
+      return NextResponse.json(
+        { error: 'Authentication required. Please log in to generate crosswords.' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user has teacher role
+    const userRole = session.user.user_metadata?.role
+    console.log('👤 API: User role attempting generator access:', userRole)
+
+    if (userRole !== 'teacher') {
+      console.log('🚫 API: Non-teacher access denied to crossword generator')
+      return NextResponse.json(
+        {
+          error: 'Teacher access required. Only teachers can generate crosswords.',
+          userRole: userRole,
+          requiredRole: 'teacher'
+        },
+        { status: 403 }
+      )
+    }
+
+    console.log('✅ API: Teacher access granted for crossword generation')
+
     const body = await request.json()
     
     // Validate request

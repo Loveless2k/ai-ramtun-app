@@ -3,12 +3,23 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { SparklesIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
+import {
+  SparklesIcon,
+  AcademicCapIcon,
+  ClockIcon,
+  ShareIcon,
+  BookmarkIcon,
+  UserGroupIcon,
+  DocumentDuplicateIcon,
+  CheckCircleIcon
+} from '@heroicons/react/24/outline'
 import { Card } from './ui/Card'
+import { useAuth } from '../lib/auth'
 import type { CrosswordResponse as CrosswordResult } from '../types/crossword'
 
 export default function CrosswordGenerator() {
   const searchParams = useSearchParams()
+  const { user } = useAuth()
 
   const [formData, setFormData] = useState({
     topic: '',
@@ -17,6 +28,22 @@ export default function CrosswordGenerator() {
     difficulty: 'medio' as 'facil' | 'medio' | 'dificil',
     questionCount: 10
   })
+
+  // 🚀 PHASE 2: Teacher-specific features
+  const [teacherOptions, setTeacherOptions] = useState({
+    saveToLibrary: true,
+    shareWithStudents: false,
+    assignToClass: false,
+    selectedClass: '',
+    dueDate: '',
+    instructions: '',
+    allowHints: true,
+    timeLimit: 0, // 0 = no limit
+    maxAttempts: 0 // 0 = unlimited
+  })
+
+  const [savedCrosswords, setSavedCrosswords] = useState<string[]>([])
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false)
 
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<CrosswordResult | null>(null)
@@ -534,6 +561,115 @@ export default function CrosswordGenerator() {
                     Descargar TXT
                   </span>
                 </button>
+              </div>
+
+              {/* 🚀 PHASE 2: Teacher-Specific Features */}
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+                <h3 className="text-lg font-semibold text-indigo-900 mb-4 flex items-center">
+                  <UserGroupIcon className="w-5 h-5 mr-2" />
+                  Opciones para Profesores
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Save and Share Options */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-indigo-800">Guardar y Compartir</h4>
+
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={teacherOptions.saveToLibrary}
+                        onChange={(e) => setTeacherOptions(prev => ({ ...prev, saveToLibrary: e.target.checked }))}
+                        className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      />
+                      <span className="text-sm text-gray-700">Guardar en mi biblioteca</span>
+                    </label>
+
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={teacherOptions.shareWithStudents}
+                        onChange={(e) => setTeacherOptions(prev => ({ ...prev, shareWithStudents: e.target.checked }))}
+                        className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      />
+                      <span className="text-sm text-gray-700">Compartir con estudiantes</span>
+                    </label>
+
+                    <button
+                      onClick={() => {
+                        if (teacherOptions.saveToLibrary) {
+                          setSavedCrosswords(prev => [...prev, result.topic])
+                          setShowSaveSuccess(true)
+                          setTimeout(() => setShowSaveSuccess(false), 3000)
+                        }
+                        alert('🚀 Funcionalidad de Compartir\n\n✅ Crucigrama guardado en biblioteca\n📤 Enlace de compartir generado\n👥 Notificación enviada a estudiantes\n\n(Simulación - Funcionalidad completa en desarrollo)')
+                      }}
+                      className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center space-x-2"
+                    >
+                      <ShareIcon className="w-4 h-4" />
+                      <span>Guardar y Compartir</span>
+                    </button>
+                  </div>
+
+                  {/* Assignment Options */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-indigo-800">Opciones de Asignación</h4>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Límite de tiempo (minutos)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="120"
+                        value={teacherOptions.timeLimit}
+                        onChange={(e) => setTeacherOptions(prev => ({ ...prev, timeLimit: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="0 = Sin límite"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Intentos máximos
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={teacherOptions.maxAttempts}
+                        onChange={(e) => setTeacherOptions(prev => ({ ...prev, maxAttempts: parseInt(e.target.value) || 0 }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="0 = Ilimitados"
+                      />
+                    </div>
+
+                    <label className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={teacherOptions.allowHints}
+                        onChange={(e) => setTeacherOptions(prev => ({ ...prev, allowHints: e.target.checked }))}
+                        className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                      />
+                      <span className="text-sm text-gray-700">Permitir pistas</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Success Message */}
+                {showSaveSuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center space-x-2"
+                  >
+                    <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                    <span className="text-green-800 text-sm font-medium">
+                      ¡Crucigrama guardado exitosamente en tu biblioteca!
+                    </span>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           )}

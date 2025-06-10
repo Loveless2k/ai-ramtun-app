@@ -16,7 +16,11 @@ import {
   BookOpenIcon,
   AcademicCapIcon,
   TrophyIcon,
-  PlayIcon
+  PlayIcon,
+  ShareIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  PresentationChartBarIcon
 } from '@heroicons/react/24/outline'
 import {
   ChartBarIcon as ChartBarSolid,
@@ -24,6 +28,11 @@ import {
   AcademicCapIcon as AcademicCapSolid
 } from '@heroicons/react/24/solid'
 import CrosswordGenerator from '@/components/CrosswordGenerator'
+import CrosswordSharingSystem from '@/components/CrosswordSharingSystem'
+import StudentProgressTracker from '@/components/StudentProgressTracker'
+import TeacherCollaboration from '@/components/TeacherCollaboration'
+import CrosswordTemplateLibrary from '@/components/CrosswordTemplateLibrary'
+import AdvancedAnalytics from '@/components/AdvancedAnalytics'
 import { useDashboard } from './layout'
 
 // Types
@@ -217,7 +226,11 @@ export default function DashboardPage() {
     { id: 'overview', name: 'Resumen', icon: ChartBarIcon, iconSolid: ChartBarSolid },
     { id: 'generator', name: 'Generador', icon: SparklesIcon, iconSolid: SparklesIcon },
     { id: 'crosswords', name: 'Mis Crucigramas', icon: BookOpenIcon, iconSolid: BookOpenSolid },
-    { id: 'analytics', name: 'Analytics', icon: ChartBarIcon, iconSolid: ChartBarSolid },
+    { id: 'sharing', name: 'Compartidos', icon: ShareIcon, iconSolid: ShareIcon }, // 🚀 PHASE 2
+    { id: 'progress', name: 'Progreso', icon: UsersIcon, iconSolid: UsersIcon }, // 🚀 PHASE 2
+    { id: 'collaboration', name: 'Colaboración', icon: UserGroupIcon, iconSolid: UserGroupIcon }, // 🚀 PHASE 3
+    { id: 'templates', name: 'Templates', icon: DocumentTextIcon, iconSolid: DocumentTextIcon }, // 🚀 PHASE 3
+    { id: 'analytics', name: 'Analytics', icon: PresentationChartBarIcon, iconSolid: PresentationChartBarIcon }, // 🚀 PHASE 3
     { id: 'library', name: 'Biblioteca', icon: AcademicCapIcon, iconSolid: AcademicCapSolid }
   ]
 
@@ -302,8 +315,20 @@ export default function DashboardPage() {
           {activeTab === 'crosswords' && (
             <CrosswordsTab crosswords={crosswords} setCrosswords={setCrosswords} />
           )}
+          {activeTab === 'sharing' && (
+            <SharingTab />
+          )}
+          {activeTab === 'progress' && (
+            <ProgressTab />
+          )}
+          {activeTab === 'collaboration' && (
+            <CollaborationTab />
+          )}
+          {activeTab === 'templates' && (
+            <TemplatesTab />
+          )}
           {activeTab === 'analytics' && (
-            <AnalyticsTab metrics={mockStats} />
+            <AdvancedAnalyticsTab />
           )}
           {activeTab === 'library' && (
             <LibraryTab />
@@ -1025,6 +1050,65 @@ function GeneratorTab() {
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
         <CrosswordGenerator />
       </div>
+    </div>
+  )
+}
+
+// 🚀 PHASE 2: Sharing Tab Component
+function SharingTab() {
+  const handleShare = (crosswordId: string, options: any) => {
+    console.log('Sharing crossword:', crosswordId, options)
+    // Implementation for sharing functionality
+  }
+
+  const handleRevoke = (crosswordId: string) => {
+    console.log('Revoking access for crossword:', crosswordId)
+    // Implementation for revoking access
+  }
+
+  return (
+    <div className="space-y-6">
+      <CrosswordSharingSystem
+        crosswords={[]}
+        onShare={handleShare}
+        onRevoke={handleRevoke}
+      />
+    </div>
+  )
+}
+
+// 🚀 PHASE 2: Progress Tab Component
+function ProgressTab() {
+  return (
+    <div className="space-y-6">
+      <StudentProgressTracker />
+    </div>
+  )
+}
+
+// 🚀 PHASE 3: Collaboration Tab Component
+function CollaborationTab() {
+  return (
+    <div className="space-y-6">
+      <TeacherCollaboration />
+    </div>
+  )
+}
+
+// 🚀 PHASE 3: Templates Tab Component
+function TemplatesTab() {
+  return (
+    <div className="space-y-6">
+      <CrosswordTemplateLibrary />
+    </div>
+  )
+}
+
+// 🚀 PHASE 3: Advanced Analytics Tab Component
+function AdvancedAnalyticsTab() {
+  return (
+    <div className="space-y-6">
+      <AdvancedAnalytics />
     </div>
   )
 }
