@@ -291,7 +291,7 @@ export default function StudentDashboard() {
   ]
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
@@ -330,6 +330,106 @@ export default function StudentDashboard() {
               style={{ width: `${(studentStats.totalPoints / studentStats.nextLevelPoints) * 100}%` }}
             ></div>
           </div>
+        </div>
+      </div>
+
+      {/* Enhanced Quick Actions Section - Moved Higher */}
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Acciones Rápidas</h3>
+          <p className="text-gray-600">Explora todas las funcionalidades disponibles</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {/* Jugar Ahora Card */}
+          <button
+            onClick={() => router.push('/student')}
+            className="group relative bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <PlayIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Jugar Ahora</h4>
+              <p className="text-xs text-indigo-100 leading-tight">Explora crucigramas disponibles</p>
+            </div>
+          </button>
+
+          {/* Biblioteca Card */}
+          <button
+            onClick={() => router.push('/student/library')}
+            className="group relative bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <BookOpenIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Biblioteca</h4>
+              <p className="text-xs text-blue-100 leading-tight">Descubre nuevos crucigramas</p>
+            </div>
+          </button>
+
+          {/* Clasificaciones Card - Enhanced */}
+          <button
+            onClick={() => router.push('/student/leaderboard')}
+            className="group relative bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <TrophyIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Clasificaciones</h4>
+              <p className="text-xs text-amber-100 leading-tight">Compite con otros estudiantes</p>
+            </div>
+          </button>
+
+          {/* Desafíos Card */}
+          <button
+            onClick={() => router.push('/student/challenges')}
+            className="group relative bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <CalendarIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Desafíos</h4>
+              <p className="text-xs text-emerald-100 leading-tight">Completa retos diarios</p>
+            </div>
+          </button>
+
+          {/* Power-ups Card */}
+          <button
+            onClick={() => router.push('/student/powerups')}
+            className="group relative bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <LightBulbIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Power-ups</h4>
+              <p className="text-xs text-purple-100 leading-tight">Mejora tu experiencia</p>
+            </div>
+          </button>
+
+          {/* Logros Card */}
+          <button
+            onClick={() => setActiveTab('achievements')}
+            className="group relative bg-gradient-to-br from-red-500 to-rose-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-red-400 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full">
+              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <FireIcon className="w-6 h-6" />
+              </div>
+              <h4 className="font-bold text-sm mb-1">Logros</h4>
+              <p className="text-xs text-red-100 leading-tight">Descubre tus achievements</p>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -516,72 +616,7 @@ export default function StudentDashboard() {
         </button>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <button
-          onClick={() => router.push('/student')}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <PlayIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Jugar Ahora</h3>
-          <p className="text-indigo-100 text-center text-xs sm:text-sm flex-grow leading-tight">Explora crucigramas disponibles</p>
-        </button>
-        <button
-          onClick={() => router.push('/student/library')}
-          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <BookOpenIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Biblioteca</h3>
-          <p className="text-blue-100 text-center text-xs sm:text-sm flex-grow leading-tight">Descubre nuevos crucigramas</p>
-        </button>
-        <button
-          onClick={() => router.push('/student/leaderboard')}
-          className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <TrophyIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">
-            <span className="hidden sm:inline">Clasificaciones</span>
-            <span className="sm:hidden">Ranking</span>
-          </h3>
-          <p className="text-yellow-100 text-center text-xs sm:text-sm flex-grow leading-tight">Compite con otros estudiantes</p>
-        </button>
-        <button
-          onClick={() => router.push('/student/challenges')}
-          className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <CalendarIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Desafíos</h3>
-          <p className="text-green-100 text-center text-xs sm:text-sm flex-grow leading-tight">Completa retos diarios</p>
-        </button>
-        <button
-          onClick={() => router.push('/student/powerups')}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <LightBulbIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Power-ups</h3>
-          <p className="text-purple-100 text-center text-xs sm:text-sm flex-grow leading-tight">Mejora tu experiencia</p>
-        </button>
-        <button
-          onClick={() => setActiveTab('achievements')}
-          className="bg-gradient-to-r from-red-500 to-rose-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
-        >
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <FireIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Logros</h3>
-          <p className="text-red-100 text-center text-xs sm:text-sm flex-grow leading-tight">Descubre tus achievements</p>
-        </button>
-      </div>
+
     </div>
   )
 
@@ -739,7 +774,7 @@ export default function StudentDashboard() {
                 className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
                 <TrophyIcon className="w-4 h-4" />
-                <span className="hidden sm:inline lg:inline">Clasificaciones</span>
+                <span className="hidden sm:inline">Clasificaciones</span>
                 <span className="sm:hidden">Ranking</span>
               </button>
               <button
