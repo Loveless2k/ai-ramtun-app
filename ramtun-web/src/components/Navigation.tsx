@@ -2,16 +2,31 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bars3Icon, XMarkIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
+import {
+  Bars3Icon,
+  XMarkIcon,
+  PuzzlePieceIcon,
+  AcademicCapIcon,
+  UserIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/outline'
 import { Button } from './ui/Button'
 import { useAuth } from '../lib/auth'
 import { useRouter, usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const { user, isAuthenticated, isLoading, signOut } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+
 
   // Manejar scroll al cargar página con hash
   useEffect(() => {
@@ -64,6 +79,29 @@ export default function Navigation() {
     } else {
       // Para enlaces normales, usar navegación estándar
       router.push(href)
+    }
+  }
+
+  // Helper para obtener información del dashboard según el rol
+  const getDashboardInfo = (userRole?: string) => {
+    if (userRole === 'teacher') {
+      return {
+        text: 'Dashboard Profesor',
+        icon: <AcademicCapIcon className="w-4 h-4" />,
+        url: '/dashboard'
+      }
+    } else if (userRole === 'student') {
+      return {
+        text: 'Dashboard Estudiante',
+        icon: <UserIcon className="w-4 h-4" />,
+        url: '/student/dashboard'
+      }
+    } else {
+      return {
+        text: 'Dashboard',
+        icon: <ChevronRightIcon className="w-4 h-4" />,
+        url: '/dashboard'
+      }
     }
   }
 
@@ -128,7 +166,7 @@ export default function Navigation() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            {isLoading ? (
+            {!isClient || isLoading ? (
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
                 <span className="text-sm text-gray-500">Cargando...</span>
@@ -154,13 +192,20 @@ export default function Navigation() {
                   variant="primary"
                   size="sm"
                   onClick={() => {
-                    const userRole = user.user_metadata?.role
-                    const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
-                    window.location.href = dashboardUrl
+                    const dashboardInfo = getDashboardInfo(user.user_metadata?.role)
+                    window.location.href = dashboardInfo.url
                   }}
-                  className="flex items-center justify-center"
+                  className="flex items-center justify-center space-x-2"
                 >
-                  Dashboard
+                  {(() => {
+                    const dashboardInfo = getDashboardInfo(user.user_metadata?.role)
+                    return (
+                      <>
+                        {dashboardInfo.icon}
+                        <span>{dashboardInfo.text}</span>
+                      </>
+                    )
+                  })()}
                 </Button>
               </div>
             ) : (
@@ -237,7 +282,7 @@ export default function Navigation() {
               ))}
               
               <div className="pt-4 border-t border-gray-200 space-y-3">
-                {isLoading ? (
+                {!isClient || isLoading ? (
                   <div className="flex items-center justify-center space-x-2 py-4">
                     <div className="w-4 h-4 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
                     <span className="text-sm text-gray-500">Cargando...</span>
@@ -251,15 +296,22 @@ export default function Navigation() {
                       <Button
                         variant="primary"
                         size="sm"
-                        className="w-full flex items-center justify-center"
+                        className="w-full flex items-center justify-center space-x-2"
                         onClick={() => {
-                          const userRole = user.user_metadata?.role
-                          const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
-                          window.location.href = dashboardUrl
+                          const dashboardInfo = getDashboardInfo(user.user_metadata?.role)
+                          window.location.href = dashboardInfo.url
                           setIsOpen(false)
                         }}
                       >
-                        Dashboard
+                        {(() => {
+                          const dashboardInfo = getDashboardInfo(user.user_metadata?.role)
+                          return (
+                            <>
+                              {dashboardInfo.icon}
+                              <span>{dashboardInfo.text}</span>
+                            </>
+                          )
+                        })()}
                       </Button>
                       <button
                         onClick={async () => {

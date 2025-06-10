@@ -17,9 +17,39 @@ import {
   MapPinIcon,
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useAuth } from '../lib/auth'
 
 export default function Home() {
+  // Estado de autenticación
+  const { user, isAuthenticated, isLoading } = useAuth()
+  const [isClient, setIsClient] = useState(false)
+
+  // Prevenir hydration mismatch
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Helper para obtener información del dashboard según el rol
+  const getDashboardInfo = (userRole?: string) => {
+    if (userRole === 'teacher') {
+      return {
+        text: 'Ir a Dashboard Profesor',
+        url: '/dashboard'
+      }
+    } else if (userRole === 'student') {
+      return {
+        text: 'Ir a Dashboard Estudiante',
+        url: '/student/dashboard'
+      }
+    } else {
+      return {
+        text: 'Ir a Dashboard',
+        url: '/dashboard'
+      }
+    }
+  }
+
   // Estado para el formulario de contacto
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -101,18 +131,47 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <button
-                onClick={() => window.location.href = '/auth/login'}
-                className="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-white"
-              >
-                Iniciar Sesión
-              </button>
-              <button
-                onClick={() => window.location.href = '/auth/register'}
-                className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm"
-              >
-                Crear Cuenta
-              </button>
+              {!isClient || isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-white">Cargando...</span>
+                </div>
+              ) : isAuthenticated && user ? (
+                // Usuario autenticado - mostrar botón contextual al dashboard
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <button
+                    onClick={() => {
+                      const dashboardInfo = getDashboardInfo(user.user_metadata?.role)
+                      window.location.href = dashboardInfo.url
+                    }}
+                    className="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-white flex items-center space-x-2"
+                  >
+                    <span>{getDashboardInfo(user.user_metadata?.role).text}</span>
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/play'}
+                    className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm"
+                  >
+                    Explorar Juegos
+                  </button>
+                </div>
+              ) : (
+                // Usuario no autenticado - mostrar botones de login/registro
+                <>
+                  <button
+                    onClick={() => window.location.href = '/auth/login'}
+                    className="bg-white text-indigo-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-white"
+                  >
+                    Iniciar Sesión
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/auth/register'}
+                    className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all duration-300 backdrop-blur-sm"
+                  >
+                    Crear Cuenta
+                  </button>
+                </>
+              )}
             </motion.div>
           </motion.div>
         </div>
