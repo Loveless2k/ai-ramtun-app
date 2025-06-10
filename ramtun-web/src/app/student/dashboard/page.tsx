@@ -535,20 +535,20 @@ export default function StudentDashboard() {
               </div>
               <div className="grid grid-cols-4 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">Juegos:</span>
-                  <div className="font-semibold">{subject.gamesPlayed}</div>
+                  <span className="text-gray-700 font-medium">Juegos:</span>
+                  <div className="font-bold text-gray-900 text-base">{subject.gamesPlayed}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Promedio:</span>
-                  <div className="font-semibold">{subject.averageScore}%</div>
+                  <span className="text-gray-700 font-medium">Promedio:</span>
+                  <div className="font-bold text-gray-900 text-base">{subject.averageScore}%</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Mejor:</span>
-                  <div className="font-semibold">{subject.bestScore}%</div>
+                  <span className="text-gray-700 font-medium">Mejor:</span>
+                  <div className="font-bold text-gray-900 text-base">{subject.bestScore}%</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Tiempo:</span>
-                  <div className="font-semibold">{subject.totalTime}</div>
+                  <span className="text-gray-700 font-medium">Tiempo:</span>
+                  <div className="font-bold text-gray-900 text-base">{subject.totalTime}</div>
                 </div>
               </div>
               <div className="mt-3">
