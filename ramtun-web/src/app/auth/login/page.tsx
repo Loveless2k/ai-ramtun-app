@@ -112,14 +112,14 @@ function LoginPageContent() {
 
         {/* User Type Selector */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
             Tipo de cuenta que vas a usar:
           </label>
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               type="button"
               onClick={() => setUserType('teacher')}
-              className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md transition-all duration-200 min-h-[48px] ${
                 userType === 'teacher'
                   ? 'bg-white text-indigo-600 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
@@ -131,7 +131,7 @@ function LoginPageContent() {
             <button
               type="button"
               onClick={() => setUserType('student')}
-              className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md transition-all duration-200 min-h-[48px] ${
                 userType === 'student'
                   ? 'bg-white text-indigo-600 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
@@ -141,7 +141,7 @@ function LoginPageContent() {
               <span className="font-medium">Estudiante</span>
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 mt-2 text-center">
             ⚠️ Debes seleccionar el tipo que corresponde a tu cuenta. Si seleccionas incorrectamente, el login fallará.
           </p>
         </div>
@@ -174,7 +174,7 @@ function LoginPageContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50 h-12"
                 placeholder="tu@email.com"
               />
             </div>
@@ -195,13 +195,13 @@ function LoginPageContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
+                className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50 h-12"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center"
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />

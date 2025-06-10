@@ -265,7 +265,7 @@ export default function CrosswordGenerator() {
                     key={level}
                     type="button"
                     onClick={() => handleInputChange('difficulty', level)}
-                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium ${
+                    className={`px-4 py-3 rounded-lg border-2 transition-all font-medium flex items-center justify-center min-h-[48px] ${
                       formData.difficulty === level
                         ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                         : 'border-gray-300 hover:border-gray-400 text-gray-700 bg-white hover:bg-gray-50'
@@ -305,25 +305,25 @@ export default function CrosswordGenerator() {
                 <p className="text-amber-800 text-sm font-medium mb-3">
                   💡 Ingresa un tema educativo para generar tu crucigrama
                 </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap justify-center">
                   <button
                     type="button"
                     onClick={() => handleInputChange('topic', 'Revolución Francesa')}
-                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors flex items-center justify-center"
                   >
                     Revolución Francesa
                   </button>
                   <button
                     type="button"
                     onClick={() => handleInputChange('topic', 'Sistema Solar')}
-                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors flex items-center justify-center"
                   >
                     Sistema Solar
                   </button>
                   <button
                     type="button"
                     onClick={() => handleInputChange('topic', 'Fracciones')}
-                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors"
+                    className="px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full text-xs font-medium transition-colors flex items-center justify-center"
                   >
                     Fracciones
                   </button>

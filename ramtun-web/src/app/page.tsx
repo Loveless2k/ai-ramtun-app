@@ -269,13 +269,13 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 flex flex-col h-full"
               >
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <div className="mb-4 flex justify-center">{feature.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed text-center flex-grow">
                   {feature.description}
                 </p>
               </motion.div>
@@ -289,12 +289,12 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center mt-16"
           >
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-gray-700 mb-6 max-w-2xl mx-auto">
               ¿Listo para transformar tus clases con tecnología de vanguardia?
             </p>
             <button
               onClick={() => window.location.href = '/auth/register'}
-              className="bg-indigo-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-indigo-700 transition-all duration-300 hover:scale-105 shadow-xl"
+              className="bg-indigo-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-indigo-700 transition-all duration-300 hover:scale-105 shadow-xl inline-flex items-center justify-center"
             >
               Comenzar Gratis
             </button>
@@ -326,7 +326,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-indigo-300 transition-all duration-300"
+              className="bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-indigo-300 transition-all duration-300 flex flex-col h-full"
             >
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Freemium</h3>
@@ -335,7 +335,7 @@ export default function Home() {
                 <p className="text-sm text-gray-500">Para siempre</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-grow">
                 {[
                   "Hasta 3 crucigramas por mes",
                   "Acceso a biblioteca básica",
@@ -343,8 +343,8 @@ export default function Home() {
                   "Soporte por email",
                   "Modo demo ilimitado"
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckIcon className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                  <li key={index} className="flex items-start">
+                    <CheckIcon className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -352,7 +352,7 @@ export default function Home() {
 
               <button
                 onClick={() => window.location.href = '/auth/register'}
-                className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-200"
+                className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center"
               >
                 Comenzar Gratis
               </button>
@@ -363,7 +363,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-indigo-50 rounded-2xl p-8 border-2 border-indigo-500 relative hover:border-indigo-600 transition-all duration-300 transform hover:scale-105"
+              className="bg-indigo-50 rounded-2xl p-8 border-2 border-indigo-500 relative hover:border-indigo-600 transition-all duration-300 transform hover:scale-105 flex flex-col h-full"
             >
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
@@ -371,14 +371,14 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="text-center mb-8">
+              <div className="text-center mb-8 pt-4">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Profesor Pro</h3>
                 <p className="text-gray-600 mb-4">Para educadores dedicados</p>
                 <div className="text-4xl font-bold text-indigo-600 mb-2">$15.990</div>
                 <p className="text-sm text-gray-500">CLP por mes</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-grow">
                 {[
                   "Crucigramas ilimitados",
                   "IA OpenAI GPT-4 completa",
@@ -388,8 +388,8 @@ export default function Home() {
                   "Soporte prioritario",
                   "Exportar a PDF/Word"
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckIcon className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0" />
+                  <li key={index} className="flex items-start">
+                    <CheckIcon className="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -397,7 +397,7 @@ export default function Home() {
 
               <button
                 onClick={() => window.location.href = '#contact'}
-                className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
+                className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center"
               >
                 Comenzar Prueba Gratis
               </button>
@@ -408,7 +408,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-purple-50 rounded-2xl p-8 border-2 border-purple-300 hover:border-purple-400 transition-all duration-300"
+              className="bg-purple-50 rounded-2xl p-8 border-2 border-purple-300 hover:border-purple-400 transition-all duration-300 flex flex-col h-full"
             >
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Institucional</h3>
@@ -417,7 +417,7 @@ export default function Home() {
                 <p className="text-sm text-gray-500">Precio personalizado</p>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-grow">
                 {[
                   "Profesores ilimitados",
                   "Estudiantes ilimitados",
@@ -428,8 +428,8 @@ export default function Home() {
                   "Soporte 24/7",
                   "Implementación guiada"
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <CheckIcon className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0" />
+                  <li key={index} className="flex items-start">
+                    <CheckIcon className="w-5 h-5 text-purple-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
                   </li>
                 ))}
@@ -437,7 +437,7 @@ export default function Home() {
 
               <button
                 onClick={() => window.location.href = '#contact'}
-                className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200"
+                className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center"
               >
                 Solicitar Cotización
               </button>
@@ -459,16 +459,16 @@ export default function Home() {
                 Trabajamos con instituciones educativas para crear soluciones a medida.
                 Contáctanos para discutir tus necesidades específicas.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button
                   onClick={() => window.location.href = '#contact'}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200"
+                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center min-w-[160px]"
                 >
                   Contactar Ventas
                 </button>
                 <button
                   onClick={() => window.location.href = '/play'}
-                  className="border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors duration-200"
+                  className="border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors duration-200 flex items-center justify-center min-w-[160px]"
                 >
                   Ver Demo
                 </button>
@@ -510,7 +510,7 @@ export default function Home() {
 
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div>
+                  <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Nombre Completo *
                     </label>
@@ -519,11 +519,11 @@ export default function Home() {
                       required
                       value={contactForm.name}
                       onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
                       placeholder="Tu nombre"
                     />
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email Institucional *
                     </label>
@@ -532,7 +532,7 @@ export default function Home() {
                       required
                       value={contactForm.email}
                       onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
                       placeholder="profesor@colegio.cl"
                     />
                   </div>
@@ -553,7 +553,7 @@ export default function Home() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div>
+                  <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Tu Rol *
                     </label>
@@ -561,7 +561,7 @@ export default function Home() {
                       required
                       value={contactForm.role}
                       onChange={(e) => setContactForm({...contactForm, role: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
                     >
                       <option value="">Selecciona tu rol</option>
                       <option value="profesor">Profesor/a</option>
@@ -571,14 +571,14 @@ export default function Home() {
                       <option value="otro">Otro</option>
                     </select>
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Nivel Educativo
                     </label>
                     <select
                       value={contactForm.gradeLevel}
                       onChange={(e) => setContactForm({...contactForm, gradeLevel: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 transition-colors"
                     >
                       <option value="">Selecciona nivel</option>
                       <option value="basica_1_4">Básica 1° - 4°</option>

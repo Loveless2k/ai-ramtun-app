@@ -679,21 +679,21 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
             <div className="flex space-x-2">
               <button
                 onClick={() => window.location.href = `/crossword/${crossword.id}`}
-                className="flex-1 bg-indigo-50 text-indigo-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors flex items-center justify-center space-x-1"
+                className="flex-1 bg-indigo-50 text-indigo-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors flex items-center justify-center space-x-1 min-h-[36px]"
               >
                 <EyeIcon className="w-4 h-4" />
                 <span>Ver</span>
               </button>
               <button
                 onClick={() => alert('🚧 Editor de Crucigramas en Desarrollo\n\nEsta funcionalidad estará disponible en la próxima versión:\n\n✨ Editor visual drag & drop\n🎨 Personalización de diseño\n📝 Edición de preguntas\n🔧 Ajustes de dificultad\n\n¡Mantente atento a las actualizaciones!')}
-                className="flex-1 bg-gray-50 text-gray-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center justify-center space-x-1"
+                className="flex-1 bg-gray-50 text-gray-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center justify-center space-x-1 min-h-[36px]"
               >
                 <PencilIcon className="w-4 h-4" />
                 <span>Editar</span>
               </button>
               <button
                 onClick={() => handleDelete(crossword.id)}
-                className="bg-red-50 text-red-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                className="bg-red-50 text-red-600 py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center min-h-[36px] min-w-[36px]"
               >
                 <TrashIcon className="w-4 h-4" />
               </button>

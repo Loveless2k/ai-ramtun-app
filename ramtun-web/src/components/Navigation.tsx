@@ -114,9 +114,9 @@ export default function Navigation() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium relative cursor-pointer"
+                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium relative cursor-pointer flex items-center"
               >
-                {item.name}
+                <span>{item.name}</span>
                 {item.badge && (
                   <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full font-medium">
                     {item.badge}
@@ -127,15 +127,15 @@ export default function Navigation() {
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {isLoading ? (
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 border-2 border-gray-300 border-t-indigo-600 rounded-full animate-spin"></div>
                 <span className="text-sm text-gray-500">Cargando...</span>
               </div>
             ) : isAuthenticated && user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-700">
+              <div className="flex items-center space-x-3">
+                <span className="text-sm font-medium text-gray-700 truncate max-w-32">
                   Hola, {user.user_metadata?.first_name || user.email}
                 </span>
                 <button
@@ -146,7 +146,7 @@ export default function Navigation() {
                       console.error('Error al cerrar sesión:', error)
                     }
                   }}
-                  className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
+                  className="px-3 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200 flex items-center justify-center"
                 >
                   Cerrar Sesión
                 </button>
@@ -158,15 +158,16 @@ export default function Navigation() {
                     const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
                     window.location.href = dashboardUrl
                   }}
+                  className="flex items-center justify-center"
                 >
                   Dashboard
                 </Button>
               </div>
             ) : (
-              <>
+              <div className="flex items-center space-x-3">
                 <button
                   onClick={() => window.location.href = '/auth/login'}
-                  className="h-9 px-4 text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105"
+                  className="h-9 px-4 text-sm font-semibold rounded-full transition-all duration-300 hover:scale-105 flex items-center justify-center"
                   style={{
                     color: '#4F46E5',
                     backgroundColor: 'rgba(79, 70, 229, 0.1)',
@@ -179,10 +180,11 @@ export default function Navigation() {
                   variant="primary"
                   size="sm"
                   onClick={() => window.location.href = '/auth/register'}
+                  className="flex items-center justify-center"
                 >
                   Registrarse
                 </Button>
-              </>
+              </div>
             )}
           </div>
 
@@ -242,14 +244,14 @@ export default function Navigation() {
                   </div>
                 ) : isAuthenticated && user ? (
                   <>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-gray-700 text-center">
                       Hola, {user.user_metadata?.first_name || user.email}
                     </p>
                     <div className="space-y-2">
                       <Button
                         variant="primary"
                         size="sm"
-                        className="w-full"
+                        className="w-full flex items-center justify-center"
                         onClick={() => {
                           const userRole = user.user_metadata?.role
                           const dashboardUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
@@ -268,7 +270,7 @@ export default function Navigation() {
                             console.error('Error al cerrar sesión:', error)
                           }
                         }}
-                        className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200"
+                        className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all duration-200 flex items-center justify-center"
                       >
                         Cerrar Sesión
                       </button>
@@ -279,7 +281,7 @@ export default function Navigation() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full"
+                      className="w-full flex items-center justify-center"
                       onClick={() => {
                         window.location.href = '/auth/login'
                         setIsOpen(false)
@@ -290,7 +292,7 @@ export default function Navigation() {
                     <Button
                       variant="primary"
                       size="sm"
-                      className="w-full"
+                      className="w-full flex items-center justify-center"
                       onClick={() => {
                         window.location.href = '/auth/register'
                         setIsOpen(false)

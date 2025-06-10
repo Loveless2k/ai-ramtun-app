@@ -320,13 +320,13 @@ export default function CrosswordGrid({
               >
                 {/* Cell number */}
                 {cell.number && (
-                  <span className="absolute top-0 left-0 text-xs text-blue-600 font-bold leading-none p-0.5">
+                  <span className="absolute top-0.5 left-0.5 text-xs text-blue-600 font-bold leading-none">
                     {cell.number}
                   </span>
                 )}
-                
+
                 {/* Cell letter */}
-                <span className="text-center">
+                <span className="flex items-center justify-center h-full w-full text-center">
                   {getVisibleAnswer(cell, rowIndex, colIndex)}
                 </span>
               </motion.div>
