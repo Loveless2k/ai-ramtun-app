@@ -21,9 +21,46 @@ describe('PerfectCrosswordGenerator', () => {
     it('should handle different grid sizes', () => {
       const smallGenerator = new PerfectCrosswordGenerator(10)
       const largeGenerator = new PerfectCrosswordGenerator(20)
-      
+
       expect(smallGenerator).toBeDefined()
       expect(largeGenerator).toBeDefined()
+    })
+  })
+
+  describe('Independencia de Chile Crossword Validation', () => {
+    it('should generate mathematically correct crossword for Independencia de Chile', () => {
+      const crosswordData = generatePerfectCrossword('independencia-chile')
+
+      expect(crosswordData).toBeDefined()
+      expect(crosswordData?.id).toBe('independencia-chile')
+      expect(crosswordData?.questions).toBeDefined()
+
+      const questions = crosswordData!.questions
+
+      // Verificar que todas las palabras esperadas están presentes
+      const expectedWords = ['OHIGGINS', 'MAIPU', 'SANMARTIN', 'PATRIA', 'ANDES', 'DIECIOCHO']
+      const actualWords = questions.map(q => q.answer)
+
+      expectedWords.forEach(word => {
+        expect(actualWords).toContain(word)
+      })
+
+      // Verificar que todas las palabras tienen posiciones válidas
+      questions.forEach(question => {
+        expect(question.position).toBeDefined()
+        expect(question.position.row).toBeGreaterThanOrEqual(0)
+        expect(question.position.col).toBeGreaterThanOrEqual(0)
+        expect(['horizontal', 'vertical']).toContain(question.position.direction)
+      })
+
+      // Verificar intersecciones matemáticamente correctas
+      validateCrosswordIntersections(questions)
+
+      // Verificar que no hay palabras aisladas
+      validateWordConnectivity(questions)
+
+      // Verificar que no hay palabras adyacentes falsas
+      validateNoAdjacentFalseWords(questions)
     })
   })
 
@@ -167,3 +204,136 @@ describe('generatePerfectCrossword function', () => {
     })
   })
 })
+
+// Funciones de validación para verificar la calidad del algoritmo perfecto
+function validateCrosswordIntersections(questions: any[]) {
+  // Crear un grid para verificar intersecciones
+  const gridSize = 15
+  const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
+
+  // Colocar todas las palabras en el grid
+  questions.forEach(question => {
+    const { answer, position } = question
+    const { row, col, direction } = position
+
+    for (let i = 0; i < answer.length; i++) {
+      const currentRow = direction === 'vertical' ? row + i : row
+      const currentCol = direction === 'horizontal' ? col + i : col
+
+      if (grid[currentRow][currentCol] !== '' && grid[currentRow][currentCol] !== answer[i]) {
+        throw new Error(`Intersección inválida en (${currentRow}, ${currentCol}): ${answer[i]} vs ${grid[currentRow][currentCol]}`)
+      }
+
+      grid[currentRow][currentCol] = answer[i]
+    }
+  })
+
+  // Verificar que todas las intersecciones son matemáticamente correctas
+  questions.forEach(question1 => {
+    questions.forEach(question2 => {
+      if (question1.id !== question2.id) {
+        const intersections = findWordIntersections(question1, question2)
+        intersections.forEach(intersection => {
+          const letter1 = question1.answer[intersection.pos1]
+          const letter2 = question2.answer[intersection.pos2]
+          expect(letter1).toBe(letter2)
+        })
+      }
+    })
+  })
+}
+
+function validateWordConnectivity(questions: any[]) {
+  if (questions.length <= 1) return
+
+  // Verificar que todas las palabras están conectadas usando BFS
+  const visited = new Set<string>()
+  const queue = [questions[0]]
+  visited.add(questions[0].id)
+
+  while (queue.length > 0) {
+    const currentWord = queue.shift()!
+
+    questions.forEach(otherWord => {
+      if (!visited.has(otherWord.id) && wordsIntersect(currentWord, otherWord)) {
+        visited.add(otherWord.id)
+        queue.push(otherWord)
+      }
+    })
+  }
+
+  expect(visited.size).toBe(questions.length)
+}
+
+function validateNoAdjacentFalseWords(questions: any[]) {
+  const gridSize = 15
+  const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
+
+  // Colocar todas las palabras en el grid
+  questions.forEach(question => {
+    const { answer, position } = question
+    const { row, col, direction } = position
+
+    for (let i = 0; i < answer.length; i++) {
+      const currentRow = direction === 'vertical' ? row + i : row
+      const currentCol = direction === 'horizontal' ? col + i : col
+      grid[currentRow][currentCol] = answer[i]
+    }
+  })
+
+  // Verificar que no hay palabras adyacentes falsas
+  questions.forEach(question => {
+    const { answer, position } = question
+    const { row, col, direction } = position
+
+    // Verificar antes del inicio
+    if (direction === 'horizontal') {
+      if (col > 0) {
+        expect(grid[row][col - 1]).toBe('')
+      }
+      if (col + answer.length < gridSize) {
+        expect(grid[row][col + answer.length]).toBe('')
+      }
+    } else {
+      if (row > 0) {
+        expect(grid[row - 1][col]).toBe('')
+      }
+      if (row + answer.length < gridSize) {
+        expect(grid[row + answer.length][col]).toBe('')
+      }
+    }
+  })
+}
+
+function findWordIntersections(word1: any, word2: any) {
+  const intersections = []
+
+  if (word1.position.direction === word2.position.direction) {
+    return intersections // Palabras paralelas no se intersectan
+  }
+
+  const horizontal = word1.position.direction === 'horizontal' ? word1 : word2
+  const vertical = word1.position.direction === 'vertical' ? word1 : word2
+
+  // Verificar si se intersectan
+  const hRow = horizontal.position.row
+  const hColStart = horizontal.position.col
+  const hColEnd = hColStart + horizontal.answer.length - 1
+
+  const vCol = vertical.position.col
+  const vRowStart = vertical.position.row
+  const vRowEnd = vRowStart + vertical.answer.length - 1
+
+  if (hRow >= vRowStart && hRow <= vRowEnd && vCol >= hColStart && vCol <= hColEnd) {
+    const pos1 = word1.position.direction === 'horizontal' ? vCol - hColStart : hRow - vRowStart
+    const pos2 = word2.position.direction === 'horizontal' ? vCol - hColStart : hRow - vRowStart
+
+    intersections.push({ pos1, pos2 })
+  }
+
+  return intersections
+}
+
+function wordsIntersect(word1: any, word2: any): boolean {
+  return findWordIntersections(word1, word2).length > 0
+}

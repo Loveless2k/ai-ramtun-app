@@ -27,20 +27,7 @@ import CrosswordGenerator from '@/components/CrosswordGenerator'
 import { useDashboard } from './layout'
 
 // Types
-interface CrosswordStats {
-  id: string
-  title: string
-  subject: string
-  grade: string
-  difficulty: string
-  questions: number
-  plays: number
-  avgScore: number
-  avgTime: string
-  createdAt: string
-  lastPlayed: string
-  status: 'Activo' | 'Borrador' | 'Archivado'
-}
+import type { CrosswordStats } from '../../types/crossword'
 
 interface DashboardMetrics {
   totalCrosswords: number

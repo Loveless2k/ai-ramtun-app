@@ -4,29 +4,8 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { SparklesIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline'
-import { Button } from './ui/Button'
 import { Card } from './ui/Card'
-
-interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: string
-}
-
-interface CrosswordResult {
-  subject: string
-  topic: string
-  level: string
-  grade: number
-  questions: CrosswordQuestion[]
-  metadata: {
-    generatedAt: string
-    totalQuestions: number
-    estimatedTime: string
-  }
-}
+import type { CrosswordResponse as CrosswordResult } from '../types/crossword'
 
 export default function CrosswordGenerator() {
   const searchParams = useSearchParams()

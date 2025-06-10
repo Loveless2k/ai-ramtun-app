@@ -10,7 +10,8 @@ import GameResults from '../components/GameResults'
 import GameTimer from '../components/GameTimer'
 import AccessGuard from '../../../components/AccessGuard'
 import DemoConversionModal from '../../../components/DemoConversionModal'
-import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
+import { generatePerfectCrossword } from '../../../utils/perfectCrosswordGenerator'
+import type { CrosswordData } from '../../../types/crossword'
 import { useAuth, isCrosswordPublic } from '../../../lib/auth'
 
 // Función para obtener datos del juego usando el algoritmo universal

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateCrossword, generateCrosswordDemo, CrosswordRequest, validateOpenAIConfig } from '@/lib/openai'
+import { generateCrossword, generateCrosswordDemo, validateOpenAIConfig } from '@/lib/openai'
 import { PerfectCrosswordGenerator } from '@/utils/perfectCrosswordGenerator'
+import type { CrosswordRequest } from '@/types/crossword'
 
 export async function POST(request: NextRequest) {
   try {

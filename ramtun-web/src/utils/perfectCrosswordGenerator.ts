@@ -1,45 +1,10 @@
 // Perfect Crossword Generator - Algoritmo que genera crucigramas perfectos
-export interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: string
-  position: {
-    row: number
-    col: number
-    direction: 'horizontal' | 'vertical'
-  }
-  number: number
-}
-
-export interface CrosswordData {
-  id: string
-  title: string
-  subject: string
-  difficulty: string
-  estimatedTime: string
-  questions: CrosswordQuestion[]
-}
-
-interface PlacedWord {
-  word: string
-  row: number
-  col: number
-  direction: 'horizontal' | 'vertical'
-  questionId: string
-  questionData: Omit<CrosswordQuestion, 'position' | 'number'>
-}
-
-interface Intersection {
-  word1: PlacedWord
-  word2: PlacedWord
-  word1LetterIndex: number
-  word2LetterIndex: number
-  row: number
-  col: number
-  letter: string
-}
+import type {
+  CrosswordQuestion,
+  CrosswordData,
+  PlacedWord,
+  Intersection
+} from '../types/crossword'
 
 export class PerfectCrosswordGenerator {
   private grid: string[][]

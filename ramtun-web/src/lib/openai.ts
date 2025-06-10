@@ -1,44 +1,14 @@
 import OpenAI from 'openai'
+import type {
+  CrosswordRequest,
+  CrosswordQuestion,
+  CrosswordResponse
+} from '../types/crossword'
 
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
-
-// Types for crossword generation
-export interface CrosswordRequest {
-  topic: string
-  educationLevel: 'basica' | 'media' // 1-8 básica, 1-4 media
-  grade: number
-  difficulty: 'facil' | 'medio' | 'dificil'
-  questionCount: number
-}
-
-export interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: 'facil' | 'medio' | 'dificil'
-  position?: {
-    row: number
-    col: number
-    direction: 'horizontal' | 'vertical'
-  }
-}
-
-export interface CrosswordResponse {
-  subject: string
-  topic: string
-  level: string
-  grade: number
-  questions: CrosswordQuestion[]
-  metadata: {
-    generatedAt: string
-    totalQuestions: number
-    estimatedTime: string
-  }
-}
 
 // Prompt-Zero implementation based on Phase 1 design
 export async function generateCrossword(request: CrosswordRequest): Promise<CrosswordResponse> {
