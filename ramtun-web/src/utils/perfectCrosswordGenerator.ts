@@ -885,6 +885,19 @@ function getGameData(gameId: string): {
   questions: Omit<CrosswordQuestion, 'position' | 'number'>[]
 } | null {
 
+  // 🔄 Mapeo de IDs de biblioteca a claves de base de datos
+  const idMapping: Record<string, string> = {
+    '1': 'sistema-solar',
+    '2': 'revolucion-francesa',
+    '3': 'geometria-basica',
+    '4': 'animales-vertebrados',
+    '5': 'independencia-chile',
+    '6': 'tabla-periodica'
+  }
+
+  // Convertir ID de biblioteca a clave de base de datos
+  const dbKey = idMapping[gameId] || gameId
+
   const gameDatabase = {
     'independencia-chile': {
       title: 'Independencia de Chile',
@@ -1081,10 +1094,112 @@ function getGameData(gameId: string): {
           difficulty: 'Medio'
         }
       ]
+    },
+
+    'animales-vertebrados': {
+      title: 'Animales Vertebrados',
+      subject: 'Ciencias',
+      difficulty: 'Fácil',
+      estimatedTime: '8-10 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Animal que vive en el agua y respira por branquias',
+          answer: 'PEZ',
+          category: 'Acuáticos',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '2',
+          question: 'Animal que vuela y tiene plumas',
+          answer: 'AVE',
+          category: 'Voladores',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '3',
+          question: 'Animal que da leche a sus crías',
+          answer: 'MAMIFERO',
+          category: 'Terrestres',
+          difficulty: 'Medio'
+        },
+        {
+          id: '4',
+          question: 'Animal de sangre fría que puede cambiar de color',
+          answer: 'REPTIL',
+          category: 'Terrestres',
+          difficulty: 'Medio'
+        },
+        {
+          id: '5',
+          question: 'Animal que vive en agua y tierra',
+          answer: 'ANFIBIO',
+          category: 'Acuáticos',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Mamífero marino más grande',
+          answer: 'BALLENA',
+          category: 'Acuáticos',
+          difficulty: 'Fácil'
+        }
+      ]
+    },
+
+    'tabla-periodica': {
+      title: 'Tabla Periódica',
+      subject: 'Ciencias',
+      difficulty: 'Difícil',
+      estimatedTime: '15-20 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Elemento químico más ligero',
+          answer: 'HIDROGENO',
+          category: 'Elementos',
+          difficulty: 'Medio'
+        },
+        {
+          id: '2',
+          question: 'Gas noble más común en la atmósfera',
+          answer: 'ARGON',
+          category: 'Gases',
+          difficulty: 'Difícil'
+        },
+        {
+          id: '3',
+          question: 'Metal precioso de símbolo Au',
+          answer: 'ORO',
+          category: 'Metales',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '4',
+          question: 'Elemento esencial para la respiración',
+          answer: 'OXIGENO',
+          category: 'Elementos',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '5',
+          question: 'Metal líquido a temperatura ambiente',
+          answer: 'MERCURIO',
+          category: 'Metales',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Elemento base de la vida orgánica',
+          answer: 'CARBONO',
+          category: 'Elementos',
+          difficulty: 'Medio'
+        }
+      ]
     }
   }
 
-  return gameDatabase[gameId as keyof typeof gameDatabase] || null
+  return gameDatabase[dbKey as keyof typeof gameDatabase] || null
 }
 
 // 🗑️ FUNCIONES LEGACY ELIMINADAS
