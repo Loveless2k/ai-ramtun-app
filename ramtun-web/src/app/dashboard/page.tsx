@@ -222,16 +222,14 @@ export default function DashboardPage() {
     }, 1500)
   }
 
+  // Simplified tabs - main navigation is handled by sidebar
   const tabs = [
     { id: 'overview', name: 'Resumen', icon: ChartBarIcon, iconSolid: ChartBarSolid },
-    { id: 'generator', name: 'Generador', icon: SparklesIcon, iconSolid: SparklesIcon },
     { id: 'crosswords', name: 'Mis Crucigramas', icon: BookOpenIcon, iconSolid: BookOpenSolid },
     { id: 'sharing', name: 'Compartidos', icon: ShareIcon, iconSolid: ShareIcon }, // 🚀 PHASE 2
     { id: 'progress', name: 'Progreso', icon: UsersIcon, iconSolid: UsersIcon }, // 🚀 PHASE 2
     { id: 'collaboration', name: 'Colaboración', icon: UserGroupIcon, iconSolid: UserGroupIcon }, // 🚀 PHASE 3
     { id: 'templates', name: 'Templates', icon: DocumentTextIcon, iconSolid: DocumentTextIcon }, // 🚀 PHASE 3
-    { id: 'analytics', name: 'Analytics', icon: PresentationChartBarIcon, iconSolid: PresentationChartBarIcon }, // 🚀 PHASE 3
-    { id: 'library', name: 'Biblioteca', icon: AcademicCapIcon, iconSolid: AcademicCapSolid }
   ]
 
   if (isLoading) {
@@ -246,50 +244,32 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-6 space-y-8">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Profesor</h1>
-          <p className="text-gray-600 mt-1">
-            Gestiona tus crucigramas y analiza el progreso de tus {mockStats.activeStudents} estudiantes
-          </p>
-        </div>
-        {activeTab !== 'generator' && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setActiveTab('generator')}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span>Crear Crucigrama</span>
-          </motion.button>
-        )}
-      </div>
+    <div className="p-6 space-y-6">
 
-      {/* Navigation Tabs */}
-      <div className="mb-8">
-        <nav className="flex space-x-8">
-          {tabs.map((tab) => {
-            const Icon = activeTab === tab.id ? tab.iconSolid : tab.icon
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{tab.name}</span>
-              </button>
-            )
-          })}
-        </nav>
-      </div>
+      {/* Secondary Navigation - Only show for overview and related tabs */}
+      {['overview', 'crosswords', 'sharing', 'progress', 'collaboration', 'templates'].includes(activeTab) && (
+        <div className="mb-6 border-b border-gray-200">
+          <nav className="flex space-x-8">
+            {tabs.map((tab) => {
+              const Icon = activeTab === tab.id ? tab.iconSolid : tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 py-3 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                    activeTab === tab.id
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.name}</span>
+                </button>
+              )
+            })}
+          </nav>
+        </div>
+      )}
 
         {/* Content */}
         <motion.div
@@ -297,6 +277,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
+          className="mt-6"
         >
           {activeTab === 'overview' && (
             <OverviewTab
@@ -391,13 +372,13 @@ function OverviewTab({
     <div className="space-y-8">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white">
-        <div className="max-w-3xl">
-          <h2 className="text-3xl font-bold mb-2">
+        <div className="max-w-4xl">
+          <h2 className="text-3xl font-bold mb-3">
             ¡Bienvenido de vuelta, Profesor! 👋
           </h2>
-          <p className="text-indigo-100 text-lg">
+          <p className="text-indigo-100 text-lg leading-relaxed">
             Tienes {metrics.activeStudents} estudiantes activos esperando nuevos desafíos.
-            ¿Qué crucigrama crearemos hoy?
+            Usa el <strong>Generador Rápido</strong> para crear crucigramas con IA en segundos.
           </p>
         </div>
       </div>
@@ -426,8 +407,8 @@ function OverviewTab({
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Quick Actions - Streamlined */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Quick Generator */}
         <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center space-x-3 mb-6">
@@ -477,36 +458,6 @@ function OverviewTab({
                   Generar con IA
                 </>
               )}
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Play/Test Crosswords */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <PlayIcon className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Probar Crucigramas</h3>
-              <p className="text-sm text-gray-600">Juega y valida la experiencia de tus estudiantes</p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-sm text-gray-700">
-              Accede al área de juegos para probar cualquier crucigrama y experimentar
-              exactamente lo que verán tus estudiantes.
-            </p>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => window.location.href = '/play'}
-              className="w-full flex items-center justify-center px-6 py-3 rounded-lg font-semibold bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl transition-all"
-            >
-              <PlayIcon className="w-5 h-5 mr-2" />
-              Ir a Área de Juegos
             </motion.button>
           </div>
         </div>

@@ -181,20 +181,26 @@ export default function DashboardLayout({
       <div className="lg:pl-64">
         {/* Top bar */}
         <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-          <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden text-gray-400 hover:text-gray-600"
             >
               <Bars3Icon className="w-6 h-6" />
             </button>
-            
-            <div className="flex items-center space-x-4">
+
+            <div className="flex items-center space-x-4 flex-1">
               <div className="hidden sm:block">
-                <h1 className="text-lg font-semibold text-gray-900">
-                  Dashboard de Profesor
+                <h1 className="text-2xl font-bold text-gray-900 mb-1">
+                  Dashboard Profesor
                 </h1>
-                <p className="text-sm text-gray-500">Gestiona tus crucigramas y analiza el progreso de tus estudiantes</p>
+                <p className="text-sm text-gray-600">Gestiona tus crucigramas y analiza el progreso de tus estudiantes</p>
+              </div>
+              {/* Mobile title */}
+              <div className="sm:hidden">
+                <h1 className="text-xl font-bold text-gray-900">
+                  Dashboard
+                </h1>
               </div>
             </div>
 
