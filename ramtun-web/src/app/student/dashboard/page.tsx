@@ -341,7 +341,7 @@ export default function StudentDashboard() {
           <p className="text-gray-600">Explora todas las funcionalidades disponibles</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {/* Jugar Ahora Card */}
           <button
             onClick={() => router.push('/student')}
@@ -417,20 +417,7 @@ export default function StudentDashboard() {
             </div>
           </button>
 
-          {/* Logros Card */}
-          <button
-            onClick={() => setActiveTab('achievements')}
-            className="group relative bg-gradient-to-br from-red-500 to-rose-500 text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col items-center justify-center text-center min-h-[140px] overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-red-400 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10 flex flex-col items-center justify-center h-full">
-              <div className="mb-3 p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                <FireIcon className="w-6 h-6" />
-              </div>
-              <h4 className="font-bold text-sm mb-1">Logros</h4>
-              <p className="text-xs text-red-100 leading-tight">Descubre tus achievements</p>
-            </div>
-          </button>
+
         </div>
       </div>
 

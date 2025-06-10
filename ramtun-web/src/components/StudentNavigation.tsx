@@ -4,11 +4,6 @@ import { useRouter, usePathname } from 'next/navigation'
 import {
   HomeIcon,
   PlayIcon,
-  BookOpenIcon,
-  TrophyIcon,
-  CalendarIcon,
-  LightBulbIcon,
-  UserIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../lib/auth'
@@ -46,24 +41,6 @@ export default function StudentNavigation({
       href: '/student/dashboard',
       icon: HomeIcon,
       shortName: 'Dashboard'
-    },
-    {
-      name: 'Clasificaciones',
-      href: '/student/leaderboard',
-      icon: TrophyIcon,
-      shortName: 'Ranking'
-    },
-    {
-      name: 'Desafíos',
-      href: '/student/challenges',
-      icon: CalendarIcon,
-      shortName: 'Desafíos'
-    },
-    {
-      name: 'Power-ups',
-      href: '/student/powerups',
-      icon: LightBulbIcon,
-      shortName: 'Power-ups'
     }
   ]
 
