@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   HomeIcon,
   BookOpenIcon,
@@ -28,6 +29,7 @@ interface NavigationItem {
 const DashboardContext = createContext<{
   activeTab: string
   setActiveTab: (tab: string) => void
+  navigateToTab: (tab: string) => void
 } | null>(null)
 
 export const useDashboard = () => {
@@ -53,9 +55,38 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
+  const pathname = usePathname()
+  const router = useRouter()
+
+  // Function to navigate to a specific tab
+  const navigateToTab = (tab: string) => {
+    const targetItem = navigation.find(item => item.tab === tab)
+    if (targetItem?.isRoute && targetItem.href) {
+      router.push(targetItem.href)
+    } else {
+      // For non-route tabs, navigate to main dashboard and set the tab
+      if (pathname !== '/dashboard') {
+        router.push('/dashboard')
+      }
+      setActiveTab(tab)
+    }
+  }
+
+  // Sync activeTab with current route
+  useEffect(() => {
+    if (pathname === '/dashboard/perfil') {
+      setActiveTab('profile')
+    } else if (pathname === '/dashboard') {
+      // Only reset to overview if we're on the main dashboard page
+      // This prevents overriding when user manually sets a tab
+      if (activeTab === 'profile') {
+        setActiveTab('overview')
+      }
+    }
+  }, [pathname, activeTab])
 
   return (
-    <DashboardContext.Provider value={{ activeTab, setActiveTab }}>
+    <DashboardContext.Provider value={{ activeTab, setActiveTab, navigateToTab }}>
       <AuthSync />
       <RoleProtection allowedRoles={['teacher']}>
         <div className="min-h-screen bg-gray-50">
@@ -81,15 +112,21 @@ export default function DashboardLayout({
 
               if (item.isRoute && item.href) {
                 return (
-                  <Link
+                  <button
                     key={item.name}
-                    href={item.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
+                    onClick={() => {
+                      navigateToTab(item.tab)
+                      setSidebarOpen(false)
+                    }}
+                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     <item.icon className="w-5 h-5 mr-3" />
                     {item.name}
-                  </Link>
+                  </button>
                 )
               }
 
@@ -97,7 +134,7 @@ export default function DashboardLayout({
                 <button
                   key={item.name}
                   onClick={() => {
-                    setActiveTab(item.tab)
+                    navigateToTab(item.tab)
                     setSidebarOpen(false)
                   }}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
@@ -130,21 +167,25 @@ export default function DashboardLayout({
 
               if (item.isRoute && item.href) {
                 return (
-                  <Link
+                  <button
                     key={item.name}
-                    href={item.href}
-                    className="w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
+                    onClick={() => navigateToTab(item.tab)}
+                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
                   >
                     <item.icon className="w-5 h-5 mr-3" />
                     {item.name}
-                  </Link>
+                  </button>
                 )
               }
 
               return (
                 <button
                   key={item.name}
-                  onClick={() => setActiveTab(item.tab)}
+                  onClick={() => navigateToTab(item.tab)}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive
                       ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600'

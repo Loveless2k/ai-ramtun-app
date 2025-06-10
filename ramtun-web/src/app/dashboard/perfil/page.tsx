@@ -10,8 +10,10 @@ import {
   AcademicCapIcon,
   MapPinIcon,
   CameraIcon,
-  CheckIcon
+  CheckIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline'
+import { useDashboard } from '../layout'
 
 // Mock data - En producción vendría de la API
 const mockProfile = {
@@ -45,6 +47,7 @@ export default function PerfilPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState(mockProfile)
   const [isSaving, setIsSaving] = useState(false)
+  const { navigateToTab } = useDashboard()
 
   const tabs = [
     { id: 'profile', name: 'Perfil', icon: UserIcon },
@@ -82,6 +85,17 @@ export default function PerfilPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      {/* Navigation Header */}
+      <div className="mb-6">
+        <button
+          onClick={() => navigateToTab('overview')}
+          className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <ArrowLeftIcon className="w-5 h-5 mr-2" />
+          Volver al Dashboard
+        </button>
+      </div>
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Mi Perfil</h1>
