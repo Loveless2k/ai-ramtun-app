@@ -338,39 +338,47 @@ export default function StudentDashboard() {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Juegos</p>
+          <div className="flex items-center justify-between h-full">
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-gray-600 mb-1">Juegos</p>
               <p className="text-2xl font-bold text-gray-900">{studentStats.totalGames}</p>
             </div>
-            <PlayIcon className="w-8 h-8 text-blue-500" />
+            <div className="flex items-center justify-center">
+              <PlayIcon className="w-8 h-8 text-blue-500" />
+            </div>
           </div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Promedio</p>
+          <div className="flex items-center justify-between h-full">
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-gray-600 mb-1">Promedio</p>
               <p className="text-2xl font-bold text-gray-900">{studentStats.averageScore}%</p>
             </div>
-            <StarIcon className="w-8 h-8 text-yellow-500" />
+            <div className="flex items-center justify-center">
+              <StarIcon className="w-8 h-8 text-yellow-500" />
+            </div>
           </div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Racha</p>
+          <div className="flex items-center justify-between h-full">
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-gray-600 mb-1">Racha</p>
               <p className="text-2xl font-bold text-gray-900">{studentStats.currentStreak}</p>
             </div>
-            <FireIcon className="w-8 h-8 text-orange-500" />
+            <div className="flex items-center justify-center">
+              <FireIcon className="w-8 h-8 text-orange-500" />
+            </div>
           </div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Mejor</p>
+          <div className="flex items-center justify-between h-full">
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-gray-600 mb-1">Mejor</p>
               <p className="text-2xl font-bold text-gray-900">{studentStats.bestScore}%</p>
             </div>
-            <TrophyIcon className="w-8 h-8 text-green-500" />
+            <div className="flex items-center justify-center">
+              <TrophyIcon className="w-8 h-8 text-green-500" />
+            </div>
           </div>
         </div>
       </div>
@@ -511,38 +519,69 @@ export default function StudentDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <button
-          onClick={() => window.location.href = '/play'}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
+          onClick={() => router.push('/student')}
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
         >
-          <PlayIcon className="w-8 h-8 mb-3" />
-          <h3 className="text-lg font-semibold mb-2">Jugar Ahora</h3>
-          <p className="text-indigo-100">Explora crucigramas disponibles</p>
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <PlayIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Jugar Ahora</h3>
+          <p className="text-indigo-100 text-center text-xs sm:text-sm flex-grow leading-tight">Explora crucigramas disponibles</p>
         </button>
         <button
           onClick={() => router.push('/student/library')}
-          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
         >
-          <BookOpenIcon className="w-8 h-8 mb-3" />
-          <h3 className="text-lg font-semibold mb-2">Biblioteca</h3>
-          <p className="text-blue-100">Descubre nuevos crucigramas</p>
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <BookOpenIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Biblioteca</h3>
+          <p className="text-blue-100 text-center text-xs sm:text-sm flex-grow leading-tight">Descubre nuevos crucigramas</p>
         </button>
         <button
-          onClick={() => router.push('/student/progress')}
-          className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
+          onClick={() => router.push('/student/leaderboard')}
+          className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
         >
-          <ChartBarIcon className="w-8 h-8 mb-3" />
-          <h3 className="text-lg font-semibold mb-2">Ver Progreso</h3>
-          <p className="text-green-100">Análisis detallado de rendimiento</p>
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <TrophyIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">
+            <span className="hidden sm:inline">Clasificaciones</span>
+            <span className="sm:hidden">Ranking</span>
+          </h3>
+          <p className="text-yellow-100 text-center text-xs sm:text-sm flex-grow leading-tight">Compite con otros estudiantes</p>
+        </button>
+        <button
+          onClick={() => router.push('/student/challenges')}
+          className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
+        >
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <CalendarIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Desafíos</h3>
+          <p className="text-green-100 text-center text-xs sm:text-sm flex-grow leading-tight">Completa retos diarios</p>
+        </button>
+        <button
+          onClick={() => router.push('/student/powerups')}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
+        >
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <LightBulbIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Power-ups</h3>
+          <p className="text-purple-100 text-center text-xs sm:text-sm flex-grow leading-tight">Mejora tu experiencia</p>
         </button>
         <button
           onClick={() => setActiveTab('achievements')}
-          className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left"
+          className="bg-gradient-to-r from-red-500 to-rose-500 text-white p-4 sm:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-left flex flex-col h-full min-h-[120px]"
         >
-          <TrophyIcon className="w-8 h-8 mb-3" />
-          <h3 className="text-lg font-semibold mb-2">Ver Logros</h3>
-          <p className="text-yellow-100">Descubre tus achievements</p>
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <FireIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-center leading-tight">Logros</h3>
+          <p className="text-red-100 text-center text-xs sm:text-sm flex-grow leading-tight">Descubre tus achievements</p>
         </button>
       </div>
     </div>
@@ -553,7 +592,7 @@ export default function StudentDashboard() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Mis Juegos</h2>
         <button
-          onClick={() => window.location.href = '/play'}
+          onClick={() => router.push('/student')}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
         >
           Explorar Más
@@ -675,41 +714,49 @@ export default function StudentDashboard() {
 
           {/* Navigation Tabs */}
           <div className="mt-6 border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex space-x-2 sm:space-x-4 lg:space-x-8 overflow-x-auto">
               <button
                 onClick={() => router.push('/student')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
                 <PlayIcon className="w-4 h-4" />
-                <span>Jugar</span>
+                <span className="hidden sm:inline">Jugar</span>
               </button>
               <button
                 onClick={() => router.push('/student/dashboard')}
-                className="border-indigo-500 text-indigo-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                className="border-indigo-500 text-indigo-600 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
                 <HomeIcon className="w-4 h-4" />
-                <span>Dashboard</span>
+                <span className="hidden sm:inline">Dashboard</span>
               </button>
               <button
                 onClick={() => router.push('/student/library')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
                 <BookOpenIcon className="w-4 h-4" />
-                <span>Biblioteca</span>
+                <span className="hidden sm:inline">Biblioteca</span>
               </button>
               <button
-                onClick={() => router.push('/student/progress')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                onClick={() => router.push('/student/leaderboard')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
-                <ChartBarIcon className="w-4 h-4" />
-                <span>Progreso</span>
+                <TrophyIcon className="w-4 h-4" />
+                <span className="hidden sm:inline lg:inline">Clasificaciones</span>
+                <span className="sm:hidden">Ranking</span>
               </button>
               <button
-                onClick={() => router.push('/student/settings')}
-                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2"
+                onClick={() => router.push('/student/challenges')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
               >
-                <Cog6ToothIcon className="w-4 h-4" />
-                <span>Configuración</span>
+                <CalendarIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Desafíos</span>
+              </button>
+              <button
+                onClick={() => router.push('/student/powerups')}
+                className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 flex-shrink-0"
+              >
+                <LightBulbIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Power-ups</span>
               </button>
             </nav>
           </div>
@@ -727,14 +774,14 @@ export default function StudentDashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-colors ${
                       activeTab === tab.id
                         ? 'bg-indigo-100 text-indigo-700 font-medium'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    <span>{tab.name}</span>
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-overflow-wrap">{tab.name}</span>
                   </button>
                 )
               })}
