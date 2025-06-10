@@ -126,20 +126,20 @@ export default function PowerUpsPage() {
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">🎒 Mis Power-ups</h2>
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="my-powerups-grid">
               {powerUps.map((powerUp) => {
                 const count = myPowerUps[powerUp.id] || 0
                 return (
-                  <div key={powerUp.id} className="text-center flex flex-col items-center">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg flex items-center justify-center mb-2 ${
+                  <div key={powerUp.id} className="my-powerups-item">
+                    <div className={`my-powerups-icon ${
                       count > 0 ? getCategoryColor(powerUp.category) : 'bg-gray-100'
                     }`}>
-                      <span className="text-xl sm:text-2xl">{powerUp.icon}</span>
+                      <span className="text-2xl">{powerUp.icon}</span>
                     </div>
-                    <h3 className="font-medium text-gray-900 text-xs sm:text-sm leading-tight text-center px-1 min-h-[32px] flex items-center powerup-title">
+                    <h3 className={`my-powerups-title text-gray-900`}>
                       {powerUp.name}
                     </h3>
-                    <p className={`text-base sm:text-lg font-bold ${count > 0 ? 'text-indigo-600' : 'text-gray-400'}`}>
+                    <p className={`my-powerups-count ${count > 0 ? 'text-indigo-600' : 'text-gray-400'}`}>
                       {count}
                     </p>
                   </div>
@@ -152,7 +152,7 @@ export default function PowerUpsPage() {
         {/* Power-ups Store */}
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">🛒 Tienda</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="powerup-store-grid">
             {powerUps.map((powerUp, index) => {
               const unlocked = isUnlocked(powerUp)
               const affordable = canAfford(powerUp)
@@ -164,95 +164,108 @@ export default function PowerUpsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`bg-white rounded-xl shadow-sm border-2 transition-all hover:shadow-md ${
+                  className={`powerup-store-card bg-white rounded-xl shadow-sm border-2 transition-all hover:shadow-md ${
                     unlocked ? 'border-gray-200' : 'border-gray-100 bg-gray-50'
                   }`}
                 >
-                  <div className="p-4 sm:p-6">
+                  <div className="p-6 flex flex-col h-full">
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${
+                    <div className="powerup-store-header">
+                      <div className={`powerup-store-icon ${
                         unlocked ? getCategoryColor(powerUp.category) : 'bg-gray-100 text-gray-400'
                       }`}>
-                        <span className="text-xl sm:text-2xl">{powerUp.icon}</span>
+                        <span className="text-2xl">{powerUp.icon}</span>
                       </div>
-                      {!unlocked && (
-                        <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                      )}
-                      {owned > 0 && (
-                        <div className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap">
-                          Tienes {owned}
-                        </div>
-                      )}
+                      <div className="powerup-store-badges">
+                        {!unlocked && (
+                          <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                        )}
+                        {owned > 0 && (
+                          <div className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap">
+                            Tienes {owned}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Content */}
-                    <h3 className={`font-semibold text-base sm:text-lg mb-2 leading-tight card-title-safe ${unlocked ? 'text-gray-900' : 'text-gray-500'}`}>
-                      {powerUp.name}
-                    </h3>
+                    <div className="powerup-store-content">
+                      <h3 className={`powerup-store-title ${unlocked ? 'text-gray-900' : 'text-gray-500'}`}>
+                        {powerUp.name}
+                      </h3>
 
-                    <p className={`text-xs sm:text-sm mb-4 leading-tight ${unlocked ? 'text-gray-600' : 'text-gray-400'}`}>
-                      {powerUp.description}
-                    </p>
+                      <p className={`powerup-store-description ${unlocked ? 'text-gray-600' : 'text-gray-400'}`}>
+                        {powerUp.description}
+                      </p>
 
-                    {/* Category Badge */}
-                    <div className="mb-4">
-                      <span className={`inline-flex items-center space-x-1 text-xs px-2 py-1 rounded-full border ${getCategoryColor(powerUp.category)}`}>
-                        {getCategoryIcon(powerUp.category)}
-                        <span className="capitalize">{powerUp.category}</span>
-                      </span>
+                      <div className="powerup-store-details">
+                        {/* Category Badge */}
+                        <div>
+                          <span className={`inline-flex items-center space-x-1 text-xs px-2 py-1 rounded-full border ${getCategoryColor(powerUp.category)}`}>
+                            {getCategoryIcon(powerUp.category)}
+                            <span className="capitalize">{powerUp.category}</span>
+                          </span>
+                        </div>
+
+                        {/* Duration - Always reserve space for consistent alignment */}
+                        <div className={`powerup-store-duration ${unlocked ? 'text-gray-600' : 'text-gray-400'}`}>
+                          {powerUp.duration ? (
+                            <>
+                              <ClockIcon className="w-4 h-4 mr-1 flex-shrink-0" />
+                              <span>Duración: {powerUp.duration} segundos</span>
+                            </>
+                          ) : (
+                            <span className="invisible">Placeholder</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Duration (if applicable) */}
-                    {powerUp.duration && (
-                      <div className={`text-sm mb-4 ${unlocked ? 'text-gray-600' : 'text-gray-400'}`}>
-                        <ClockIcon className="w-4 h-4 inline mr-1" />
-                        Duración: {powerUp.duration} segundos
+                    {/* Price and Action Section */}
+                    <div className="powerup-store-footer">
+                      {/* Price */}
+                      <div className="powerup-store-price">
+                        <div className="flex items-center space-x-2">
+                          <StarIcon className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                          <span className={`text-lg font-bold ${
+                            unlocked && affordable ? 'text-gray-900' : 'text-gray-500'
+                          }`}>
+                            {powerUp.cost}
+                          </span>
+                        </div>
+                        {!unlocked && (
+                          <span className="text-xs text-gray-500 text-right">
+                            Nivel {powerUp.unlockLevel} requerido
+                          </span>
+                        )}
                       </div>
-                    )}
 
-                    {/* Price */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <StarIcon className="w-5 h-5 text-yellow-500" />
-                        <span className={`text-lg font-bold ${
-                          unlocked && affordable ? 'text-gray-900' : 'text-gray-500'
-                        }`}>
-                          {powerUp.cost}
-                        </span>
-                      </div>
-                      {!unlocked && (
-                        <span className="text-xs text-gray-500">
-                          Nivel {powerUp.unlockLevel} requerido
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Action Button */}
-                    {unlocked ? (
-                      affordable ? (
-                        <button
-                          onClick={() => handlePurchase(powerUp)}
-                          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                        >
-                          Comprar
-                        </button>
+                      {/* Action Button */}
+                      {unlocked ? (
+                        affordable ? (
+                          <button
+                            onClick={() => handlePurchase(powerUp)}
+                            className="powerup-store-button bg-indigo-600 text-white hover:bg-indigo-700"
+                          >
+                            Comprar
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="powerup-store-button bg-gray-100 text-gray-500 cursor-not-allowed"
+                          >
+                            Puntos insuficientes
+                          </button>
+                        )
                       ) : (
                         <button
                           disabled
-                          className="w-full bg-gray-100 text-gray-500 py-2 px-4 rounded-lg font-medium cursor-not-allowed"
+                          className="powerup-store-button bg-gray-100 text-gray-500 cursor-not-allowed"
                         >
-                          Puntos insuficientes
+                          Bloqueado
                         </button>
-                      )
-                    ) : (
-                      <button
-                        disabled
-                        className="w-full bg-gray-100 text-gray-500 py-2 px-4 rounded-lg font-medium cursor-not-allowed"
-                      >
-                        Bloqueado
-                      </button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               )
