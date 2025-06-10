@@ -15,6 +15,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { PowerUp, getAvailablePowerUps } from '../../../lib/gamification'
+import StudentNavigation from '../../../components/StudentNavigation'
 
 export default function PowerUpsPage() {
   const [powerUps, setPowerUps] = useState<PowerUp[]>([])
@@ -111,29 +112,14 @@ export default function PowerUpsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <ShoppingBagIcon className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Tienda de Power-ups</h1>
-                <p className="text-gray-600">Mejora tu experiencia de juego</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Tus puntos</p>
-              <div className="flex items-center space-x-2">
-                <StarIcon className="w-6 h-6 text-yellow-500" />
-                <p className="text-2xl font-bold text-yellow-600">{playerPoints}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudentNavigation
+        title="Tienda de Power-ups"
+        subtitle={`Mejora tu experiencia de juego • ${playerPoints} puntos disponibles`}
+        icon={<LightBulbIcon className="w-6 h-6 text-purple-600" />}
+        showBackButton={true}
+        backUrl="/student/dashboard"
+        backLabel="Volver al Dashboard"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* My Power-ups */}

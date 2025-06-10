@@ -18,6 +18,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { DailyChallenge, generateDailyChallenges } from '../../../lib/gamification'
+import StudentNavigation from '../../../components/StudentNavigation'
 
 interface WeeklyChallenge {
   id: string
@@ -147,26 +148,14 @@ export default function ChallengesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                <CalendarDaysIcon className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Desafíos Diarios</h1>
-                <p className="text-gray-600">Completa desafíos para ganar recompensas</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Tu nivel actual</p>
-              <p className="text-2xl font-bold text-indigo-600">Nivel {playerLevel}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <StudentNavigation
+        title="Desafíos Diarios"
+        subtitle={`Completa desafíos para ganar recompensas • Nivel ${playerLevel}`}
+        icon={<CalendarDaysIcon className="w-6 h-6 text-orange-600" />}
+        showBackButton={true}
+        backUrl="/student/dashboard"
+        backLabel="Volver al Dashboard"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Weekly Challenge */}

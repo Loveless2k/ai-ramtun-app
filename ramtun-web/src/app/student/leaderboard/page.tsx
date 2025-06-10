@@ -16,6 +16,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
 import { LeaderboardEntry } from '../../../lib/gamification'
+import StudentNavigation from '../../../components/StudentNavigation'
 
 export default function LeaderboardPage() {
   const router = useRouter()
@@ -193,27 +194,19 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <TrophyIcon className="w-6 h-6 text-yellow-600" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Clasificaciones</h1>
-                <p className="text-gray-600">Compite con otros estudiantes</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Tu posición actual</p>
-              <p className="text-2xl font-bold text-indigo-600">#{getMyPosition()}</p>
-            </div>
-          </div>
+      <StudentNavigation
+        title="Clasificaciones"
+        subtitle={`Compite con otros estudiantes • Tu posición: #${getMyPosition()}`}
+        icon={<TrophyIcon className="w-6 h-6 text-yellow-600" />}
+        showBackButton={true}
+        backUrl="/student/dashboard"
+        backLabel="Volver al Dashboard"
+      />
 
-          {/* Navigation Tabs */}
-          <div className="mt-6 border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Leaderboard Tabs */}
+        <div className="mb-8">
+          <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
               {[
                 { id: 'global', name: 'Global', icon: TrophyIcon },
@@ -239,9 +232,7 @@ export default function LeaderboardPage() {
             </nav>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* My Position Card */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white mb-8">
           <div className="flex items-center justify-between">
