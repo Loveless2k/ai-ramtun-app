@@ -210,7 +210,7 @@ export default function DashboardPage() {
     // Simular procesamiento del tema
     setTimeout(() => {
       setIsGenerating(false)
-      // Redirigir con parámetros completos para autocompletado
+      // Cambiar al tab generator con parámetros preconfigurados
       const params = new URLSearchParams({
         topic: quickTopic.trim(),
         source: 'quick-generator',
@@ -218,7 +218,10 @@ export default function DashboardPage() {
         grade: '8',
         difficulty: 'medio'
       })
-      window.location.href = `/generator?${params.toString()}`
+      // Cambiar al tab generator en lugar de redirigir a página externa
+      setActiveTab('generator')
+      // Opcional: Guardar parámetros en localStorage para autocompletado
+      localStorage.setItem('quickGeneratorParams', params.toString())
     }, 1500)
   }
 
@@ -900,18 +903,15 @@ function LibraryTab() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     // Cambiar al tab generator con tema preconfigurado
+                    const params = new URLSearchParams({
+                      topic: 'Revolución Industrial',
+                      source: 'ai-suggestion',
+                      level: 'media',
+                      grade: '1',
+                      difficulty: 'medio'
+                    })
+                    localStorage.setItem('quickGeneratorParams', params.toString())
                     setActiveTab('generator')
-                    // Simular autocompletado (en una implementación real, esto se haría con context)
-                    setTimeout(() => {
-                      const params = new URLSearchParams({
-                        topic: 'Revolución Industrial',
-                        source: 'ai-suggestion',
-                        level: 'media',
-                        grade: '1',
-                        difficulty: 'medio'
-                      })
-                      window.location.href = `/generator?${params.toString()}`
-                    }, 100)
                   }}
                   className="bg-indigo-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-indigo-700 transition-colors"
                 >
@@ -930,18 +930,15 @@ function LibraryTab() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     // Cambiar al tab generator con tema preconfigurado
+                    const params = new URLSearchParams({
+                      topic: 'Ecosistemas',
+                      source: 'ai-suggestion',
+                      level: 'basica',
+                      grade: '6',
+                      difficulty: 'facil'
+                    })
+                    localStorage.setItem('quickGeneratorParams', params.toString())
                     setActiveTab('generator')
-                    // Simular autocompletado
-                    setTimeout(() => {
-                      const params = new URLSearchParams({
-                        topic: 'Ecosistemas',
-                        source: 'ai-suggestion',
-                        level: 'basica',
-                        grade: '6',
-                        difficulty: 'facil'
-                      })
-                      window.location.href = `/generator?${params.toString()}`
-                    }, 100)
                   }}
                   className="bg-green-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-green-700 transition-colors"
                 >
@@ -960,18 +957,15 @@ function LibraryTab() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     // Cambiar al tab generator con tema preconfigurado
+                    const params = new URLSearchParams({
+                      topic: 'Álgebra Básica',
+                      source: 'ai-suggestion',
+                      level: 'media',
+                      grade: '1',
+                      difficulty: 'medio'
+                    })
+                    localStorage.setItem('quickGeneratorParams', params.toString())
                     setActiveTab('generator')
-                    // Simular autocompletado
-                    setTimeout(() => {
-                      const params = new URLSearchParams({
-                        topic: 'Álgebra Básica',
-                        source: 'ai-suggestion',
-                        level: 'media',
-                        grade: '1',
-                        difficulty: 'medio'
-                      })
-                      window.location.href = `/generator?${params.toString()}`
-                    }, 100)
                   }}
                   className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 transition-colors"
                 >

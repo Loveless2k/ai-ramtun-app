@@ -83,25 +83,46 @@ export default function CrosswordGenerator() {
     }
   }, [formData])
 
-  // Autocompletar desde parámetros URL
+  // Autocompletar desde parámetros URL o localStorage
   useEffect(() => {
+    // Primero verificar parámetros URL
     const topic = searchParams.get('topic')
     const source = searchParams.get('source')
     const level = searchParams.get('level')
     const grade = searchParams.get('grade')
     const difficulty = searchParams.get('difficulty')
 
+    // Si no hay parámetros URL, verificar localStorage
+    let paramsToUse = null
     if (topic) {
+      paramsToUse = { topic, source, level, grade, difficulty }
+    } else {
+      const storedParams = localStorage.getItem('quickGeneratorParams')
+      if (storedParams) {
+        const urlParams = new URLSearchParams(storedParams)
+        paramsToUse = {
+          topic: urlParams.get('topic'),
+          source: urlParams.get('source'),
+          level: urlParams.get('level'),
+          grade: urlParams.get('grade'),
+          difficulty: urlParams.get('difficulty')
+        }
+        // Limpiar localStorage después de usar
+        localStorage.removeItem('quickGeneratorParams')
+      }
+    }
+
+    if (paramsToUse?.topic) {
       setFormData(prev => ({
         ...prev,
-        topic: topic,
-        educationLevel: (level === 'media' ? 'media' : 'basica') as 'basica' | 'media',
-        grade: grade ? parseInt(grade) : prev.grade,
-        difficulty: (difficulty === 'facil' || difficulty === 'dificil' ? difficulty : 'medio') as 'facil' | 'medio' | 'dificil'
+        topic: paramsToUse.topic || '',
+        educationLevel: (paramsToUse.level === 'media' ? 'media' : 'basica') as 'basica' | 'media',
+        grade: paramsToUse.grade ? parseInt(paramsToUse.grade) : prev.grade,
+        difficulty: (paramsToUse.difficulty === 'facil' || paramsToUse.difficulty === 'dificil' ? paramsToUse.difficulty : 'medio') as 'facil' | 'medio' | 'dificil'
       }))
 
       // Marcar si viene del generador rápido
-      if (source === 'quick-generator') {
+      if (paramsToUse.source === 'quick-generator' || paramsToUse.source === 'ai-suggestion') {
         setIsFromQuickGenerator(true)
         // Auto-generar después de un breve delay para mostrar el autocompletado
         setTimeout(() => {

@@ -383,11 +383,11 @@ export default function AdvancedAnalytics() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Promedio:</span>
-                  <span className="font-medium">{data.avgScore}%</span>
+                  <span className="font-medium text-gray-900">{data.avgScore}%</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Completados:</span>
-                  <span className="font-medium">{data.completionRate}%</span>
+                  <span className="font-medium text-gray-900">{data.completionRate}%</span>
                 </div>
               </div>
             </div>
