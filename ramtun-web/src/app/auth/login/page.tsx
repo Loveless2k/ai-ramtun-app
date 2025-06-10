@@ -7,7 +7,6 @@ import {
   EyeIcon,
   EyeSlashIcon,
   AcademicCapIcon,
-  UserIcon,
   EnvelopeIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline'
@@ -18,7 +17,6 @@ function LoginPageContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [userType, setUserType] = useState<'teacher' | 'student'>('teacher')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -38,16 +36,15 @@ function LoginPageContent() {
         const userRole = result.user.user_metadata?.role
 
         if (!userRole) {
-          throw new Error('Usuario sin rol asignado. Contacta al administrador.')
+          throw new Error('Tu cuenta no tiene un rol asignado. Por favor contacta al administrador para configurar tu perfil.')
         }
 
-        // Validar que el rol seleccionado coincida con el rol real
-        if (userRole !== userType) {
-          throw new Error(`Tu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}". No puedes acceder como "${userType === 'teacher' ? 'Profesor' : 'Estudiante'}".`)
-        }
+        // Redirigir automáticamente según el rol detectado
+        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
 
-        // Redirigir según el rol REAL del usuario (no el selector)
-        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
+        // Mostrar mensaje de bienvenida con el rol detectado
+        console.log(`✅ Login exitoso como ${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}`)
+
         router.push(redirectUrl)
       }
     } catch (err: unknown) {
@@ -69,16 +66,15 @@ function LoginPageContent() {
         const userRole = result.user.user_metadata?.role
 
         if (!userRole) {
-          throw new Error('Usuario sin rol asignado. Contacta al administrador.')
+          throw new Error('Tu cuenta no tiene un rol asignado. Por favor contacta al administrador para configurar tu perfil.')
         }
 
-        // Validar que el rol seleccionado coincida con el rol real
-        if (userRole !== userType) {
-          throw new Error(`Tu cuenta es de tipo "${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}". No puedes acceder como "${userType === 'teacher' ? 'Profesor' : 'Estudiante'}".`)
-        }
+        // Redirigir automáticamente según el rol detectado
+        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
 
-        // Redirigir según el rol REAL del usuario (no el selector)
-        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student'
+        // Mostrar mensaje de bienvenida con el rol detectado
+        console.log(`✅ Login exitoso con Google como ${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}`)
+
         router.push(redirectUrl)
       }
     } catch (err: unknown) {
@@ -107,44 +103,10 @@ function LoginPageContent() {
             <AcademicCapIcon className="w-8 h-8 text-indigo-600" />
           </motion.div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Bienvenido a Ramtun</h1>
-          <p className="text-gray-600">Inicia sesión para continuar</p>
+          <p className="text-gray-600">Inicia sesión para acceder a tu dashboard</p>
         </div>
 
-        {/* User Type Selector */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
-            Tipo de cuenta que vas a usar:
-          </label>
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              type="button"
-              onClick={() => setUserType('teacher')}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md transition-all duration-200 min-h-[48px] ${
-                userType === 'teacher'
-                  ? 'bg-white text-indigo-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <AcademicCapIcon className="w-5 h-5" />
-              <span className="font-medium">Profesor</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setUserType('student')}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-md transition-all duration-200 min-h-[48px] ${
-                userType === 'student'
-                  ? 'bg-white text-indigo-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <UserIcon className="w-5 h-5" />
-              <span className="font-medium">Estudiante</span>
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
-            ⚠️ Debes seleccionar el tipo que corresponde a tu cuenta. Si seleccionas incorrectamente, el login fallará.
-          </p>
-        </div>
+
 
         {/* Error Message */}
         {error && (
@@ -156,6 +118,13 @@ function LoginPageContent() {
             {error}
           </motion.div>
         )}
+
+        {/* Info Message */}
+        <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800 text-center">
+            💡 <strong>Acceso Inteligente:</strong> El sistema detectará automáticamente si eres profesor o estudiante y te llevará a tu dashboard correspondiente.
+          </p>
+        </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
