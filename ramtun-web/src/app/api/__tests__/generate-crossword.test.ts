@@ -5,6 +5,37 @@
 import { NextRequest } from 'next/server'
 import { POST } from '../generate-crossword/route'
 
+// Mock Supabase auth helpers to prevent cookie context errors
+jest.mock('@supabase/auth-helpers-nextjs', () => ({
+  createRouteHandlerClient: jest.fn(() => ({
+    auth: {
+      getSession: jest.fn().mockResolvedValue({
+        data: {
+          session: {
+            user: {
+              id: 'test-user-id',
+              email: 'test@example.com',
+              user_metadata: { role: 'teacher' }
+            }
+          }
+        },
+        error: null,
+      }),
+    },
+  })),
+}))
+
+// Mock Next.js cookies
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => ({
+    get: jest.fn(),
+    set: jest.fn(),
+    delete: jest.fn(),
+    has: jest.fn(),
+    getAll: jest.fn(() => []),
+  })),
+}))
+
 // Mock OpenAI
 jest.mock('../../../lib/openai', () => ({
   generateCrossword: jest.fn(),
@@ -13,17 +44,118 @@ jest.mock('../../../lib/openai', () => ({
 }))
 
 import { generateCrossword, generateCrosswordDemo, validateOpenAIConfig } from '../../../lib/openai'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 
 const mockGenerateCrossword = generateCrossword as jest.MockedFunction<typeof generateCrossword>
 const mockGenerateCrosswordDemo = generateCrosswordDemo as jest.MockedFunction<typeof generateCrosswordDemo>
 const mockValidateOpenAIConfig = validateOpenAIConfig as jest.MockedFunction<typeof validateOpenAIConfig>
+const mockCreateRouteHandlerClient = createRouteHandlerClient as jest.MockedFunction<typeof createRouteHandlerClient>
 
 describe('/api/generate-crossword', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
+  describe('Authentication', () => {
+    it('should require authentication', async () => {
+      // Mock no session
+      mockCreateRouteHandlerClient.mockReturnValue({
+        auth: {
+          getSession: jest.fn().mockResolvedValue({
+            data: { session: null },
+            error: null,
+          }),
+        },
+      } as any)
+
+      const request = new NextRequest('http://localhost:3000/api/generate-crossword', {
+        method: 'POST',
+        body: JSON.stringify({
+          topic: 'Test Topic',
+          educationLevel: 'basica',
+          grade: '6',
+          difficulty: 'easy',
+          questionCount: '10'
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const response = await POST(request)
+      const data = await response.json()
+
+      expect(response.status).toBe(401)
+      expect(data.error).toContain('Authentication required')
+    })
+
+    it('should allow authenticated teacher access', async () => {
+      // Mock authenticated teacher session
+      mockCreateRouteHandlerClient.mockReturnValue({
+        auth: {
+          getSession: jest.fn().mockResolvedValue({
+            data: {
+              session: {
+                user: {
+                  id: 'test-teacher-id',
+                  email: 'teacher@example.com',
+                  user_metadata: { role: 'teacher' }
+                }
+              }
+            },
+            error: null,
+          }),
+        },
+      } as any)
+
+      const mockCrosswordData = {
+        title: 'Test Crossword',
+        questions: []
+      }
+
+      mockValidateOpenAIConfig.mockReturnValue(false)
+      mockGenerateCrosswordDemo.mockResolvedValue(mockCrosswordData)
+
+      const request = new NextRequest('http://localhost:3000/api/generate-crossword', {
+        method: 'POST',
+        body: JSON.stringify({
+          topic: 'Test Topic',
+          educationLevel: 'basica',
+          grade: '6',
+          difficulty: 'easy',
+          questionCount: '10'
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const response = await POST(request)
+      expect(response.status).toBe(200)
+    })
+  })
+
   describe('POST method', () => {
+    beforeEach(() => {
+      // Reset to authenticated teacher for other tests
+      mockCreateRouteHandlerClient.mockReturnValue({
+        auth: {
+          getSession: jest.fn().mockResolvedValue({
+            data: {
+              session: {
+                user: {
+                  id: 'test-teacher-id',
+                  email: 'teacher@example.com',
+                  user_metadata: { role: 'teacher' }
+                }
+              }
+            },
+            error: null,
+          }),
+        },
+      } as any)
+    })
+
     it('should generate crossword with valid request', async () => {
       const mockCrosswordData = {
         title: 'Test Crossword',

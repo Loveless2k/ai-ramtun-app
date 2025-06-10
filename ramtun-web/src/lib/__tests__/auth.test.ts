@@ -39,13 +39,13 @@ jest.mock('../supabase', () => ({
 describe('Auth Utilities', () => {
   describe('isCrosswordPublic', () => {
     it('should return true for public crossword (Sistema Solar)', () => {
-      expect(isCrosswordPublic('2')).toBe(true)
+      expect(isCrosswordPublic('sistema-solar')).toBe(true)
     })
 
     it('should return false for private crosswords', () => {
-      expect(isCrosswordPublic('1')).toBe(false)
-      expect(isCrosswordPublic('3')).toBe(false)
-      expect(isCrosswordPublic('4')).toBe(false)
+      expect(isCrosswordPublic('independencia-chile')).toBe(false)
+      expect(isCrosswordPublic('geometria-basica')).toBe(false)
+      expect(isCrosswordPublic('revolucion-francesa')).toBe(false)
       expect(isCrosswordPublic('999')).toBe(false)
     })
 

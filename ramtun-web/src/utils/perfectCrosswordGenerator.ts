@@ -24,6 +24,12 @@ export class PerfectCrosswordGenerator {
     console.log('🎯 Iniciando generación de crucigrama perfecto...')
     console.log('📝 Palabras a colocar:', questions.map(q => q.answer))
 
+    // Manejar caso de array vacío
+    if (questions.length === 0) {
+      console.log('📝 Array vacío, retornando array vacío')
+      return []
+    }
+
     // Limpiar estado
     this.reset()
 
