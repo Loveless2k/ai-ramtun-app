@@ -12,9 +12,11 @@ jest.mock('../../../lib/openai', () => ({
   validateOpenAIConfig: jest.fn(),
 }))
 
-const mockGenerateCrossword = require('../../../lib/openai').generateCrossword
-const mockGenerateCrosswordDemo = require('../../../lib/openai').generateCrosswordDemo
-const mockValidateOpenAIConfig = require('../../../lib/openai').validateOpenAIConfig
+import { generateCrossword, generateCrosswordDemo, validateOpenAIConfig } from '../../../lib/openai'
+
+const mockGenerateCrossword = generateCrossword as jest.MockedFunction<typeof generateCrossword>
+const mockGenerateCrosswordDemo = generateCrosswordDemo as jest.MockedFunction<typeof generateCrosswordDemo>
+const mockValidateOpenAIConfig = validateOpenAIConfig as jest.MockedFunction<typeof validateOpenAIConfig>
 
 describe('/api/generate-crossword', () => {
   beforeEach(() => {

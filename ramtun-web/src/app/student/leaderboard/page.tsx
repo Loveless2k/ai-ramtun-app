@@ -11,9 +11,7 @@ import {
   ChevronDownIcon,
   MinusIcon,
   SparklesIcon,
-  BoltIcon,
   AcademicCapIcon,
-  ClockIcon,
   PlayIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
@@ -23,7 +21,6 @@ export default function LeaderboardPage() {
   const router = useRouter()
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState<'global' | 'weekly' | 'class'>('global')
-  const [timeFilter, setTimeFilter] = useState<'all' | 'week' | 'month'>('all')
   const [isLoading, setIsLoading] = useState(true)
 
   // Mock data - En producción vendría de la API
@@ -150,7 +147,7 @@ export default function LeaderboardPage() {
       }))
       setIsLoading(false)
     }, 1000)
-  }, [])
+  }, [leaderboardData.global])
 
   const getCurrentData = () => {
     return leaderboardData[activeTab] || []
@@ -227,7 +224,7 @@ export default function LeaderboardPage() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as 'global' | 'weekly' | 'class')}
                     className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
                       activeTab === tab.id
                         ? 'border-indigo-500 text-indigo-600'

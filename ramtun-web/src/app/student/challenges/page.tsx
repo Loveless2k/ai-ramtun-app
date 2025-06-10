@@ -16,16 +16,32 @@ import {
   GiftIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline'
-import { useAuth } from '../../../lib/auth'
+
 import { DailyChallenge, generateDailyChallenges } from '../../../lib/gamification'
+
+interface WeeklyChallenge {
+  id: string
+  title: string
+  description: string
+  icon: string
+  target: number
+  progress: number
+  reward: {
+    points: number
+    powerUps: string[]
+    achievements: string[]
+  }
+  expiresAt: string
+  type: string
+  difficulty: string
+}
 
 export default function ChallengesPage() {
   const router = useRouter()
-  const { user } = useAuth()
   const [challenges, setChallenges] = useState<DailyChallenge[]>([])
-  const [weeklyChallenge, setWeeklyChallenge] = useState<any>(null)
+  const [weeklyChallenge, setWeeklyChallenge] = useState<WeeklyChallenge | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [playerLevel, setPlayerLevel] = useState(6)
+  const [playerLevel] = useState(6)
 
   useEffect(() => {
     // Simular carga de datos

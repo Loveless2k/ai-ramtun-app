@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import {
   HomeIcon,
   TrophyIcon,
-  ChartBarIcon,
   UserIcon,
   PlayIcon,
   StarIcon,
@@ -14,7 +13,6 @@ import {
   BookOpenIcon,
   FireIcon,
   CheckCircleIcon,
-  Cog6ToothIcon,
   AcademicCapIcon,
   CalendarIcon,
   ArrowTrendingUpIcon,

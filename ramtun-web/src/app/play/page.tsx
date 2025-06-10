@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { 
-  AcademicCapIcon, 
-  PlayIcon, 
+import {
+  AcademicCapIcon,
+  PlayIcon,
   LockClosedIcon,
-  ChartBarIcon,
   ClockIcon,
-  UserGroupIcon,
   BookOpenIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../lib/auth'

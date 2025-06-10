@@ -13,11 +13,8 @@ import {
   ClockIcon,
   StarIcon,
   BookOpenIcon,
-  AcademicCapIcon,
   FireIcon,
-  TrophyIcon,
-  ChevronDownIcon,
-  XMarkIcon
+  TrophyIcon
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 import { useAuth } from '../../../lib/auth'
