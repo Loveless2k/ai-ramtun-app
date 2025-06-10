@@ -13,189 +13,21 @@ import DemoConversionModal from '../../../components/DemoConversionModal'
 import { generatePerfectCrossword, CrosswordData } from '../../../utils/perfectCrosswordGenerator'
 import { useAuth, isCrosswordPublic } from '../../../lib/auth'
 
-// Función para obtener datos del juego usando el algoritmo perfecto
+// Función para obtener datos del juego usando el algoritmo universal
 const getGameData = (gameId: string): CrosswordData | null => {
-  // Intentar generar con algoritmo perfecto primero
+  // El algoritmo universal maneja todos los temas disponibles
   const perfectCrossword = generatePerfectCrossword(gameId)
   if (perfectCrossword) {
-    console.log(`✅ Crucigrama perfecto generado para: ${gameId}`)
+    console.log(`✅ Crucigrama universal generado para: ${gameId}`)
     return perfectCrossword
   }
 
-  console.log(`⚠️ No hay algoritmo perfecto para: ${gameId}, usando datos mock`)
+  console.log(`❌ Tema no encontrado: ${gameId}`)
   return null
 }
 
-// Mock game data para juegos sin algoritmo perfecto - En producción vendría de la API
-const mockGameData: Record<string, CrosswordData> = {
-  '1': {
-    id: '1',
-    title: 'Revolución Francesa',
-    subject: 'Historia',
-    difficulty: 'Medio',
-    questions: [
-      {
-        id: '1',
-        question: 'Rey de Francia ejecutado en 1793',
-        answer: 'LUIS',
-        category: 'Historia',
-        difficulty: 'Medio',
-        position: { row: 1, col: 1, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Fortaleza tomada el 14 de julio de 1789',
-        answer: 'BASTILLA',
-        category: 'Historia',
-        difficulty: 'Medio',
-        position: { row: 1, col: 1, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Reina francesa conocida por "Que coman pasteles"',
-        answer: 'MARIA',
-        category: 'Historia',
-        difficulty: 'Medio',
-        position: { row: 3, col: 2, direction: 'horizontal' },
-        number: 3
-      },
-      {
-        id: '4',
-        question: 'Período de terror dirigido por Robespierre',
-        answer: 'TERROR',
-        category: 'Historia',
-        difficulty: 'Medio',
-        position: { row: 2, col: 5, direction: 'vertical' },
-        number: 4
-      }
-    ]
-  },
-  '2': {
-    id: '2',
-    title: 'Sistema Solar',
-    subject: 'Ciencias',
-    difficulty: 'Fácil',
-    questions: [
-      {
-        id: '1',
-        question: 'Planeta más cercano al Sol',
-        answer: 'MERCURIO',
-        category: 'Ciencias',
-        difficulty: 'Fácil',
-        position: { row: 1, col: 1, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Planeta rojo del sistema solar',
-        answer: 'MARTE',
-        category: 'Ciencias',
-        difficulty: 'Fácil',
-        position: { row: 1, col: 3, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Estrella central de nuestro sistema',
-        answer: 'SOL',
-        category: 'Ciencias',
-        difficulty: 'Fácil',
-        position: { row: 3, col: 1, direction: 'horizontal' },
-        number: 3
-      },
-      {
-        id: '4',
-        question: 'Planeta con anillos visibles',
-        answer: 'SATURNO',
-        category: 'Ciencias',
-        difficulty: 'Fácil',
-        position: { row: 2, col: 6, direction: 'vertical' },
-        number: 4
-      }
-    ]
-  },
-  '3': {
-    id: '3',
-    title: 'Fracciones Básicas',
-    subject: 'Matemáticas',
-    difficulty: 'Fácil',
-    questions: [
-      {
-        id: '1',
-        question: 'Parte de un entero dividido en partes iguales',
-        answer: 'FRACCION',
-        category: 'Matemáticas',
-        difficulty: 'Fácil',
-        position: { row: 1, col: 1, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Número de arriba en una fracción',
-        answer: 'NUMERADOR',
-        category: 'Matemáticas',
-        difficulty: 'Fácil',
-        position: { row: 1, col: 1, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Número de abajo en una fracción',
-        answer: 'DENOMINADOR',
-        category: 'Matemáticas',
-        difficulty: 'Fácil',
-        position: { row: 3, col: 2, direction: 'horizontal' },
-        number: 3
-      }
-    ]
-  },
-  '4': {
-    id: '4',
-    title: 'Geometría Básica',
-    subject: 'Matemáticas',
-    difficulty: 'Medio',
-    questions: [
-      {
-        id: '1',
-        question: 'Figura con tres lados',
-        answer: 'TRIANGULO',
-        category: 'Matemáticas',
-        difficulty: 'Medio',
-        position: { row: 1, col: 1, direction: 'horizontal' },
-        number: 1
-      },
-      {
-        id: '2',
-        question: 'Figura con cuatro lados iguales',
-        answer: 'CUADRADO',
-        category: 'Matemáticas',
-        difficulty: 'Medio',
-        position: { row: 1, col: 1, direction: 'vertical' },
-        number: 2
-      },
-      {
-        id: '3',
-        question: 'Línea que une dos puntos de un círculo',
-        answer: 'CUERDA',
-        category: 'Matemáticas',
-        difficulty: 'Medio',
-        position: { row: 3, col: 2, direction: 'horizontal' },
-        number: 3
-      },
-      {
-        id: '4',
-        question: 'Figura redonda perfecta',
-        answer: 'CIRCULO',
-        category: 'Matemáticas',
-        difficulty: 'Medio',
-        position: { row: 2, col: 5, direction: 'vertical' },
-        number: 4
-      }
-    ]
-  }
-}
+// ✅ Mock data eliminado - El algoritmo universal maneja todos los casos
+
 
 export default function GamePage() {
   const params = useParams()
@@ -218,12 +50,14 @@ export default function GamePage() {
   const isPublicCrossword = isCrosswordPublic(gameId)
   const hasAccess = isAuthenticated || isPublicCrossword
 
-  // Load game data using perfect algorithm
+  // Load game data using universal algorithm
   useEffect(() => {
-    const data = getGameData(gameId) || mockGameData[gameId]
+    const data = getGameData(gameId)
     if (data) {
       setGameData(data)
       setSelectedQuestion(data.questions[0]?.id || null)
+    } else {
+      console.error(`❌ No se pudo cargar el crucigrama: ${gameId}`)
     }
   }, [gameId])
 

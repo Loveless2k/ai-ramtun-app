@@ -154,46 +154,74 @@ export class PerfectCrosswordGenerator {
       col: number
       direction: 'horizontal' | 'vertical'
       intersectionCount: number
+      intersectionDetails: string
     }> = []
+
+    console.log(`🔍 Buscando intersecciones para "${word}" con ${this.placedWords.length} palabras colocadas`)
 
     // Buscar intersecciones con palabras ya colocadas
     for (const placedWord of this.placedWords) {
+      console.log(`  🔗 Verificando intersecciones con "${placedWord.word}" en (${placedWord.row}, ${placedWord.col}) ${placedWord.direction}`)
       const intersections = this.findLetterIntersections(word, placedWord.word)
-      
+      console.log(`    📍 Encontradas ${intersections.length} intersecciones de letras`)
+
       for (const intersection of intersections) {
+        console.log(`    🎯 Intersección: "${intersection.letter}" - ${word}[${intersection.newWordIndex}] ↔ ${placedWord.word}[${intersection.placedWordIndex}]`)
+
         // Calcular posición para intersección
         const newDirection = placedWord.direction === 'horizontal' ? 'vertical' : 'horizontal'
-        
+
         let newRow: number, newCol: number
-        
-        if (newDirection === 'horizontal') {
-          newRow = placedWord.direction === 'vertical' 
-            ? placedWord.row + intersection.placedWordIndex 
-            : placedWord.row
-          newCol = placedWord.direction === 'horizontal' 
-            ? placedWord.col + intersection.placedWordIndex - intersection.newWordIndex
-            : placedWord.col - intersection.newWordIndex
+
+        if (placedWord.direction === 'horizontal') {
+          // Palabra colocada es horizontal, nueva será vertical
+          newRow = placedWord.row - intersection.newWordIndex
+          newCol = placedWord.col + intersection.placedWordIndex
         } else {
-          newRow = placedWord.direction === 'vertical' 
-            ? placedWord.row + intersection.placedWordIndex - intersection.newWordIndex
-            : placedWord.row - intersection.newWordIndex
-          newCol = placedWord.direction === 'horizontal' 
-            ? placedWord.col + intersection.placedWordIndex
-            : placedWord.col
+          // Palabra colocada es vertical, nueva será horizontal
+          newRow = placedWord.row + intersection.placedWordIndex
+          newCol = placedWord.col - intersection.newWordIndex
         }
-        
+
+        console.log(`    📐 Posición calculada: (${newRow}, ${newCol}) ${newDirection}`)
+
         // Verificar que esté dentro del grid
         if (this.isWithinBounds(newRow, newCol, word.length, newDirection)) {
-          placements.push({
-            row: newRow,
-            col: newCol,
-            direction: newDirection,
-            intersectionCount: 1
-          })
+          // Verificar que la intersección sea matemáticamente correcta
+          const intersectionRow = newDirection === 'vertical' ? newRow + intersection.newWordIndex : newRow
+          const intersectionCol = newDirection === 'horizontal' ? newCol + intersection.newWordIndex : newCol
+
+          // CRÍTICO: Verificar que la letra en el grid coincida exactamente
+          const expectedLetter = word[intersection.newWordIndex]
+          const gridLetter = this.grid[intersectionRow][intersectionCol]
+          const placedLetter = placedWord.word[intersection.placedWordIndex]
+
+          // Validación triple: palabra nueva, palabra colocada y grid deben coincidir
+          if (expectedLetter === placedLetter && expectedLetter === gridLetter) {
+            console.log(`    ✅ Intersección válida: "${expectedLetter}" en (${intersectionRow}, ${intersectionCol})`)
+
+            // Validación adicional: verificar que toda la colocación sea segura
+            if (this.canPlaceWordSafely(word, newRow, newCol, newDirection)) {
+              placements.push({
+                row: newRow,
+                col: newCol,
+                direction: newDirection,
+                intersectionCount: 1,
+                intersectionDetails: `${word}[${intersection.newWordIndex}] ↔ ${placedWord.word}[${intersection.placedWordIndex}] = "${expectedLetter}"`
+              })
+            } else {
+              console.log(`    ❌ Colocación no segura para ${word} en (${newRow}, ${newCol}) ${newDirection}`)
+            }
+          } else {
+            console.log(`    ❌ Intersección inválida: esperado "${expectedLetter}", grid "${gridLetter}", colocada "${placedLetter}"`)
+          }
+        } else {
+          console.log(`    ❌ Fuera de límites: (${newRow}, ${newCol}) ${newDirection}`)
         }
       }
     }
-    
+
+    console.log(`📊 Total de posiciones válidas encontradas: ${placements.length}`)
     return placements
   }
 
@@ -267,30 +295,78 @@ export class PerfectCrosswordGenerator {
         return false
       }
 
-      // Si es una nueva posición, verificar que no forme palabras perpendiculares inválidas
-      // SOLO rechazar si forma una palabra perpendicular de más de 1 letra
+      // CRÍTICO: Verificar que no se formen palabras adyacentes inválidas
       if (this.grid[currentRow][currentCol] === '') {
-        if (direction === 'horizontal') {
-          // Para palabras horizontales, verificar que no forme palabras verticales inválidas
-          let hasLetterAbove = currentRow > 0 && this.grid[currentRow - 1][currentCol] !== ''
-          let hasLetterBelow = currentRow < this.gridSize - 1 && this.grid[currentRow + 1][currentCol] !== ''
-
-          // Solo rechazar si formaría una palabra vertical de más de 1 letra SIN intersección válida
-          if (hasLetterAbove && hasLetterBelow) {
-            console.log(`❌ ${word} rechazada: formaría palabra vertical inválida en (${currentRow}, ${currentCol})`)
-            return false
-          }
-        } else {
-          // Para palabras verticales, verificar que no forme palabras horizontales inválidas
-          let hasLetterLeft = currentCol > 0 && this.grid[currentRow][currentCol - 1] !== ''
-          let hasLetterRight = currentCol < this.gridSize - 1 && this.grid[currentRow][currentCol + 1] !== ''
-
-          // Solo rechazar si formaría una palabra horizontal de más de 1 letra SIN intersección válida
-          if (hasLetterLeft && hasLetterRight) {
-            console.log(`❌ ${word} rechazada: formaría palabra horizontal inválida en (${currentRow}, ${currentCol})`)
-            return false
-          }
+        if (!this.validatePerpendicularPlacement(word, i, currentRow, currentCol, direction)) {
+          console.log(`❌ ${word} rechazada: formaría palabra perpendicular inválida en (${currentRow}, ${currentCol})`)
+          return false
         }
+      }
+    }
+
+    return true
+  }
+
+  private validatePerpendicularPlacement(word: string, letterIndex: number, row: number, col: number, direction: 'horizontal' | 'vertical'): boolean {
+    if (direction === 'horizontal') {
+      // Para palabras horizontales, verificar formación de palabras verticales
+      let verticalWord = ''
+      let startRow = row
+      let endRow = row
+
+      // Buscar hacia arriba
+      while (startRow > 0 && this.grid[startRow - 1][col] !== '') {
+        startRow--
+      }
+
+      // Buscar hacia abajo
+      while (endRow < this.gridSize - 1 && this.grid[endRow + 1][col] !== '') {
+        endRow++
+      }
+
+      // Construir la palabra vertical que se formaría
+      for (let r = startRow; r <= endRow; r++) {
+        if (r === row) {
+          verticalWord += word[letterIndex]
+        } else {
+          verticalWord += this.grid[r][col]
+        }
+      }
+
+      // Si formaría una palabra de más de 1 letra, debe ser una intersección válida
+      if (verticalWord.length > 1) {
+        // Solo permitir si es exactamente una intersección (la letra actual coincide con una palabra existente)
+        return this.grid[row][col] !== '' && this.grid[row][col] === word[letterIndex]
+      }
+    } else {
+      // Para palabras verticales, verificar formación de palabras horizontales
+      let horizontalWord = ''
+      let startCol = col
+      let endCol = col
+
+      // Buscar hacia la izquierda
+      while (startCol > 0 && this.grid[row][startCol - 1] !== '') {
+        startCol--
+      }
+
+      // Buscar hacia la derecha
+      while (endCol < this.gridSize - 1 && this.grid[row][endCol + 1] !== '') {
+        endCol++
+      }
+
+      // Construir la palabra horizontal que se formaría
+      for (let c = startCol; c <= endCol; c++) {
+        if (c === col) {
+          horizontalWord += word[letterIndex]
+        } else {
+          horizontalWord += this.grid[row][c]
+        }
+      }
+
+      // Si formaría una palabra de más de 1 letra, debe ser una intersección válida
+      if (horizontalWord.length > 1) {
+        // Solo permitir si es exactamente una intersección (la letra actual coincide con una palabra existente)
+        return this.grid[row][col] !== '' && this.grid[row][col] === word[letterIndex]
       }
     }
 
@@ -358,21 +434,42 @@ export class PerfectCrosswordGenerator {
   }
 
   private placeWordWithBackup(question: Omit<CrosswordQuestion, 'position' | 'number'>) {
-    // Algoritmo de respaldo: buscar cualquier posición válida
+    // Algoritmo de respaldo: buscar cualquier posición válida CON intersecciones
     const word = question.answer.toUpperCase()
-    
-    for (let row = 0; row < this.gridSize - word.length; row++) {
-      for (let col = 0; col < this.gridSize - word.length; col++) {
+    console.log(`🔄 Intentando algoritmo de respaldo para: ${word}`)
+
+    // Primero intentar encontrar posiciones con intersecciones válidas
+    for (let row = 0; row < this.gridSize; row++) {
+      for (let col = 0; col < this.gridSize; col++) {
         for (const direction of ['horizontal', 'vertical'] as const) {
-          if (this.canPlaceWordSafely(word, row, col, direction)) {
-            this.placeWordOnGrid(word, row, col, direction, question)
-            console.log(`🔄 Palabra colocada con respaldo: ${word}`)
-            return true
+          if (this.isWithinBounds(row, col, word.length, direction) &&
+              this.canPlaceWordSafely(word, row, col, direction)) {
+
+            // Verificar si tiene al menos una intersección válida
+            let hasValidIntersection = false
+            for (let i = 0; i < word.length; i++) {
+              const currentRow = direction === 'vertical' ? row + i : row
+              const currentCol = direction === 'horizontal' ? col + i : col
+
+              if (this.grid[currentRow][currentCol] !== '' &&
+                  this.grid[currentRow][currentCol] === word[i]) {
+                hasValidIntersection = true
+                break
+              }
+            }
+
+            // Solo colocar si tiene intersección válida (excepto si es la primera palabra)
+            if (hasValidIntersection || this.placedWords.length === 0) {
+              this.placeWordOnGrid(word, row, col, direction, question)
+              console.log(`🔄 Palabra colocada con respaldo: ${word} en (${row}, ${col}) ${direction}`)
+              return true
+            }
           }
         }
       }
     }
-    
+
+    console.log(`❌ No se pudo colocar ${word} ni con algoritmo de respaldo`)
     return false
   }
 
@@ -419,16 +516,10 @@ export class PerfectCrosswordGenerator {
   }
 
   private retryWithDifferentStrategy(questions: Omit<CrosswordQuestion, 'position' | 'number'>[]): CrosswordQuestion[] {
-    console.log('🔄 Reintentando con estrategia diferente...')
-    
-    // Reiniciar y probar con orden diferente
-    this.reset()
-    
-    // Ordenar por frecuencia de letras comunes
-    const sortedByConnectivity = this.sortByConnectivity(questions)
-    
-    // Intentar nuevamente
-    return this.generatePerfectCrossword(sortedByConnectivity)
+    console.log('🔄 Reintentando con algoritmo universal...')
+
+    // Usar algoritmo universal que funciona con cualquier conjunto de palabras
+    return this.createUniversalOptimizedCrossword(questions)
   }
 
   private sortByConnectivity(questions: Omit<CrosswordQuestion, 'position' | 'number'>[]): Omit<CrosswordQuestion, 'position' | 'number'>[] {
@@ -464,6 +555,306 @@ export class PerfectCrosswordGenerator {
     return count
   }
 
+  private createUniversalOptimizedCrossword(questions: Omit<CrosswordQuestion, 'position' | 'number'>[]): CrosswordQuestion[] {
+    console.log('🎯 Creando crucigrama con algoritmo universal optimizado...')
+
+    const words = questions.map(q => ({ word: q.answer.toUpperCase(), question: q }))
+    console.log('📝 Palabras a organizar:', words.map(w => w.word))
+
+    // Paso 1: Encontrar la mejor palabra base (más intersecciones potenciales)
+    const baseWordData = this.findBestBaseWord(words)
+    console.log(`📍 Palabra base seleccionada: ${baseWordData.word} (${baseWordData.intersectionCount} intersecciones potenciales)`)
+
+    // Paso 2: Colocar palabra base en el centro
+    const centerRow = Math.floor(this.gridSize / 2)
+    const centerCol = Math.floor((this.gridSize - baseWordData.word.length) / 2)
+
+    const result: CrosswordQuestion[] = []
+    const placedWords = new Map<string, { row: number, col: number, direction: 'horizontal' | 'vertical' }>()
+    const tempGrid: string[][] = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''))
+
+    // Colocar palabra base en el grid temporal
+    for (let i = 0; i < baseWordData.word.length; i++) {
+      tempGrid[centerRow][centerCol + i] = baseWordData.word[i]
+    }
+
+    // Agregar palabra base
+    result.push({
+      ...baseWordData.question,
+      position: { row: centerRow, col: centerCol, direction: 'horizontal' },
+      number: 1
+    })
+    placedWords.set(baseWordData.word, { row: centerRow, col: centerCol, direction: 'horizontal' })
+
+    // Paso 3: Colocar palabras restantes usando algoritmo de intersecciones mejorado
+    const remainingWords = words.filter(w => w.word !== baseWordData.word)
+    let questionNumber = 2
+
+    for (const wordData of remainingWords) {
+      const bestPlacement = this.findBestPlacementWithValidation(wordData.word, placedWords, tempGrid)
+
+      if (bestPlacement) {
+        // Actualizar grid temporal
+        for (let i = 0; i < wordData.word.length; i++) {
+          const currentRow = bestPlacement.direction === 'vertical' ? bestPlacement.row + i : bestPlacement.row
+          const currentCol = bestPlacement.direction === 'horizontal' ? bestPlacement.col + i : bestPlacement.col
+          tempGrid[currentRow][currentCol] = wordData.word[i]
+        }
+
+        result.push({
+          ...wordData.question,
+          position: { row: bestPlacement.row, col: bestPlacement.col, direction: bestPlacement.direction },
+          number: questionNumber++
+        })
+        placedWords.set(wordData.word, bestPlacement)
+        console.log(`✅ ${wordData.word} colocada en (${bestPlacement.row}, ${bestPlacement.col}) ${bestPlacement.direction} - intersección: "${bestPlacement.intersectionLetter}"`)
+      } else {
+        console.log(`⚠️ No se pudo colocar ${wordData.word} con intersección válida`)
+      }
+    }
+
+    // Validación final del crucigrama
+    this.validateFinalCrossword(result)
+
+    console.log(`✅ Crucigrama universal creado con ${result.length} palabras`)
+    return result
+  }
+
+  private validateFinalCrossword(questions: CrosswordQuestion[]): void {
+    console.log('🔍 Validando crucigrama final...')
+
+    // Verificar que todas las intersecciones sean correctas
+    for (let i = 0; i < questions.length; i++) {
+      for (let j = i + 1; j < questions.length; j++) {
+        const word1 = questions[i]
+        const word2 = questions[j]
+
+        // Buscar intersecciones
+        const intersection = this.findWordIntersection(word1, word2)
+        if (intersection) {
+          const letter1 = word1.answer[intersection.word1Index]
+          const letter2 = word2.answer[intersection.word2Index]
+
+          if (letter1 !== letter2) {
+            console.error(`❌ INTERSECCIÓN INVÁLIDA: ${word1.answer}[${intersection.word1Index}]="${letter1}" vs ${word2.answer}[${intersection.word2Index}]="${letter2}" en (${intersection.row}, ${intersection.col})`)
+          } else {
+            console.log(`✅ Intersección válida: ${word1.answer} ↔ ${word2.answer} = "${letter1}" en (${intersection.row}, ${intersection.col})`)
+          }
+        }
+      }
+    }
+  }
+
+  private findWordIntersection(word1: CrosswordQuestion, word2: CrosswordQuestion): { row: number, col: number, word1Index: number, word2Index: number } | null {
+    // Solo palabras perpendiculares pueden intersectarse
+    if (word1.position.direction === word2.position.direction) {
+      return null
+    }
+
+    const horizontal = word1.position.direction === 'horizontal' ? word1 : word2
+    const vertical = word1.position.direction === 'vertical' ? word1 : word2
+
+    const hRow = horizontal.position.row
+    const hColStart = horizontal.position.col
+    const hColEnd = hColStart + horizontal.answer.length - 1
+
+    const vCol = vertical.position.col
+    const vRowStart = vertical.position.row
+    const vRowEnd = vRowStart + vertical.answer.length - 1
+
+    // Verificar si se intersectan
+    if (hRow >= vRowStart && hRow <= vRowEnd && vCol >= hColStart && vCol <= hColEnd) {
+      const word1Index = word1.position.direction === 'horizontal' ? vCol - hColStart : hRow - vRowStart
+      const word2Index = word2.position.direction === 'horizontal' ? vCol - hColStart : hRow - vRowStart
+
+      return {
+        row: hRow,
+        col: vCol,
+        word1Index,
+        word2Index
+      }
+    }
+
+    return null
+  }
+
+  private findBestBaseWord(words: Array<{ word: string, question: any }>): { word: string, question: any, intersectionCount: number } {
+    let bestWord = words[0]
+    let maxIntersections = 0
+
+    for (const wordData of words) {
+      let intersectionCount = 0
+
+      for (const otherWordData of words) {
+        if (wordData.word !== otherWordData.word) {
+          const intersections = this.findLetterIntersections(wordData.word, otherWordData.word)
+          intersectionCount += intersections.length
+        }
+      }
+
+      if (intersectionCount > maxIntersections) {
+        maxIntersections = intersectionCount
+        bestWord = wordData
+      }
+    }
+
+    return { ...bestWord, intersectionCount: maxIntersections }
+  }
+
+  private findBestPlacementWithValidation(word: string, placedWords: Map<string, { row: number, col: number, direction: 'horizontal' | 'vertical' }>, tempGrid: string[][]):
+    { row: number, col: number, direction: 'horizontal' | 'vertical', intersectionLetter: string } | null {
+
+    for (const [placedWord, placement] of placedWords) {
+      const intersections = this.findLetterIntersections(word, placedWord)
+
+      for (const intersection of intersections) {
+        const newDirection = placement.direction === 'horizontal' ? 'vertical' : 'horizontal'
+
+        let newRow: number, newCol: number
+
+        if (placement.direction === 'horizontal') {
+          // Palabra colocada es horizontal, nueva será vertical
+          newRow = placement.row - intersection.newWordIndex
+          newCol = placement.col + intersection.placedWordIndex
+        } else {
+          // Palabra colocada es vertical, nueva será horizontal
+          newRow = placement.row + intersection.placedWordIndex
+          newCol = placement.col - intersection.newWordIndex
+        }
+
+        // Verificar que esté dentro del grid
+        if (this.isWithinBounds(newRow, newCol, word.length, newDirection)) {
+          // Validación estricta con grid temporal
+          if (this.isPlacementValidWithGrid(word, newRow, newCol, newDirection, tempGrid)) {
+            return {
+              row: newRow,
+              col: newCol,
+              direction: newDirection,
+              intersectionLetter: intersection.letter
+            }
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  private isPlacementValidWithGrid(word: string, row: number, col: number, direction: 'horizontal' | 'vertical', tempGrid: string[][]): boolean {
+    // Verificar cada letra de la palabra
+    for (let i = 0; i < word.length; i++) {
+      const currentRow = direction === 'vertical' ? row + i : row
+      const currentCol = direction === 'horizontal' ? col + i : col
+
+      // Verificar límites
+      if (currentRow < 0 || currentRow >= this.gridSize || currentCol < 0 || currentCol >= this.gridSize) {
+        return false
+      }
+
+      const gridLetter = tempGrid[currentRow][currentCol]
+      const wordLetter = word[i]
+
+      // Si hay una letra en el grid, debe coincidir exactamente
+      if (gridLetter !== '' && gridLetter !== wordLetter) {
+        console.log(`❌ Conflicto de letra en (${currentRow}, ${currentCol}): "${wordLetter}" vs "${gridLetter}"`)
+        return false
+      }
+
+      // Verificar que no forme palabras adyacentes inválidas
+      if (gridLetter === '') {
+        if (!this.validatePerpendicularPlacementWithGrid(word, i, currentRow, currentCol, direction, tempGrid)) {
+          return false
+        }
+      }
+    }
+
+    // Verificar que no haya letras antes del inicio o después del final
+    if (direction === 'horizontal') {
+      if (col > 0 && tempGrid[row][col - 1] !== '') {
+        return false
+      }
+      if (col + word.length < this.gridSize && tempGrid[row][col + word.length] !== '') {
+        return false
+      }
+    } else {
+      if (row > 0 && tempGrid[row - 1][col] !== '') {
+        return false
+      }
+      if (row + word.length < this.gridSize && tempGrid[row + word.length][col] !== '') {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  private validatePerpendicularPlacementWithGrid(word: string, letterIndex: number, row: number, col: number, direction: 'horizontal' | 'vertical', tempGrid: string[][]): boolean {
+    if (direction === 'horizontal') {
+      // Para palabras horizontales, verificar formación de palabras verticales
+      let hasLetterAbove = row > 0 && tempGrid[row - 1][col] !== ''
+      let hasLetterBelow = row < this.gridSize - 1 && tempGrid[row + 1][col] !== ''
+
+      // Solo permitir si es exactamente una intersección
+      if (hasLetterAbove || hasLetterBelow) {
+        return tempGrid[row][col] !== '' && tempGrid[row][col] === word[letterIndex]
+      }
+    } else {
+      // Para palabras verticales, verificar formación de palabras horizontales
+      let hasLetterLeft = col > 0 && tempGrid[row][col - 1] !== ''
+      let hasLetterRight = col < this.gridSize - 1 && tempGrid[row][col + 1] !== ''
+
+      // Solo permitir si es exactamente una intersección
+      if (hasLetterLeft || hasLetterRight) {
+        return tempGrid[row][col] !== '' && tempGrid[row][col] === word[letterIndex]
+      }
+    }
+
+    return true
+  }
+
+  private isPlacementValid(word: string, row: number, col: number, direction: 'horizontal' | 'vertical',
+    placedWords: Map<string, { row: number, col: number, direction: 'horizontal' | 'vertical' }>): boolean {
+
+    // Crear grid temporal para verificar conflictos
+    const tempGrid: string[][] = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''))
+
+    // Colocar palabras ya existentes
+    for (const [placedWord, placement] of placedWords) {
+      for (let i = 0; i < placedWord.length; i++) {
+        const currentRow = placement.direction === 'vertical' ? placement.row + i : placement.row
+        const currentCol = placement.direction === 'horizontal' ? placement.col + i : placement.col
+        tempGrid[currentRow][currentCol] = placedWord[i]
+      }
+    }
+
+    // Verificar si la nueva palabra puede colocarse
+    for (let i = 0; i < word.length; i++) {
+      const currentRow = direction === 'vertical' ? row + i : row
+      const currentCol = direction === 'horizontal' ? col + i : col
+
+      if (tempGrid[currentRow][currentCol] !== '' && tempGrid[currentRow][currentCol] !== word[i]) {
+        return false // Conflicto de letras
+      }
+    }
+
+    return true
+  }
+
+  private findBestIntersection(word1: string, word2: string): { letter: string, newWordIndex: number, baseWordIndex: number } | null {
+    for (let i = 0; i < word1.length; i++) {
+      for (let j = 0; j < word2.length; j++) {
+        if (word1[i] === word2[j]) {
+          return {
+            letter: word1[i],
+            newWordIndex: i,
+            baseWordIndex: j
+          }
+        }
+      }
+    }
+    return null
+  }
+
   private convertToFinalFormat(): CrosswordQuestion[] {
     return this.placedWords.map((placedWord, index) => ({
       ...placedWord.questionData,
@@ -489,266 +880,255 @@ export class PerfectCrosswordGenerator {
   }
 }
 
-// Función universal para generar cualquier crucigrama usando el algoritmo perfecto
+// 🎯 ALGORITMO UNIVERSAL - Funciona con cualquier tema y conjunto de palabras
+// ✅ Escalable a miles de temas sin programar funciones individuales
 export function generatePerfectCrossword(gameId: string): CrosswordData | null {
+  console.log(`🎯 Generando crucigrama universal para: ${gameId}`)
+
   const generator = new PerfectCrosswordGenerator(15)
+  const gameData = getGameData(gameId)
 
-  switch (gameId) {
-    case 'revolucion-francesa':
-    case '1':
-      return generateRevolutionCrossword(generator)
-    case 'sistema-solar':
-    case '2':
-      return generateSolarSystemCrossword(generator)
-    case 'independencia-chile':
-    case '3':
-      return generateChileIndependenceCrossword(generator)
-    case 'geometria-basica':
-    case '4':
-      return generateGeometryCrossword(generator)
-    default:
-      console.log(`⚠️ No hay algoritmo perfecto para gameId: ${gameId}`)
-      return null
+  if (!gameData) {
+    console.warn(`❌ Datos no encontrados para gameId: ${gameId}`)
+    return null
   }
-}
 
-// Revolución Francesa
-function generateRevolutionCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
-  const questions = [
-    {
-      id: '1',
-      question: 'Rey de Francia ejecutado durante la revolución',
-      answer: 'LUIS',
-      category: 'Personajes',
-      difficulty: 'Medio'
-    },
-    {
-      id: '2',
-      question: 'Fortaleza tomada el 14 de julio de 1789',
-      answer: 'BASTILLA',
-      category: 'Eventos',
-      difficulty: 'Medio'
-    },
-    {
-      id: '3',
-      question: 'Líder del período del Terror',
-      answer: 'ROBESPIERRE',
-      category: 'Personajes',
-      difficulty: 'Difícil'
-    },
-    {
-      id: '4',
-      question: 'Clase social privilegiada antes de la revolución',
-      answer: 'NOBLEZA',
-      category: 'Sociedad',
-      difficulty: 'Fácil'
-    },
-    {
-      id: '5',
-      question: 'Documento que declaraba los derechos fundamentales',
-      answer: 'DECLARACION',
-      category: 'Documentos',
-      difficulty: 'Medio'
-    }
-  ]
+  console.log(`📝 Procesando ${gameData.questions.length} palabras para "${gameData.title}"`)
 
-  const generatedQuestions = generator.generatePerfectCrossword(questions)
+  // Usar algoritmo universal que funciona con cualquier conjunto de palabras
+  const generatedQuestions = generator.createUniversalOptimizedCrossword(gameData.questions)
+
+  console.log(`✅ Crucigrama "${gameData.title}" generado exitosamente con ${generatedQuestions.length} palabras`)
 
   return {
-    id: 'revolucion-francesa',
-    title: 'Revolución Francesa',
-    subject: 'Historia',
-    difficulty: 'Medio',
-    estimatedTime: '12-15 min',
+    id: gameId,
+    title: gameData.title,
+    subject: gameData.subject,
+    difficulty: gameData.difficulty,
+    estimatedTime: gameData.estimatedTime,
     questions: generatedQuestions
   }
 }
 
-// Sistema Solar - Versión optimizada con colocación manual
-function generateSolarSystemCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
-  console.log('🌟 Generando crucigrama Sistema Solar con algoritmo optimizado...')
+// 📊 BASE DE DATOS DE TEMAS - Escalable a miles de temas
+// ✅ Solo se necesita agregar datos aquí para crear nuevos crucigramas
+function getGameData(gameId: string): {
+  title: string,
+  subject: string,
+  difficulty: string,
+  estimatedTime: string,
+  questions: Omit<CrosswordQuestion, 'position' | 'number'>[]
+} | null {
 
-  // Crear crucigrama manualmente optimizado con intersecciones matemáticamente correctas
-  // MERCURIO: M(1) E(2) R(3) C(4) U(5) R(6) I(7) O(8) (horizontal, fila 7, col 1-8)
-  // MARTE: M(5) A(6) R(7) T(8) E(9) (vertical, col 3) - intersecta en R con MERCURIO
-  // SOL: S(6) O(7) L(8) (vertical, col 8) - intersecta en O con MERCURIO
-  // SATURNO: S(2) A(3) T(4) U(5) R(6) N(7) O(8) (vertical, col 6) - intersecta en R con MERCURIO
+  const gameDatabase = {
+    'independencia-chile': {
+      title: 'Independencia de Chile',
+      subject: 'Historia',
+      difficulty: 'Medio',
+      estimatedTime: '15-18 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Libertador de América',
+          answer: 'SANMARTIN',
+          category: 'Personajes',
+          difficulty: 'Medio'
+        },
+        {
+          id: '2',
+          question: 'Padre de la Patria chilena',
+          answer: 'OHIGGINS',
+          category: 'Personajes',
+          difficulty: 'Medio'
+        },
+        {
+          id: '3',
+          question: 'Cruce de esta cordillera fue clave',
+          answer: 'ANDES',
+          category: 'Geografía',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '4',
+          question: 'Batalla decisiva de la independencia',
+          answer: 'MAIPU',
+          category: 'Batallas',
+          difficulty: 'Medio'
+        },
+        {
+          id: '5',
+          question: 'Primera Junta de Gobierno',
+          answer: 'PATRIA',
+          category: 'Eventos',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Año de la independencia',
+          answer: 'DIECIOCHO',
+          category: 'Fechas',
+          difficulty: 'Difícil'
+        }
+      ]
+    },
 
-  const questions: CrosswordQuestion[] = [
-    {
-      id: '1',
-      question: 'Planeta más cercano al Sol',
-      answer: 'MERCURIO',
-      category: 'Planetas',
+    'sistema-solar': {
+      title: 'Sistema Solar',
+      subject: 'Ciencias',
       difficulty: 'Fácil',
-      position: { row: 7, col: 1, direction: 'horizontal' },
-      number: 1
+      estimatedTime: '8-10 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Planeta más cercano al Sol',
+          answer: 'MERCURIO',
+          category: 'Planetas',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '2',
+          question: 'Planeta rojo',
+          answer: 'MARTE',
+          category: 'Planetas',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '3',
+          question: 'Planeta más grande del sistema solar',
+          answer: 'JUPITER',
+          category: 'Planetas',
+          difficulty: 'Medio'
+        },
+        {
+          id: '4',
+          question: 'Satélite natural de la Tierra',
+          answer: 'LUNA',
+          category: 'Satélites',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '5',
+          question: 'Estrella del sistema solar',
+          answer: 'SOL',
+          category: 'Estrellas',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '6',
+          question: 'Planeta con anillos',
+          answer: 'SATURNO',
+          category: 'Planetas',
+          difficulty: 'Medio'
+        }
+      ]
     },
-    {
-      id: '2',
-      question: 'Planeta conocido como el planeta rojo',
-      answer: 'MARTE',
-      category: 'Planetas',
-      difficulty: 'Fácil',
-      position: { row: 5, col: 3, direction: 'vertical' }, // R de MARTE (7,3) = R de MERCURIO (7,3)
-      number: 2
+
+    'geometria-basica': {
+      title: 'Geometría Básica',
+      subject: 'Matemáticas',
+      difficulty: 'Medio',
+      estimatedTime: '10-12 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Figura de tres lados',
+          answer: 'TRIANGULO',
+          category: 'Figuras',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '2',
+          question: 'Figura de cuatro lados iguales',
+          answer: 'CUADRADO',
+          category: 'Figuras',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '3',
+          question: 'Línea que divide un círculo por la mitad',
+          answer: 'DIAMETRO',
+          category: 'Círculo',
+          difficulty: 'Medio'
+        },
+        {
+          id: '4',
+          question: 'Ángulo de 90 grados',
+          answer: 'RECTO',
+          category: 'Ángulos',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '5',
+          question: 'Perímetro de un círculo',
+          answer: 'CIRCUNFERENCIA',
+          category: 'Círculo',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Figura de seis lados',
+          answer: 'HEXAGONO',
+          category: 'Figuras',
+          difficulty: 'Medio'
+        }
+      ]
     },
-    {
-      id: '3',
-      question: 'Estrella central de nuestro sistema',
-      answer: 'SOL',
-      category: 'Estrellas',
-      difficulty: 'Fácil',
-      position: { row: 6, col: 8, direction: 'vertical' }, // O de SOL (7,8) = O de MERCURIO (7,8)
-      number: 3
-    },
-    {
-      id: '4',
-      question: 'Planeta con anillos visibles',
-      answer: 'SATURNO',
-      category: 'Planetas',
-      difficulty: 'Fácil',
-      position: { row: 2, col: 6, direction: 'vertical' }, // R de SATURNO (7,6) = R de MERCURIO (7,6)
-      number: 4
+
+    'revolucion-francesa': {
+      title: 'Revolución Francesa',
+      subject: 'Historia',
+      difficulty: 'Medio',
+      estimatedTime: '12-15 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Rey de Francia ejecutado durante la revolución',
+          answer: 'LUIS',
+          category: 'Personajes',
+          difficulty: 'Medio'
+        },
+        {
+          id: '2',
+          question: 'Fortaleza tomada el 14 de julio de 1789',
+          answer: 'BASTILLA',
+          category: 'Eventos',
+          difficulty: 'Medio'
+        },
+        {
+          id: '3',
+          question: 'Líder del período del Terror',
+          answer: 'ROBESPIERRE',
+          category: 'Personajes',
+          difficulty: 'Difícil'
+        },
+        {
+          id: '4',
+          question: 'Clase social privilegiada antes de la revolución',
+          answer: 'NOBLEZA',
+          category: 'Sociedad',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '5',
+          question: 'Documento que declaraba los derechos fundamentales',
+          answer: 'DECLARACION',
+          category: 'Documentos',
+          difficulty: 'Medio'
+        }
+      ]
     }
-  ]
-
-  console.log('✅ Crucigrama Sistema Solar generado con intersecciones matemáticamente perfectas')
-  console.log('📊 Intersecciones verificadas:')
-  console.log('   - MERCURIO (fila 7, col 1-8): M-E-R-C-U-R-I-O')
-  console.log('   - MARTE (fila 5-9, col 3): M-A-R-T-E, R intersecta en (7,3)')
-  console.log('   - SOL (fila 6-8, col 8): S-O-L, O intersecta en (7,8)')
-  console.log('   - SATURNO (fila 2-8, col 6): S-A-T-U-R-N-O, R intersecta en (7,6)')
-
-  return {
-    id: 'sistema-solar',
-    title: 'Sistema Solar',
-    subject: 'Ciencias',
-    difficulty: 'Fácil',
-    estimatedTime: '8-10 min',
-    questions: questions
   }
+
+  return gameDatabase[gameId as keyof typeof gameDatabase] || null
 }
 
-// Independencia de Chile
-function generateChileIndependenceCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
-  const questions = [
-    {
-      id: '1',
-      question: 'Padre de la Patria chilena',
-      answer: 'OHIGGINS',
-      category: 'Personajes',
-      difficulty: 'Medio'
-    },
-    {
-      id: '2',
-      question: 'Batalla decisiva de la independencia',
-      answer: 'MAIPU',
-      category: 'Batallas',
-      difficulty: 'Medio'
-    },
-    {
-      id: '3',
-      question: 'Libertador de América',
-      answer: 'SANMARTIN',
-      category: 'Personajes',
-      difficulty: 'Medio'
-    },
-    {
-      id: '4',
-      question: 'Primera Junta de Gobierno',
-      answer: 'PATRIA',
-      category: 'Eventos',
-      difficulty: 'Medio'
-    },
-    {
-      id: '5',
-      question: 'Cruce de esta cordillera fue clave',
-      answer: 'ANDES',
-      category: 'Geografía',
-      difficulty: 'Fácil'
-    },
-    {
-      id: '6',
-      question: 'Año de la independencia',
-      answer: 'DIECIOCHO',
-      category: 'Fechas',
-      difficulty: 'Difícil'
-    }
-  ]
+// 🗑️ FUNCIONES LEGACY ELIMINADAS
+// ✅ Todas las funciones específicas por tema han sido reemplazadas por el algoritmo universal
 
-  const generatedQuestions = generator.generatePerfectCrossword(questions)
 
-  return {
-    id: 'independencia-chile',
-    title: 'Independencia de Chile',
-    subject: 'Historia',
-    difficulty: 'Medio',
-    estimatedTime: '15-18 min',
-    questions: generatedQuestions
-  }
-}
 
-// Geometría Básica
-function generateGeometryCrossword(generator: PerfectCrosswordGenerator): CrosswordData {
-  const questions = [
-    {
-      id: '1',
-      question: 'Figura de tres lados',
-      answer: 'TRIANGULO',
-      category: 'Figuras',
-      difficulty: 'Fácil'
-    },
-    {
-      id: '2',
-      question: 'Figura de cuatro lados iguales',
-      answer: 'CUADRADO',
-      category: 'Figuras',
-      difficulty: 'Fácil'
-    },
-    {
-      id: '3',
-      question: 'Línea que divide un círculo por la mitad',
-      answer: 'DIAMETRO',
-      category: 'Círculo',
-      difficulty: 'Medio'
-    },
-    {
-      id: '4',
-      question: 'Ángulo de 90 grados',
-      answer: 'RECTO',
-      category: 'Ángulos',
-      difficulty: 'Fácil'
-    },
-    {
-      id: '5',
-      question: 'Perímetro de un círculo',
-      answer: 'CIRCUNFERENCIA',
-      category: 'Círculo',
-      difficulty: 'Medio'
-    },
-    {
-      id: '6',
-      question: 'Figura de seis lados',
-      answer: 'HEXAGONO',
-      category: 'Figuras',
-      difficulty: 'Medio'
-    }
-  ]
 
-  const generatedQuestions = generator.generatePerfectCrossword(questions)
 
-  return {
-    id: 'geometria-basica',
-    title: 'Geometría Básica',
-    subject: 'Matemáticas',
-    difficulty: 'Medio',
-    estimatedTime: '10-12 min',
-    questions: generatedQuestions
-  }
-}
 
-// Función legacy para compatibilidad
-export function generatePerfectRevolutionCrossword(): CrosswordData {
-  return generatePerfectCrossword('revolucion-francesa')!
-}
+
+

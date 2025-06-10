@@ -240,8 +240,8 @@ export const getServerSession = async () => {
 
 // Función para verificar si un crucigrama es accesible sin login
 export function isCrosswordPublic(gameId: string): boolean {
-  // Solo "Sistema Solar" (ID: 2) es público
-  const publicCrosswords = ['2']
+  // Solo "Sistema Solar" es público para demo
+  const publicCrosswords = ['sistema-solar']
   return publicCrosswords.includes(gameId)
 }
 

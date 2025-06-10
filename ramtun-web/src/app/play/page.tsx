@@ -45,44 +45,44 @@ export default function PlayPage() {
       // Datos de ejemplo - en producción vendría de la API
       const availableCrosswords: AvailableCrossword[] = [
         {
-          id: '2',
+          id: 'sistema-solar',
           title: 'Sistema Solar',
           subject: 'Ciencias',
           description: 'Explora los planetas y cuerpos celestes de nuestro sistema solar.',
-          difficulty: 'Medio',
-          estimatedTime: '15-20 min',
+          difficulty: 'Fácil',
+          estimatedTime: '8-10 min',
           isPublic: true,
-          questions: 12
+          questions: 6
         },
         {
-          id: '3',
+          id: 'independencia-chile',
           title: 'Independencia de Chile',
           subject: 'Historia',
           description: 'Descubre los eventos y personajes clave de la independencia chilena.',
           difficulty: 'Medio',
-          estimatedTime: '20-25 min',
+          estimatedTime: '15-18 min',
           isPublic: false,
-          questions: 15
+          questions: 6
         },
         {
-          id: '4',
+          id: 'geometria-basica',
           title: 'Geometría Básica',
           subject: 'Matemáticas',
           description: 'Aprende sobre figuras geométricas y sus propiedades.',
-          difficulty: 'Fácil',
-          estimatedTime: '10-15 min',
+          difficulty: 'Medio',
+          estimatedTime: '10-12 min',
           isPublic: false,
-          questions: 10
+          questions: 6
         },
         {
-          id: '5',
+          id: 'revolucion-francesa',
           title: 'Revolución Francesa',
           subject: 'Historia',
           description: 'Conoce los eventos que marcaron la Revolución Francesa.',
-          difficulty: 'Difícil',
-          estimatedTime: '25-30 min',
+          difficulty: 'Medio',
+          estimatedTime: '12-15 min',
           isPublic: false,
-          questions: 18
+          questions: 5
         }
       ]
 
