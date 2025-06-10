@@ -887,12 +887,12 @@ function getGameData(gameId: string): {
 
   // 🔄 Mapeo de IDs de biblioteca a claves de base de datos
   const idMapping: Record<string, string> = {
-    '1': 'sistema-solar',
-    '2': 'revolucion-francesa',
-    '3': 'geometria-basica',
-    '4': 'animales-vertebrados',
-    '5': 'independencia-chile',
-    '6': 'tabla-periodica'
+    '1': 'sistema-solar',           // Sistema Solar
+    '2': 'revolucion-francesa',     // Revolución Francesa
+    '3': 'fracciones-basicas',      // Fracciones Básicas
+    '4': 'animales-vertebrados',    // Animales Vertebrados
+    '5': 'geografia-chile',         // Geografía de Chile
+    '6': 'tabla-periodica'          // Tabla Periódica
   }
 
   // Convertir ID de biblioteca a clave de base de datos
@@ -1193,6 +1193,108 @@ function getGameData(gameId: string): {
           question: 'Elemento base de la vida orgánica',
           answer: 'CARBONO',
           category: 'Elementos',
+          difficulty: 'Medio'
+        }
+      ]
+    },
+
+    'fracciones-basicas': {
+      title: 'Fracciones Básicas',
+      subject: 'Matemáticas',
+      difficulty: 'Fácil',
+      estimatedTime: '10-15 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Parte de arriba de una fracción',
+          answer: 'NUMERADOR',
+          category: 'Conceptos',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '2',
+          question: 'Parte de abajo de una fracción',
+          answer: 'DENOMINADOR',
+          category: 'Conceptos',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '3',
+          question: 'Fracción que representa la mitad',
+          answer: 'MEDIO',
+          category: 'Fracciones',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '4',
+          question: 'Fracción que representa una de cuatro partes',
+          answer: 'CUARTO',
+          category: 'Fracciones',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '5',
+          question: 'Fracción equivalente a 2/4',
+          answer: 'MEDIO',
+          category: 'Equivalencias',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Fracción mayor que un entero',
+          answer: 'IMPROPIA',
+          category: 'Tipos',
+          difficulty: 'Medio'
+        }
+      ]
+    },
+
+    'geografia-chile': {
+      title: 'Geografía de Chile',
+      subject: 'Historia',
+      difficulty: 'Medio',
+      estimatedTime: '18-22 min',
+      questions: [
+        {
+          id: '1',
+          question: 'Capital de Chile',
+          answer: 'SANTIAGO',
+          category: 'Ciudades',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '2',
+          question: 'Desierto más árido del mundo en Chile',
+          answer: 'ATACAMA',
+          category: 'Geografía',
+          difficulty: 'Medio'
+        },
+        {
+          id: '3',
+          question: 'Cordillera que atraviesa Chile',
+          answer: 'ANDES',
+          category: 'Geografía',
+          difficulty: 'Fácil'
+        },
+        {
+          id: '4',
+          question: 'Región más austral de Chile',
+          answer: 'MAGALLANES',
+          category: 'Regiones',
+          difficulty: 'Medio'
+        },
+        {
+          id: '5',
+          question: 'Puerto principal de Chile',
+          answer: 'VALPARAISO',
+          category: 'Ciudades',
+          difficulty: 'Medio'
+        },
+        {
+          id: '6',
+          question: 'Isla famosa por sus estatuas',
+          answer: 'PASCUA',
+          category: 'Islas',
           difficulty: 'Medio'
         }
       ]
