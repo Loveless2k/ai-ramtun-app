@@ -77,6 +77,10 @@ function RegisterPageContent() {
       // Redirect to verification page or dashboard
       router.push('/auth/verify-email')
     } catch (err: unknown) {
+      if (err instanceof Error && err.message === 'DEMO_MODE') {
+        // Demo mode - don't show error, just stop execution
+        return
+      }
       setError(err instanceof Error ? err.message : 'Error al crear la cuenta')
     } finally {
       setIsLoading(false)

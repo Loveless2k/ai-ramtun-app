@@ -202,8 +202,8 @@ export const useAuth = (): AuthState & {
     if (!isSupabaseConfigured()) {
       // Demo mode
       console.log('Demo: Sign up with email:', email, metadata)
-      alert('🚧 Modo Demo: El registro estará disponible cuando configures Supabase')
-      return
+      alert('🚧 Modo Demo Activo\n\n✅ Puedes explorar la plataforma sin registrarte\n🎮 Prueba el crucigrama demo "Sistema Solar"\n📊 Accede a las áreas de demostración\n\n💡 El registro real estará disponible cuando se configure Supabase')
+      throw new Error('DEMO_MODE') // Throw error to prevent navigation
     }
 
     const supabase = createClientComponentClient()

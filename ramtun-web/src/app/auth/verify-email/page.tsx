@@ -14,16 +14,6 @@ export default function VerifyEmailPage() {
   const searchParams = useSearchParams()
   const supabase = createClientComponentClient()
 
-  useEffect(() => {
-    // Check if this is a verification callback
-    const token = searchParams.get('token')
-    const type = searchParams.get('type')
-    
-    if (token && type === 'signup') {
-      handleEmailVerification(token)
-    }
-  }, [searchParams, handleEmailVerification])
-
   const handleEmailVerification = useCallback(async (token: string) => {
     setIsVerifying(true)
     
@@ -60,6 +50,16 @@ export default function VerifyEmailPage() {
       setIsVerifying(false)
     }
   }, [router, supabase.auth])
+
+  useEffect(() => {
+    // Check if this is a verification callback
+    const token = searchParams.get('token')
+    const type = searchParams.get('type')
+
+    if (token && type === 'signup') {
+      handleEmailVerification(token)
+    }
+  }, [searchParams, handleEmailVerification])
 
   const resendVerificationEmail = async () => {
     try {
