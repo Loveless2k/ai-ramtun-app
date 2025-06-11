@@ -97,7 +97,7 @@ export default function AccessGuard({ gameTitle, gameSubject }: Omit<AccessGuard
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => router.push('/game/2')}
+            onClick={() => router.push('/game/1')}
             className="w-full bg-green-50 text-green-700 py-3 px-6 rounded-lg font-semibold border-2 border-green-200 hover:border-green-300 transition-all duration-200"
           >
             🎮 Probar Demo: Sistema Solar

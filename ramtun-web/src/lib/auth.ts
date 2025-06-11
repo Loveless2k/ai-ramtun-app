@@ -280,14 +280,27 @@ export const getServerSession = async () => {
 // Función para verificar si un crucigrama es accesible sin login
 export function isCrosswordPublic(gameId: string): boolean {
   // Solo "Sistema Solar" es público para demo
+  // Mapeo de IDs numéricos a claves de base de datos
+  const idMapping: Record<string, string> = {
+    '1': 'sistema-solar',           // Sistema Solar
+    '2': 'revolucion-francesa',     // Revolución Francesa
+    '3': 'fracciones-basicas',      // Fracciones Básicas
+    '4': 'animales-vertebrados',    // Animales Vertebrados
+    '5': 'geografia-chile',         // Geografía de Chile
+    '6': 'tabla-periodica'          // Tabla Periódica
+  }
+
+  // Convertir ID numérico a clave de base de datos si es necesario
+  const gameKey = idMapping[gameId] || gameId
+
   const publicCrosswords = ['sistema-solar']
-  return publicCrosswords.includes(gameId)
+  return publicCrosswords.includes(gameKey)
 }
 
 // Función para obtener información del crucigrama demo
 export function getDemoCrosswordInfo() {
   return {
-    id: '2',
+    id: '1',
     title: 'Sistema Solar',
     subject: 'Ciencias',
     description: 'Descubre los planetas y cuerpos celestes en este crucigrama demo.',
