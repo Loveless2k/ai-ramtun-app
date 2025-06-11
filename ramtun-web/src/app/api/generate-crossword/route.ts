@@ -8,11 +8,45 @@ import type { CrosswordRequest } from '@/types/crossword'
 export async function POST(request: NextRequest) {
   try {
     // 🔒 PHASE 1: Authentication and Authorization Check
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     const { data: { session } } = await supabase.auth.getSession()
 
+    let userRole: string | null = null
+    let isAuthenticated = false
+
+    // Check Supabase session first
+    if (session?.user) {
+      userRole = session.user.user_metadata?.role
+      isAuthenticated = true
+      console.log('✅ API: Supabase session found, role:', userRole)
+    } else {
+      // Check for custom auth header (for demo/localStorage users)
+      const authHeader = request.headers.get('x-ramtun-auth')
+      console.log('🔍 API: Checking custom auth header:', authHeader ? 'Present' : 'Missing')
+
+      if (authHeader) {
+        try {
+          const authData = JSON.parse(authHeader)
+          console.log('🔍 API: Parsed auth data:', authData)
+
+          if (authData.role && authData.id) {
+            userRole = authData.role
+            isAuthenticated = true
+            console.log('✅ API: Custom auth header found, role:', userRole)
+          } else {
+            console.log('❌ API: Auth data missing required fields (role/id):', authData)
+          }
+        } catch (error) {
+          console.log('❌ API: Invalid auth header format:', error)
+        }
+      } else {
+        console.log('❌ API: No auth header found')
+      }
+    }
+
     // Check if user is authenticated
-    if (!session?.user) {
+    if (!isAuthenticated) {
       console.log('❌ API: Unauthenticated access attempt to crossword generator')
       return NextResponse.json(
         { error: 'Authentication required. Please log in to generate crosswords.' },
@@ -21,7 +55,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has teacher role
-    const userRole = session.user.user_metadata?.role
     console.log('👤 API: User role attempting generator access:', userRole)
 
     if (userRole !== 'teacher') {

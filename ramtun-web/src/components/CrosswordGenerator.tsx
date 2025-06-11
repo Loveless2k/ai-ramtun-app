@@ -59,11 +59,32 @@ export default function CrosswordGenerator() {
     setResult(null)
 
     try {
+      // Prepare headers with authentication
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add authentication header if user is available
+      if (user) {
+        console.log('🔍 Frontend: User object:', user)
+        console.log('🔍 Frontend: User role:', user.role)
+        console.log('🔍 Frontend: User metadata role:', user.user_metadata?.role)
+
+        const authData = {
+          id: user.id,
+          role: user.user_metadata?.role || user.role, // Try both locations
+          email: user.email
+        }
+
+        console.log('🔍 Frontend: Sending auth data:', authData)
+        headers['x-ramtun-auth'] = JSON.stringify(authData)
+      } else {
+        console.log('❌ Frontend: No user available for auth')
+      }
+
       const response = await fetch('/api/generate-crossword', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(formData),
       })
 
@@ -81,7 +102,7 @@ export default function CrosswordGenerator() {
       setIsGenerating(false)
       setIsFromQuickGenerator(false)
     }
-  }, [formData])
+  }, [formData, user])
 
   // Autocompletar desde parámetros URL o localStorage
   useEffect(() => {
@@ -139,11 +160,32 @@ export default function CrosswordGenerator() {
     setResult(null)
 
     try {
+      // Prepare headers with authentication
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add authentication header if user is available
+      if (user) {
+        console.log('🔍 Frontend: User object:', user)
+        console.log('🔍 Frontend: User role:', user.role)
+        console.log('🔍 Frontend: User metadata role:', user.user_metadata?.role)
+
+        const authData = {
+          id: user.id,
+          role: user.user_metadata?.role || user.role, // Try both locations
+          email: user.email
+        }
+
+        console.log('🔍 Frontend: Sending auth data:', authData)
+        headers['x-ramtun-auth'] = JSON.stringify(authData)
+      } else {
+        console.log('❌ Frontend: No user available for auth')
+      }
+
       const response = await fetch('/api/generate-crossword', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(formData),
       })
 

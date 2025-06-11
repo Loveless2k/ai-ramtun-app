@@ -50,8 +50,40 @@ export const useAuth = (): AuthState & {
     if (!isClient) return
 
     if (!isSupabaseConfigured()) {
-      // Demo mode - crear usuarios demo basados en URL
-      const createDemoUser = () => {
+      // Demo mode - check localStorage first, then create demo user
+      const checkLocalStorageUser = () => {
+        try {
+          const storedUser = localStorage.getItem('ramtun_user')
+          if (storedUser) {
+            const userData = JSON.parse(storedUser)
+            console.log('🔍 Auth: Found localStorage user:', userData)
+
+            // Convert localStorage user to AuthUser format
+            const authUser: AuthUser = {
+              id: userData.id,
+              email: userData.email,
+              user_metadata: userData.user_metadata || {
+                first_name: userData.user_metadata?.first_name || (userData.role === 'teacher' ? 'Profesor' : 'Estudiante'),
+                last_name: userData.user_metadata?.last_name || 'Demo',
+                role: userData.user_metadata?.role || userData.role,
+                school_name: userData.user_metadata?.school_name || 'Escuela Demo'
+              }
+            } as AuthUser
+
+            console.log('🔍 Auth: Converted to AuthUser:', authUser)
+            setUser(authUser)
+            setIsLoading(false)
+            return true
+          }
+        } catch (error) {
+          console.error('Error reading localStorage user:', error)
+        }
+        return false
+      }
+
+      // Try localStorage first
+      if (!checkLocalStorageUser()) {
+        // Fallback to creating demo user based on URL
         const isInTeacherDashboard = window.location.pathname.startsWith('/dashboard')
         const isInStudentArea = window.location.pathname.startsWith('/student')
 
@@ -73,8 +105,15 @@ export const useAuth = (): AuthState & {
         setIsLoading(false)
       }
 
-      createDemoUser()
-      return
+      // Listen for localStorage changes
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === 'ramtun_user') {
+          checkLocalStorageUser()
+        }
+      }
+
+      window.addEventListener('storage', handleStorageChange)
+      return () => window.removeEventListener('storage', handleStorageChange)
     }
 
     // Real Supabase auth

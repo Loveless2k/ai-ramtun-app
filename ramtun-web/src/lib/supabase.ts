@@ -12,7 +12,7 @@ export const createClientComponentClient = () => {
 // Server-side Supabase client (only use in server components)
 export const createServerComponentClient = async () => {
   const { cookies } = await import('next/headers')
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {

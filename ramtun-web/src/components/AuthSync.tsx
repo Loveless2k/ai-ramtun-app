@@ -34,7 +34,13 @@ export default function AuthSync() {
         const demoUser = {
           id: `demo-${role}`,
           email: role === 'teacher' ? 'profesor@demo.com' : 'estudiante@demo.com',
-          name: role === 'teacher' ? 'Profesor Demo' : 'Estudiante Demo',
+          user_metadata: {
+            first_name: role === 'teacher' ? 'Profesor' : 'Estudiante',
+            last_name: 'Demo',
+            role: role,
+            school_name: 'Escuela Demo'
+          },
+          // Also include role at root level for backward compatibility
           role: role
         }
 
