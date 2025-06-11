@@ -679,7 +679,7 @@ export default function CrosswordGenerator() {
                     <h4 className="font-medium text-indigo-800">Opciones de Asignación</h4>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-semibold text-gray-900 mb-1">
                         Límite de tiempo (minutos)
                       </label>
                       <input
@@ -688,13 +688,13 @@ export default function CrosswordGenerator() {
                         max="120"
                         value={teacherOptions.timeLimit}
                         onChange={(e) => setTeacherOptions(prev => ({ ...prev, timeLimit: parseInt(e.target.value) || 0 }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500"
                         placeholder="0 = Sin límite"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-semibold text-gray-900 mb-1">
                         Intentos máximos
                       </label>
                       <input
@@ -703,7 +703,7 @@ export default function CrosswordGenerator() {
                         max="10"
                         value={teacherOptions.maxAttempts}
                         onChange={(e) => setTeacherOptions(prev => ({ ...prev, maxAttempts: parseInt(e.target.value) || 0 }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 placeholder-gray-500"
                         placeholder="0 = Ilimitados"
                       />
                     </div>
