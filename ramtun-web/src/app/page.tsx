@@ -231,7 +231,6 @@ export default function Home() {
                 muted
                 loop
                 playsInline
-                poster="/hero_section_ramtun_poster.jpg"
                 preload="auto"
               >
                 <source src="/hero_section_ramtun.mp4" type="video/mp4" />

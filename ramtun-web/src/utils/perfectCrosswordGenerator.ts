@@ -46,12 +46,12 @@ export class PerfectCrosswordGenerator {
     // Colocar las demás palabras usando intersecciones válidas
     for (let i = 1; i < sortedQuestions.length; i++) {
       const question = sortedQuestions[i]
-      console.log(`\n🔄 Intentando colocar palabra ${i + 1}/${sortedQuestions.length}: ${question.answer}`)
+      // console.log(`\n🔄 Intentando colocar palabra ${i + 1}/${sortedQuestions.length}: ${question.answer}`)
 
       const placed = this.placePerfectWord(question)
 
       if (!placed) {
-        console.warn(`⚠️ No se pudo colocar la palabra: ${question.answer}`)
+        // console.warn(`⚠️ No se pudo colocar la palabra: ${question.answer}`)
         // Intentar con algoritmo de respaldo
         const backupPlaced = this.placeWordWithBackup(question)
         if (!backupPlaced) {
@@ -59,8 +59,8 @@ export class PerfectCrosswordGenerator {
         }
       }
 
-      console.log(`📋 Estado actual del grid después de ${question.answer}:`)
-      this.printGrid()
+      // console.log(`📋 Estado actual del grid después de ${question.answer}:`)
+      // this.printGrid()
     }
 
     // Verificar que todas las palabras estén conectadas
@@ -72,7 +72,7 @@ export class PerfectCrosswordGenerator {
     // Convertir a formato final
     const result = this.convertToFinalFormat()
     console.log('✅ Crucigrama perfecto generado exitosamente')
-    console.log('📊 Palabras finales colocadas:', result.map(q => `${q.answer} en (${q.position.row},${q.position.col}) ${q.position.direction}`))
+    // console.log('📊 Palabras finales colocadas:', result.map(q => `${q.answer} en (${q.position.row},${q.position.col}) ${q.position.direction}`))
 
     return result
   }
@@ -128,16 +128,16 @@ export class PerfectCrosswordGenerator {
       intersectionDetails: string
     }> = []
 
-    console.log(`🔍 Buscando intersecciones para "${word}" con ${this.placedWords.length} palabras colocadas`)
+    // console.log(`🔍 Buscando intersecciones para "${word}" con ${this.placedWords.length} palabras colocadas`)
 
     // Buscar intersecciones con palabras ya colocadas
     for (const placedWord of this.placedWords) {
-      console.log(`  🔗 Verificando intersecciones con "${placedWord.word}" en (${placedWord.row}, ${placedWord.col}) ${placedWord.direction}`)
+      // console.log(`  🔗 Verificando intersecciones con "${placedWord.word}" en (${placedWord.row}, ${placedWord.col}) ${placedWord.direction}`)
       const intersections = this.findLetterIntersections(word, placedWord.word)
-      console.log(`    📍 Encontradas ${intersections.length} intersecciones de letras`)
+      // console.log(`    📍 Encontradas ${intersections.length} intersecciones de letras`)
 
       for (const intersection of intersections) {
-        console.log(`    🎯 Intersección: "${intersection.letter}" - ${word}[${intersection.newWordIndex}] ↔ ${placedWord.word}[${intersection.placedWordIndex}]`)
+        // console.log(`    🎯 Intersección: "${intersection.letter}" - ${word}[${intersection.newWordIndex}] ↔ ${placedWord.word}[${intersection.placedWordIndex}]`)
 
         // Calcular posición para intersección
         const newDirection = placedWord.direction === 'horizontal' ? 'vertical' : 'horizontal'
@@ -154,7 +154,7 @@ export class PerfectCrosswordGenerator {
           newCol = placedWord.col - intersection.newWordIndex
         }
 
-        console.log(`    📐 Posición calculada: (${newRow}, ${newCol}) ${newDirection}`)
+        // console.log(`    📐 Posición calculada: (${newRow}, ${newCol}) ${newDirection}`)
 
         // Verificar que esté dentro del grid
         if (this.isWithinBounds(newRow, newCol, word.length, newDirection)) {
@@ -169,7 +169,7 @@ export class PerfectCrosswordGenerator {
 
           // Validación triple: palabra nueva, palabra colocada y grid deben coincidir
           if (expectedLetter === placedLetter && expectedLetter === gridLetter) {
-            console.log(`    ✅ Intersección válida: "${expectedLetter}" en (${intersectionRow}, ${intersectionCol})`)
+            // console.log(`    ✅ Intersección válida: "${expectedLetter}" en (${intersectionRow}, ${intersectionCol})`)
 
             // Validación adicional: verificar que toda la colocación sea segura
             if (this.canPlaceWordSafely(word, newRow, newCol, newDirection)) {
@@ -237,20 +237,20 @@ export class PerfectCrosswordGenerator {
     // Verificar que no haya letras antes del inicio o después del final (para evitar palabras concatenadas)
     if (direction === 'horizontal') {
       if (col > 0 && this.grid[row][col - 1] !== '') {
-        console.log(`❌ ${word} rechazada: letra antes del inicio en (${row}, ${col - 1})`)
+        // console.log(`❌ ${word} rechazada: letra antes del inicio en (${row}, ${col - 1})`)
         return false
       }
       if (col + word.length < this.gridSize && this.grid[row][col + word.length] !== '') {
-        console.log(`❌ ${word} rechazada: letra después del final en (${row}, ${col + word.length})`)
+        // console.log(`❌ ${word} rechazada: letra después del final en (${row}, ${col + word.length})`)
         return false
       }
     } else {
       if (row > 0 && this.grid[row - 1][col] !== '') {
-        console.log(`❌ ${word} rechazada: letra antes del inicio en (${row - 1}, ${col})`)
+        // console.log(`❌ ${word} rechazada: letra antes del inicio en (${row - 1}, ${col})`)
         return false
       }
       if (row + word.length < this.gridSize && this.grid[row + word.length][col] !== '') {
-        console.log(`❌ ${word} rechazada: letra después del final en (${row + word.length}, ${col})`)
+        // console.log(`❌ ${word} rechazada: letra después del final en (${row + word.length}, ${col})`)
         return false
       }
     }
