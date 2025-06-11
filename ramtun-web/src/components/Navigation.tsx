@@ -241,8 +241,9 @@ export default function Navigation() {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              icon={isOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
+              icon={isOpen ? <XMarkIcon className="w-6 h-6 text-gray-900" /> : <Bars3Icon className="w-6 h-6 text-gray-900" />}
               animation="none"
+              className="text-gray-900 hover:bg-gray-100"
             />
           </div>
         </div>
@@ -266,7 +267,7 @@ export default function Navigation() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="block text-gray-700 hover:text-indigo-600 transition-colors duration-200 font-medium py-2 relative cursor-pointer"
+                  className="block text-gray-900 hover:text-indigo-600 transition-colors duration-200 font-semibold py-2 relative cursor-pointer"
                   onClick={(e) => {
                     handleAnchorNavigation(item.href, e)
                     setIsOpen(false)
@@ -291,7 +292,7 @@ export default function Navigation() {
                   </div>
                 ) : isAuthenticated && user ? (
                   <>
-                    <p className="text-sm font-medium text-gray-700 text-center">
+                    <p className="text-sm font-semibold text-gray-900 text-center">
                       Hola, {user.user_metadata?.first_name || user.email}
                     </p>
                     <div className="space-y-2">
@@ -335,7 +336,7 @@ export default function Navigation() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full flex items-center justify-center"
+                      className="w-full flex items-center justify-center border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white font-semibold"
                       onClick={() => {
                         window.location.href = '/auth/login'
                         setIsOpen(false)
