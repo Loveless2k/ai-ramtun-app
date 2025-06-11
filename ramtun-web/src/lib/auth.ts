@@ -23,6 +23,7 @@ interface AuthState {
 
 export const useAuth = (): AuthState & {
   signInWithGoogle: () => Promise<any>
+  signUpWithGoogle: () => Promise<any>
   signInWithEmail: (email: string, password: string) => Promise<any>
   signUpWithEmail: (email: string, password: string, metadata?: any) => Promise<any>
   signOut: () => Promise<void>
@@ -180,6 +181,25 @@ export const useAuth = (): AuthState & {
     return data
   }
 
+  const signUpWithGoogle = async () => {
+    if (!isSupabaseConfigured()) {
+      // Demo mode
+      console.log('Demo: Sign up with Google')
+      alert('🚧 Modo Demo Activo\n\n✅ Puedes explorar la plataforma sin registrarte\n🎮 Prueba el crucigrama demo "Sistema Solar"\n📊 Accede a las áreas de demostración\n\n💡 El registro con Google estará disponible cuando se configure Supabase')
+      throw new Error('DEMO_MODE') // Throw error to prevent navigation
+    }
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+
+    if (error) throw error
+    return data
+  }
+
   const signInWithEmail = async (email: string, password: string) => {
     if (!isSupabaseConfigured()) {
       // Demo mode
@@ -261,6 +281,7 @@ export const useAuth = (): AuthState & {
     isLoading,
     isAuthenticated: !!user,
     signInWithGoogle,
+    signUpWithGoogle,
     signInWithEmail,
     signUpWithEmail,
     signOut,
