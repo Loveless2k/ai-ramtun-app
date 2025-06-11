@@ -1,16 +1,64 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  
+
   // Create a response object to pass to supabase
-  const res = NextResponse.next()
-  
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
   // Create a Supabase client configured to use cookies
-  const supabase = createMiddlewareClient({ req: request, res })
-  
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          })
+        },
+        remove(name: string, options: any) {
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          })
+        },
+      },
+    }
+  )
+
   // Refresh session if expired - required for Server Components
   const { data: { session } } = await supabase.auth.getSession()
   
@@ -47,8 +95,8 @@ export async function middleware(request: NextRequest) {
   
   // Note: Dashboard routes (/dashboard and /student) are protected by RoleProtection components, not middleware
   // This prevents conflicts with AuthRedirect component and ensures consistent authentication flow
-  
-  return res
+
+  return response
 }
 
 export const config = {

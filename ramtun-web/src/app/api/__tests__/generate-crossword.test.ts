@@ -5,9 +5,9 @@
 import { NextRequest } from 'next/server'
 import { POST } from '../generate-crossword/route'
 
-// Mock Supabase auth helpers to prevent cookie context errors
-jest.mock('@supabase/auth-helpers-nextjs', () => ({
-  createRouteHandlerClient: jest.fn(() => ({
+// Mock Supabase SSR to prevent cookie context errors
+jest.mock('@supabase/ssr', () => ({
+  createServerClient: jest.fn(() => ({
     auth: {
       getSession: jest.fn().mockResolvedValue({
         data: {
@@ -44,12 +44,12 @@ jest.mock('../../../lib/openai', () => ({
 }))
 
 import { generateCrossword, generateCrosswordDemo, validateOpenAIConfig } from '../../../lib/openai'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 
 const mockGenerateCrossword = generateCrossword as jest.MockedFunction<typeof generateCrossword>
 const mockGenerateCrosswordDemo = generateCrosswordDemo as jest.MockedFunction<typeof generateCrosswordDemo>
 const mockValidateOpenAIConfig = validateOpenAIConfig as jest.MockedFunction<typeof validateOpenAIConfig>
-const mockCreateRouteHandlerClient = createRouteHandlerClient as jest.MockedFunction<typeof createRouteHandlerClient>
+const mockCreateServerClient = createServerClient as jest.MockedFunction<typeof createServerClient>
 
 describe('/api/generate-crossword', () => {
   beforeEach(() => {
@@ -59,7 +59,7 @@ describe('/api/generate-crossword', () => {
   describe('Authentication', () => {
     it('should require authentication', async () => {
       // Mock no session
-      mockCreateRouteHandlerClient.mockReturnValue({
+      mockCreateServerClient.mockReturnValue({
         auth: {
           getSession: jest.fn().mockResolvedValue({
             data: { session: null },
@@ -91,7 +91,7 @@ describe('/api/generate-crossword', () => {
 
     it('should allow authenticated teacher access', async () => {
       // Mock authenticated teacher session
-      mockCreateRouteHandlerClient.mockReturnValue({
+      mockCreateServerClient.mockReturnValue({
         auth: {
           getSession: jest.fn().mockResolvedValue({
             data: {
@@ -138,7 +138,7 @@ describe('/api/generate-crossword', () => {
   describe('POST method', () => {
     beforeEach(() => {
       // Reset to authenticated teacher for other tests
-      mockCreateRouteHandlerClient.mockReturnValue({
+      mockCreateServerClient.mockReturnValue({
         auth: {
           getSession: jest.fn().mockResolvedValue({
             data: {
