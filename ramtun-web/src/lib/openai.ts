@@ -149,15 +149,27 @@ function parseCrosswordResponse(response: string, request: CrosswordRequest): Cr
     }
 
     // Validate and clean questions
-    const validatedQuestions = parsed.questions
-      .map((q: any, index: number) => ({
+    type AIQuestion = {
+      id?: string
+      question?: string
+      pregunta?: string
+      answer?: string
+      respuesta?: string
+      category?: string
+      categoria?: string
+      difficulty?: 'facil' | 'medio' | 'dificil' | string
+      dificultad?: 'facil' | 'medio' | 'dificil' | string
+    }
+
+    const validatedQuestions: CrosswordQuestion[] = (parsed.questions as AIQuestion[])
+      .map((q, index): CrosswordQuestion => ({
         id: q.id || (index + 1).toString(),
         question: q.question || q.pregunta || '',
         answer: (q.answer || q.respuesta || '').toUpperCase().replace(/[^A-Z]/g, ''),
         category: q.category || q.categoria || 'General',
-        difficulty: q.difficulty || q.dificultad || request.difficulty,
+        difficulty: (q.difficulty || q.dificultad || request.difficulty) as 'facil' | 'medio' | 'dificil',
       }))
-      .filter((q: any) =>
+      .filter((q) =>
         q.question.length > 0 &&
         q.answer.length >= 3 &&
         q.answer.length <= 15 &&

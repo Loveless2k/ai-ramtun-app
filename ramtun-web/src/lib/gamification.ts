@@ -85,9 +85,9 @@ export interface LeaderboardEntry {
 // Cálculo de puntos base
 export function calculateBasePoints(stats: GameStats): number {
   const { score, timeElapsed, hintsUsed, difficulty, isFirstTime } = stats
-  
+
   let points = score // Base: puntuación del juego (0-100)
-  
+
   // Bonus por dificultad
   const difficultyMultiplier = {
     'Fácil': 1.0,
@@ -95,20 +95,20 @@ export function calculateBasePoints(stats: GameStats): number {
     'Difícil': 2.0
   }
   points *= difficultyMultiplier[difficulty]
-  
+
   // Bonus por tiempo (máximo 50 puntos extra)
   const timeBonus = Math.max(0, 50 - Math.floor(timeElapsed / 30))
   points += timeBonus
-  
+
   // Bonus por no usar pistas (máximo 30 puntos extra)
   const hintBonus = Math.max(0, 30 - (hintsUsed * 10))
   points += hintBonus
-  
+
   // Bonus por primera vez (50% extra)
   if (isFirstTime) {
     points *= 1.5
   }
-  
+
   return Math.round(points)
 }
 
@@ -126,7 +126,7 @@ export function calculateLevel(totalXP: number): PlayerLevel {
     { level: 9, requiredXP: 2200, title: "Genio", perks: ["Acceso beta"], unlocks: ["beta_features"] },
     { level: 10, requiredXP: 2700, title: "Leyenda", perks: ["Título especial"], unlocks: ["legendary_badge"] }
   ]
-  
+
   let currentLevel = levels[0]
   for (let i = levels.length - 1; i >= 0; i--) {
     if (totalXP >= levels[i].requiredXP) {
@@ -134,10 +134,10 @@ export function calculateLevel(totalXP: number): PlayerLevel {
       break
     }
   }
-  
+
   const nextLevel = levels.find(l => l.level === currentLevel.level + 1)
   const requiredXP = nextLevel ? nextLevel.requiredXP : currentLevel.requiredXP
-  
+
   return {
     ...currentLevel,
     currentXP: totalXP,
@@ -145,10 +145,19 @@ export function calculateLevel(totalXP: number): PlayerLevel {
   }
 }
 
+// Minimal shape of player data used for achievement checks
+export interface PlayerDataSummary {
+  totalGames?: number
+  currentStreak?: number
+  subjectStats?: Record<string, { gamesPlayed?: number }>
+  level?: number
+}
+
+
 // Verificar logros desbloqueados
-export function checkAchievements(stats: GameStats, playerData: any): Achievement[] {
+export function checkAchievements(stats: GameStats, playerData: PlayerDataSummary): Achievement[] {
   const newAchievements: Achievement[] = []
-  
+
   // Definir todos los logros disponibles
   const allAchievements: Achievement[] = [
     // Logros básicos
@@ -274,14 +283,14 @@ export function checkAchievements(stats: GameStats, playerData: any): Achievemen
       requirements: { type: 'level', value: 10 }
     }
   ]
-  
+
   // Verificar cada logro
   allAchievements.forEach(achievement => {
     if (achievement.unlocked || !achievement.requirements) return
-    
+
     const req = achievement.requirements
     let shouldUnlock = false
-    
+
     switch (req.type) {
       case 'perfect_score':
         shouldUnlock = stats.score >= req.value
@@ -306,7 +315,7 @@ export function checkAchievements(stats: GameStats, playerData: any): Achievemen
         shouldUnlock = (playerData.level || 1) >= req.value
         break
     }
-    
+
     if (shouldUnlock) {
       newAchievements.push({
         ...achievement,
@@ -315,7 +324,7 @@ export function checkAchievements(stats: GameStats, playerData: any): Achievemen
       })
     }
   })
-  
+
   return newAchievements
 }
 
@@ -325,7 +334,7 @@ export function generateDailyChallenges(): DailyChallenge[] {
   const tomorrow = new Date(today)
   tomorrow.setDate(tomorrow.getDate() + 1)
   tomorrow.setHours(0, 0, 0, 0)
-  
+
   const challenges: DailyChallenge[] = [
     {
       id: 'daily_games',
@@ -364,7 +373,7 @@ export function generateDailyChallenges(): DailyChallenge[] {
       difficulty: 'hard'
     }
   ]
-  
+
   return challenges
 }
 
@@ -453,13 +462,13 @@ export function getLevelRewards(level: number): {
   const baseReward = level * 100
   const powerUps: string[] = []
   const achievements: string[] = []
-  
+
   // Recompensas especiales por nivel
   if (level === 2) powerUps.push('hint_boost')
   if (level === 3) powerUps.push('time_freeze')
   if (level === 5) powerUps.push('double_xp')
   if (level === 10) achievements.push('level_10')
-  
+
   return {
     points: baseReward,
     powerUps,

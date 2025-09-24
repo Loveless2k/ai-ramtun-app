@@ -96,7 +96,7 @@ export class PerfectCrosswordGenerator {
     const word = question.answer.toUpperCase()
     console.log(`🔍 Buscando posiciones para: ${word}`)
 
-    const possiblePlacements = this.findAllValidPlacements(word, question)
+    const possiblePlacements = this.findAllValidPlacements(word)
     console.log(`📍 Posiciones posibles encontradas: ${possiblePlacements.length}`)
 
     // Ordenar por calidad de colocación (más intersecciones = mejor)
@@ -119,7 +119,7 @@ export class PerfectCrosswordGenerator {
     return false
   }
 
-  private findAllValidPlacements(word: string, question: Omit<CrosswordQuestion, 'position' | 'number'>) {
+  private findAllValidPlacements(word: string) {
     const placements: Array<{
       row: number
       col: number
@@ -197,7 +197,7 @@ export class PerfectCrosswordGenerator {
   }
 
   private findLetterIntersections(word1: string, word2: string) {
-    const intersections = []
+    const intersections: Array<{ newWordIndex: number; placedWordIndex: number; letter: string }> = []
     
     for (let i = 0; i < word1.length; i++) {
       for (let j = 0; j < word2.length; j++) {
@@ -346,7 +346,7 @@ export class PerfectCrosswordGenerator {
 
   private checkValidIntersections(word: string, row: number, col: number, direction: 'horizontal' | 'vertical'): boolean {
     let hasIntersection = false
-    let intersectionDetails: string[] = []
+    const intersectionDetails: string[] = []
 
     for (let i = 0; i < word.length; i++) {
       const currentRow = direction === 'vertical' ? row + i : row
@@ -649,7 +649,7 @@ export class PerfectCrosswordGenerator {
     return null
   }
 
-  private findBestBaseWord(words: Array<{ word: string, question: any }>): { word: string, question: any, intersectionCount: number } {
+  private findBestBaseWord(words: Array<{ word: string, question: Omit<CrosswordQuestion, 'position' | 'number'> }>): { word: string, question: Omit<CrosswordQuestion, 'position' | 'number'>, intersectionCount: number } {
     let bestWord = words[0]
     let maxIntersections = 0
 
@@ -762,8 +762,8 @@ export class PerfectCrosswordGenerator {
   private validatePerpendicularPlacementWithGrid(word: string, letterIndex: number, row: number, col: number, direction: 'horizontal' | 'vertical', tempGrid: string[][]): boolean {
     if (direction === 'horizontal') {
       // Para palabras horizontales, verificar formación de palabras verticales
-      let hasLetterAbove = row > 0 && tempGrid[row - 1][col] !== ''
-      let hasLetterBelow = row < this.gridSize - 1 && tempGrid[row + 1][col] !== ''
+      const hasLetterAbove = row > 0 && tempGrid[row - 1][col] !== ''
+      const hasLetterBelow = row < this.gridSize - 1 && tempGrid[row + 1][col] !== ''
 
       // Solo permitir si es exactamente una intersección
       if (hasLetterAbove || hasLetterBelow) {
@@ -771,8 +771,8 @@ export class PerfectCrosswordGenerator {
       }
     } else {
       // Para palabras verticales, verificar formación de palabras horizontales
-      let hasLetterLeft = col > 0 && tempGrid[row][col - 1] !== ''
-      let hasLetterRight = col < this.gridSize - 1 && tempGrid[row][col + 1] !== ''
+      const hasLetterLeft = col > 0 && tempGrid[row][col - 1] !== ''
+      const hasLetterRight = col < this.gridSize - 1 && tempGrid[row][col + 1] !== ''
 
       // Solo permitir si es exactamente una intersección
       if (hasLetterLeft || hasLetterRight) {

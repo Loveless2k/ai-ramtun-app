@@ -1,17 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
-  UserGroupIcon,
   ShareIcon,
   HeartIcon,
   StarIcon,
-  EyeIcon,
   DocumentDuplicateIcon,
   ChatBubbleLeftRightIcon,
-  AcademicCapIcon,
-  ClockIcon,
   CheckCircleIcon,
   XMarkIcon,
   PlusIcon
@@ -176,7 +172,7 @@ export default function TeacherCollaboration() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveView(tab.id as any)}
+            onClick={() => setActiveView(tab.id as 'shared' | 'requests' | 'my-shared')}
             className={`flex-1 py-2 px-4 rounded-md font-medium text-sm transition-colors ${
               activeView === tab.id
                 ? 'bg-white text-indigo-600 shadow-sm'

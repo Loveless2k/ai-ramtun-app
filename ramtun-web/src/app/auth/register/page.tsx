@@ -14,6 +14,7 @@ import {
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
+import type { AuthUser, RegistrationMetadata } from '../../../lib/auth'
 import AuthRedirect from '../../../components/AuthRedirect'
 
 function RegisterPageContent() {
@@ -32,8 +33,8 @@ function RegisterPageContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showMetadataModal, setShowMetadataModal] = useState(false)
-  const [googleUser, setGoogleUser] = useState<any>(null)
-  
+  const [googleUser, setGoogleUser] = useState<AuthUser | null>(null)
+
   const { signUpWithEmail, signUpWithGoogle } = useAuth()
   const router = useRouter()
 
@@ -130,7 +131,7 @@ function RegisterPageContent() {
     }
   }
 
-  const handleMetadataSubmit = async (metadata: any) => {
+  const handleMetadataSubmit = async (metadata: RegistrationMetadata) => {
     try {
       // Here we would update the user metadata in Supabase
       // For now, we'll simulate the process and redirect
@@ -464,8 +465,8 @@ function RegisterPageContent() {
 
 // Metadata Modal Component
 function MetadataModal({ user, onSubmit, onClose }: {
-  user: any
-  onSubmit: (metadata: any) => void
+  user: AuthUser
+  onSubmit: (metadata: RegistrationMetadata) => void
   onClose: () => void
 }) {
   const [modalData, setModalData] = useState({
@@ -483,7 +484,7 @@ function MetadataModal({ user, onSubmit, onClose }: {
     e.preventDefault()
     setIsSubmitting(true)
 
-    const metadata = {
+    const metadata: RegistrationMetadata = {
       first_name: user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || '',
       last_name: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
       role: modalData.role,

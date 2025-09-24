@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { createBrowserClient, createServerClient } from '@supabase/ssr'
+import type { CrosswordQuestion } from '../types/crossword'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
@@ -95,7 +96,7 @@ export interface Database {
           topic: string
           level: string
           difficulty: 'easy' | 'medium' | 'hard'
-          questions: any // JSON
+          questions: CrosswordQuestion[] // JSON
           teacher_id: string
           school_id: string
           embedding: number[] | null
@@ -109,7 +110,7 @@ export interface Database {
           topic: string
           level: string
           difficulty: 'easy' | 'medium' | 'hard'
-          questions: any
+          questions: CrosswordQuestion[]
           teacher_id: string
           school_id: string
           embedding?: number[] | null
@@ -123,7 +124,7 @@ export interface Database {
           topic?: string
           level?: string
           difficulty?: 'easy' | 'medium' | 'hard'
-          questions?: any
+          questions?: CrosswordQuestion[]
           teacher_id?: string
           school_id?: string
           embedding?: number[] | null

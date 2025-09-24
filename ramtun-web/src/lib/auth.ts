@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { createClientComponentClient } from './supabase'
 import type { User } from '@supabase/supabase-js'
 
-interface AuthUser extends User {
+export interface AuthUser extends User {
   user_metadata?: {
     first_name?: string
     last_name?: string
@@ -15,19 +15,29 @@ interface AuthUser extends User {
   }
 }
 
+export type RegistrationMetadata = {
+  first_name?: string
+  last_name?: string
+  role?: 'teacher' | 'student' | 'admin'
+  school_name?: string
+  grade?: string
+}
+
 interface AuthState {
   user: AuthUser | null
   isLoading: boolean
   isAuthenticated: boolean
 }
 
+type GoogleAuthResult = { user?: AuthUser } | undefined
+
 export const useAuth = (): AuthState & {
-  signInWithGoogle: () => Promise<any>
-  signUpWithGoogle: () => Promise<any>
-  signInWithEmail: (email: string, password: string) => Promise<any>
-  signUpWithEmail: (email: string, password: string, metadata?: any) => Promise<any>
+  signInWithGoogle: () => Promise<GoogleAuthResult>
+  signUpWithGoogle: () => Promise<GoogleAuthResult>
+  signInWithEmail: (email: string, password: string) => Promise<unknown>
+  signUpWithEmail: (email: string, password: string, metadata?: RegistrationMetadata) => Promise<unknown>
   signOut: () => Promise<void>
-  resetPassword: (email: string) => Promise<any>
+  resetPassword: (email: string) => Promise<unknown>
 } => {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -218,7 +228,7 @@ export const useAuth = (): AuthState & {
     return data
   }
 
-  const signUpWithEmail = async (email: string, password: string, metadata?: any) => {
+  const signUpWithEmail = async (email: string, password: string, metadata?: RegistrationMetadata) => {
     if (!isSupabaseConfigured()) {
       // Demo mode
       console.log('Demo: Sign up with email:', email, metadata)

@@ -1,18 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import {
   ChartBarIcon,
   TrophyIcon,
-  ClockIcon,
   UserGroupIcon,
   AcademicCapIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  CalendarIcon,
-  StarIcon,
-  EyeIcon,
   DocumentChartBarIcon,
   PresentationChartLineIcon
 } from '@heroicons/react/24/outline'
@@ -70,11 +66,10 @@ interface AnalyticsData {
 
 export default function AdvancedAnalytics() {
   const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter'>('month')
-  const [selectedMetric, setSelectedMetric] = useState<'plays' | 'scores' | 'engagement'>('plays')
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
 
   // Mock analytics data
-  const mockAnalytics: AnalyticsData = {
+  const mockAnalytics = useMemo<AnalyticsData>(() => ({
     overview: {
       totalCrosswords: 24,
       totalPlays: 1247,
@@ -126,14 +121,14 @@ export default function AdvancedAnalytics() {
       medium: { plays: 489, avgScore: 82.7, completionRate: 78.3 },
       hard: { plays: 191, avgScore: 71.4, completionRate: 62.8 }
     }
-  }
+  }), [])
 
   useEffect(() => {
     // Simulate loading analytics data
     setTimeout(() => {
       setAnalyticsData(mockAnalytics)
     }, 1000)
-  }, [])
+  }, [mockAnalytics])
 
   const calculateTrend = (current: number, previous: number) => {
     const change = ((current - previous) / previous) * 100
@@ -171,10 +166,10 @@ export default function AdvancedAnalytics() {
           <p className="text-gray-600">Análisis detallado del rendimiento y engagement de tus crucigramas</p>
         </div>
         <div className="flex space-x-2">
-          {['week', 'month', 'quarter'].map((period) => (
+          {(['week', 'month', 'quarter'] as const).map((period) => (
             <button
               key={period}
-              onClick={() => setSelectedPeriod(period as any)}
+              onClick={() => setSelectedPeriod(period)}
               className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                 selectedPeriod === period
                   ? 'bg-indigo-600 text-white'

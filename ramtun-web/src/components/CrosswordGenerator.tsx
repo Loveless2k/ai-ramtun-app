@@ -8,9 +8,7 @@ import {
   AcademicCapIcon,
   ClockIcon,
   ShareIcon,
-  BookmarkIcon,
   UserGroupIcon,
-  DocumentDuplicateIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline'
 import { Card } from './ui/Card'
@@ -42,7 +40,7 @@ export default function CrosswordGenerator() {
     maxAttempts: 0 // 0 = unlimited
   })
 
-  const [savedCrosswords, setSavedCrosswords] = useState<string[]>([])
+  const [, setSavedCrosswords] = useState<string[]>([])
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
 
   const [isGenerating, setIsGenerating] = useState(false)

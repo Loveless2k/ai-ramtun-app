@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
 import {
   AcademicCapIcon,
   TrophyIcon,
@@ -10,9 +9,6 @@ import {
   StarIcon,
   BookOpenIcon,
   UserGroupIcon,
-  HomeIcon,
-  ChartBarIcon,
-  Cog6ToothIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline'
 import { useAuth, isCrosswordPublic } from '../../lib/auth'
@@ -34,7 +30,6 @@ interface AvailableCrossword {
 }
 
 export default function StudentPage() {
-  const router = useRouter()
   const { isAuthenticated } = useAuth()
   const [crosswords, setCrosswords] = useState<AvailableCrossword[]>([])
   const [selectedSubject, setSelectedSubject] = useState<string>('all')

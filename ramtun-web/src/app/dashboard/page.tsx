@@ -11,21 +11,17 @@ import {
   EyeIcon,
   PencilIcon,
   TrashIcon,
-  PlusIcon,
   ChartBarIcon,
   BookOpenIcon,
   AcademicCapIcon,
   TrophyIcon,
-  PlayIcon,
   ShareIcon,
   UsersIcon,
-  DocumentTextIcon,
-  PresentationChartBarIcon
+  DocumentTextIcon
 } from '@heroicons/react/24/outline'
 import {
   ChartBarIcon as ChartBarSolid,
-  BookOpenIcon as BookOpenSolid,
-  AcademicCapIcon as AcademicCapSolid
+  BookOpenIcon as BookOpenSolid
 } from '@heroicons/react/24/solid'
 import CrosswordGenerator from '@/components/CrosswordGenerator'
 import CrosswordSharingSystem from '@/components/CrosswordSharingSystem'
@@ -34,6 +30,7 @@ import TeacherCollaboration from '@/components/TeacherCollaboration'
 import CrosswordTemplateLibrary from '@/components/CrosswordTemplateLibrary'
 import AdvancedAnalytics from '@/components/AdvancedAnalytics'
 import { useDashboard } from './layout'
+import type { ShareOptions } from '@/components/CrosswordSharingSystem'
 
 // Types
 import type { CrosswordStats } from '../../types/crossword'
@@ -689,135 +686,6 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
   )
 }
 
-// Analytics Tab Component
-function AnalyticsTab({ metrics }: { metrics: DashboardMetrics }) {
-  // Chart data for future implementation
-  // const chartData = [
-  //   { name: 'Lun', jugadas: 12, completados: 8 },
-  //   { name: 'Mar', jugadas: 19, completados: 15 },
-  //   { name: 'Mié', jugadas: 15, completados: 12 },
-  //   { name: 'Jue', jugadas: 22, completados: 18 },
-  //   { name: 'Vie', jugadas: 28, completados: 24 },
-  //   { name: 'Sáb', jugadas: 8, completados: 6 },
-  //   { name: 'Dom', jugadas: 5, completados: 4 }
-  // ]
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Analytics y Métricas</h2>
-          <p className="text-gray-600">Analiza el rendimiento y engagement de tus estudiantes</p>
-        </div>
-        <div className="flex space-x-2">
-          <button className="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium">
-            Esta semana
-          </button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200">
-            Este mes
-          </button>
-        </div>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Tasa de Completación</p>
-              <p className="text-3xl font-bold text-gray-900">{metrics.completionRate}%</p>
-              <p className="text-sm text-green-600 mt-1">+5% vs semana anterior</p>
-            </div>
-            <div className="bg-green-100 p-3 rounded-lg">
-              <CheckCircleIcon className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Tiempo Promedio</p>
-              <p className="text-3xl font-bold text-gray-900">11.5 min</p>
-              <p className="text-sm text-blue-600 mt-1">-2 min vs semana anterior</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <ClockIcon className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Puntuación Promedio</p>
-              <p className="text-3xl font-bold text-gray-900">84%</p>
-              <p className="text-sm text-purple-600 mt-1">+3% vs semana anterior</p>
-            </div>
-            <div className="bg-purple-100 p-3 rounded-lg">
-              <TrophyIcon className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Placeholder */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad Semanal</h3>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-            <div className="text-center">
-              <ChartBarIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600">Gráfico de actividad semanal</p>
-              <p className="text-sm text-gray-500">Próximamente</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Rendimiento por Materia</h3>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-            <div className="text-center">
-              <AcademicCapIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-gray-600">Análisis por materia</p>
-              <p className="text-sm text-gray-500">Próximamente</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Performers */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Estudiantes Destacados</h3>
-        <div className="space-y-4">
-          {[
-            { name: 'María González', score: 98, crosswords: 12, time: '8 min promedio' },
-            { name: 'Carlos Rodríguez', score: 95, crosswords: 15, time: '9 min promedio' },
-            { name: 'Ana Martínez', score: 92, crosswords: 10, time: '11 min promedio' }
-          ].map((student, index) => (
-            <div key={student.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-4">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                  index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-orange-500'
-                }`}>
-                  {index + 1}
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">{student.name}</p>
-                  <p className="text-sm text-gray-600">{student.crosswords} crucigramas completados</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-gray-900">{student.score}%</p>
-                <p className="text-sm text-gray-600">{student.time}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // Library Tab Component
 function LibraryTab() {
@@ -1001,7 +869,7 @@ function GeneratorTab() {
 
 // 🚀 PHASE 2: Sharing Tab Component
 function SharingTab() {
-  const handleShare = (crosswordId: string, options: any) => {
+  const handleShare = (crosswordId: string, options: ShareOptions) => {
     console.log('Sharing crossword:', crosswordId, options)
     // Implementation for sharing functionality
   }

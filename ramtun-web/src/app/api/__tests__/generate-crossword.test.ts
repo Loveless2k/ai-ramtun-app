@@ -4,6 +4,7 @@
 
 import { NextRequest } from 'next/server'
 import { POST } from '../generate-crossword/route'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Mock Supabase SSR to prevent cookie context errors
 jest.mock('@supabase/ssr', () => ({
@@ -66,7 +67,7 @@ describe('/api/generate-crossword', () => {
             error: null,
           }),
         },
-      } as any)
+      } as unknown as SupabaseClient)
 
       const request = new NextRequest('http://localhost:3000/api/generate-crossword', {
         method: 'POST',
@@ -106,7 +107,7 @@ describe('/api/generate-crossword', () => {
             error: null,
           }),
         },
-      } as any)
+      } as unknown as SupabaseClient)
 
       const mockCrosswordData = {
         title: 'Test Crossword',
@@ -153,7 +154,7 @@ describe('/api/generate-crossword', () => {
             error: null,
           }),
         },
-      } as any)
+      } as unknown as SupabaseClient)
     })
 
     it('should generate crossword with valid request', async () => {

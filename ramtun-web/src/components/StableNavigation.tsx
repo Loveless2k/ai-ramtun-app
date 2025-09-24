@@ -11,7 +11,7 @@ export default function StableNavigation() {
   const [isClient, setIsClient] = useState(false)
   const [authState, setAuthState] = useState<{
     isAuthenticated: boolean
-    user: any
+    user: unknown
   } | null>(null)
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function StableNavigation() {
       } else {
         setAuthState({ isAuthenticated: false, user: null })
       }
-    } catch (error) {
+    } catch {
       setAuthState({ isAuthenticated: false, user: null })
     }
 
@@ -40,7 +40,7 @@ export default function StableNavigation() {
         } else {
           setAuthState({ isAuthenticated: false, user: null })
         }
-      } catch (error) {
+      } catch {
         setAuthState({ isAuthenticated: false, user: null })
       }
     }

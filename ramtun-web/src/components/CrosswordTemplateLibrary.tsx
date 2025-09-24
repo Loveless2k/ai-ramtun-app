@@ -8,12 +8,8 @@ import {
   DocumentDuplicateIcon,
   StarIcon,
   ClockIcon,
-  AcademicCapIcon,
-  PuzzlePieceIcon,
-  TagIcon,
   EyeIcon,
   PlusIcon,
-  FunnelIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
@@ -56,7 +52,7 @@ export default function CrosswordTemplateLibrary() {
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
 
   // Mock template data
-  const mockTemplates: CrosswordTemplate[] = [
+  const mockTemplates = useMemo<CrosswordTemplate[]>(() => [
     {
       id: '1',
       title: 'Historia de Chile - Independencia',
@@ -135,15 +131,15 @@ export default function CrosswordTemplateLibrary() {
         learningObjectives: ['Operar con fracciones', 'Convertir fracciones a decimales']
       }
     }
-  ]
+  ], [])
 
   useEffect(() => {
     setTemplates(mockTemplates)
     setFilteredTemplates(mockTemplates)
-  }, [])
+  }, [mockTemplates])
 
   useEffect(() => {
-    let filtered = templates.filter(template => {
+    const filtered = templates.filter(template => {
       const matchesSubject = selectedSubject === 'all' || template.subject === selectedSubject
       const matchesGrade = selectedGrade === 'all' || template.grade === selectedGrade
       const matchesDifficulty = selectedDifficulty === 'all' || template.difficulty === selectedDifficulty
@@ -296,7 +292,7 @@ export default function CrosswordTemplateLibrary() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'rating' | 'uses' | 'recent')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="rating">Mejor valorados</option>

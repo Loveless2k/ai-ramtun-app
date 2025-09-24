@@ -1,18 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState } from 'react'
 import {
-  ChartBarIcon,
   UserIcon,
   ClockIcon,
-  StarIcon,
   TrophyIcon,
   CheckCircleIcon,
   XCircleIcon,
-  EyeIcon,
-  CalendarIcon,
-  AcademicCapIcon
+  EyeIcon
 } from '@heroicons/react/24/outline'
 
 interface StudentProgress {
@@ -33,17 +28,8 @@ interface StudentProgress {
   totalQuestions: number
 }
 
-interface StudentProgressTrackerProps {
-  crosswordId?: string
-  classId?: string
-}
-
-export default function StudentProgressTracker({ 
-  crosswordId, 
-  classId 
-}: StudentProgressTrackerProps) {
+export default function StudentProgressTracker() {
   const [selectedView, setSelectedView] = useState<'overview' | 'detailed'>('overview')
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>('all')
 
   // Mock data for demonstration

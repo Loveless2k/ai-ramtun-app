@@ -174,7 +174,7 @@ describe('generatePerfectCrossword function', () => {
     })
 
     it('should return null for undefined', () => {
-      const result = generatePerfectCrossword(undefined as any)
+      const result = generatePerfectCrossword(undefined as unknown as string)
       expect(result).toBeNull()
     })
   })
@@ -214,7 +214,7 @@ describe('generatePerfectCrossword function', () => {
 })
 
 // Funciones de validación para verificar la calidad del algoritmo perfecto
-function validateCrosswordIntersections(questions: any[]) {
+function validateCrosswordIntersections(questions: import('../../types/crossword').CrosswordQuestion[]) {
   // Crear un grid para verificar intersecciones
   const gridSize = 15
   const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
@@ -251,7 +251,7 @@ function validateCrosswordIntersections(questions: any[]) {
   })
 }
 
-function validateWordConnectivity(questions: any[]) {
+function validateWordConnectivity(questions: import('../../types/crossword').CrosswordQuestion[]) {
   if (questions.length <= 1) return
 
   // Verificar que todas las palabras están conectadas usando BFS
@@ -273,7 +273,7 @@ function validateWordConnectivity(questions: any[]) {
   expect(visited.size).toBe(questions.length)
 }
 
-function validateNoAdjacentFalseWords(questions: any[]) {
+function validateNoAdjacentFalseWords(questions: import('../../types/crossword').CrosswordQuestion[]) {
   const gridSize = 15
   const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
 
@@ -313,7 +313,7 @@ function validateNoAdjacentFalseWords(questions: any[]) {
   })
 }
 
-function findWordIntersections(word1: any, word2: any) {
+function findWordIntersections(word1: import('../../types/crossword').CrosswordQuestion, word2: import('../../types/crossword').CrosswordQuestion) {
   const intersections = []
 
   if (word1.position.direction === word2.position.direction) {
@@ -342,6 +342,6 @@ function findWordIntersections(word1: any, word2: any) {
   return intersections
 }
 
-function wordsIntersect(word1: any, word2: any): boolean {
+function wordsIntersect(word1: import('../../types/crossword').CrosswordQuestion, word2: import('../../types/crossword').CrosswordQuestion): boolean {
   return findWordIntersections(word1, word2).length > 0
 }

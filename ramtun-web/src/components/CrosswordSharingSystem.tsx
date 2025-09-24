@@ -1,19 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   ShareIcon,
   UserGroupIcon,
   ClockIcon,
   EyeIcon,
-  DocumentDuplicateIcon,
-  CheckCircleIcon,
   XCircleIcon,
   CalendarIcon,
   AcademicCapIcon
 } from '@heroicons/react/24/outline'
-import { useAuth } from '../lib/auth'
 
 interface SharedCrossword {
   id: string
@@ -33,27 +29,16 @@ interface SharedCrossword {
   averageScore: number
 }
 
-interface CrosswordSharingSystemProps {
-  crosswords: SharedCrossword[]
-  onShare: (crosswordId: string, options: any) => void
-  onRevoke: (crosswordId: string) => void
+export interface ShareOptions {
+  shareWithClass: string
+  dueDate: string
+  timeLimit: number
+  maxAttempts: number
+  allowHints: boolean
+  instructions: string
 }
 
-export default function CrosswordSharingSystem({ 
-  crosswords, 
-  onShare, 
-  onRevoke 
-}: CrosswordSharingSystemProps) {
-  const { user } = useAuth()
-  const [selectedCrossword, setSelectedCrossword] = useState<string | null>(null)
-  const [shareOptions, setShareOptions] = useState({
-    shareWithClass: '',
-    dueDate: '',
-    timeLimit: 0,
-    maxAttempts: 0,
-    allowHints: true,
-    instructions: ''
-  })
+export default function CrosswordSharingSystem() {
 
   // Mock data for demonstration
   const mockCrosswords: SharedCrossword[] = [
