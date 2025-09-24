@@ -1,0 +1,17 @@
+# Netlify configuration for Next.js (monorepo: app in ramtun-web)
+# Netlify will detect Next.js and use its adapter automatically (OpenNext)
+
+[build]
+  base = "ramtun-web"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Environment variables to set in Netlify Dashboard (Build & deploy > Environment):
+# - NEXT_PUBLIC_SUPABASE_URL        (Public, exposed to client)
+# - NEXT_PUBLIC_SUPABASE_ANON_KEY   (Public, exposed to client)
+# - OPENAI_API_KEY                  (Secret, server-side only; do NOT prefix with NEXT_PUBLIC_)
+# - Any other secrets your app requires (server-side only)
+
