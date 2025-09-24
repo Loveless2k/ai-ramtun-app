@@ -103,7 +103,7 @@ export default function LeaderboardPage() {
       },
       {
         id: 'current',
-        name: user?.user_metadata?.name || 'Tú',
+        name: user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Tú',
         avatar: '🎓',
         points: 1850,
         level: 6,
@@ -241,7 +241,7 @@ export default function LeaderboardPage() {
               <div>
                 <h3 className="text-xl font-bold">Tu Posición</h3>
                 <p className="text-indigo-100">
-                  {user?.user_metadata?.name || 'Estudiante'} • Nivel {leaderboardData.global.find(p => p.id === 'current')?.level}
+                  {user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Estudiante'} • Nivel {leaderboardData.global.find(p => p.id === 'current')?.level}
                 </p>
               </div>
             </div>

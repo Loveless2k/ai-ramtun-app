@@ -67,7 +67,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           hover === 'scale' ? { scale: 1.05 } : 
           hover === 'lift' ? { y: -8 } : {}
         }
-        {...props}
+        {...(props as unknown as React.ComponentPropsWithoutRef<typeof motion.div>)}
       >
         {children}
       </motion.div>

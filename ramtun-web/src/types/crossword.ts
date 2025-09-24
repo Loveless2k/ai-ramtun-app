@@ -6,7 +6,7 @@ export interface CrosswordQuestion {
   question: string
   answer: string
   category: string
-  difficulty: 'facil' | 'medio' | 'dificil'
+  difficulty: string
   position?: {
     row: number
     col: number

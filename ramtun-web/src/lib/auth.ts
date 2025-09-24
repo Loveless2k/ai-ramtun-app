@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react'
 import { createClientComponentClient } from './supabase'
 import type { User } from '@supabase/supabase-js'
 
-export interface AuthUser extends User {
-  user_metadata?: {
+export type AuthUser = Omit<User, 'user_metadata'> & {
+  user_metadata: {
     first_name?: string
     last_name?: string
+    full_name?: string
     role?: 'teacher' | 'student' | 'admin'
     school_name?: string
     grade?: string
@@ -29,12 +30,13 @@ interface AuthState {
   isAuthenticated: boolean
 }
 
-type GoogleAuthResult = { user?: AuthUser } | undefined
+type GoogleAuthResult = { provider: string; url: string } | undefined
+type EmailAuthResult = { user?: AuthUser | null } | undefined
 
 export const useAuth = (): AuthState & {
   signInWithGoogle: () => Promise<GoogleAuthResult>
   signUpWithGoogle: () => Promise<GoogleAuthResult>
-  signInWithEmail: (email: string, password: string) => Promise<unknown>
+  signInWithEmail: (email: string, password: string) => Promise<EmailAuthResult>
   signUpWithEmail: (email: string, password: string, metadata?: RegistrationMetadata) => Promise<unknown>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<unknown>
@@ -199,6 +201,7 @@ export const useAuth = (): AuthState & {
       throw new Error('DEMO_MODE') // Throw error to prevent navigation
     }
 
+    const supabase = createClientComponentClient()
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -210,7 +213,7 @@ export const useAuth = (): AuthState & {
     return data
   }
 
-  const signInWithEmail = async (email: string, password: string) => {
+  const signInWithEmail = async (email: string, password: string): Promise<EmailAuthResult> => {
     if (!isSupabaseConfigured()) {
       // Demo mode
       console.log('Demo: Sign in with email:', email)
@@ -225,7 +228,7 @@ export const useAuth = (): AuthState & {
     })
 
     if (error) throw error
-    return data
+    return { user: (data.user as AuthUser) ?? null }
   }
 
   const signUpWithEmail = async (email: string, password: string, metadata?: RegistrationMetadata) => {

@@ -31,8 +31,8 @@ interface GameHeaderProps {
     id: string
     question: string
     answer: string
-    number: number
-    position: { direction: 'horizontal' | 'vertical' }
+    number?: number
+    position?: { direction: 'horizontal' | 'vertical' }
   }>
 }
 
@@ -167,7 +167,7 @@ export default function GameHeader({
                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                 <span className="text-xs font-medium text-blue-700">
                   Pregunta {questions.find(q => q.id === selectedQuestion)?.number || '?'}
-                  {questions.find(q => q.id === selectedQuestion)?.position.direction === 'horizontal' ? 'H' : 'V'}
+                  {questions.find(q => q.id === selectedQuestion)?.position?.direction === 'horizontal' ? 'H' : 'V'}
                 </span>
               </div>
             )}

@@ -297,7 +297,7 @@ export default function StudentDashboard() {
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-2">¡Hola, {user?.user_metadata?.name || 'Estudiante'}!</h2>
+            <h2 className="text-2xl font-bold mb-2">¡Hola, {user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Estudiante'}!</h2>
             <p className="text-blue-100">
               Tienes una racha de {studentStats.currentStreak} días. ¡Sigue así!
             </p>

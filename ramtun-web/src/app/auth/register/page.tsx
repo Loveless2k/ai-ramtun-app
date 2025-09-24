@@ -14,7 +14,6 @@ import {
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../../../lib/auth'
-import type { AuthUser, RegistrationMetadata } from '../../../lib/auth'
 import AuthRedirect from '../../../components/AuthRedirect'
 
 function RegisterPageContent() {
@@ -32,8 +31,6 @@ function RegisterPageContent() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [showMetadataModal, setShowMetadataModal] = useState(false)
-  const [googleUser, setGoogleUser] = useState<AuthUser | null>(null)
 
   const { signUpWithEmail, signUpWithGoogle } = useAuth()
   const router = useRouter()
@@ -95,31 +92,8 @@ function RegisterPageContent() {
     setError('')
 
     try {
-      const result = await signUpWithGoogle()
-
-      if (result?.user) {
-        // Check if user already has complete metadata
-        const userMetadata = result.user.user_metadata
-        const hasCompleteMetadata = userMetadata?.role &&
-          userMetadata?.first_name &&
-          userMetadata?.last_name &&
-          userMetadata?.school_name &&
-          (userMetadata?.role === 'teacher' || userMetadata?.grade)
-
-        if (hasCompleteMetadata) {
-          // User already has complete info, redirect to dashboard
-          const userRole = userMetadata.role
-          if (userRole === 'teacher') {
-            router.push('/dashboard')
-          } else {
-            router.push('/student')
-          }
-        } else {
-          // Need to collect additional metadata
-          setGoogleUser(result.user)
-          setShowMetadataModal(true)
-        }
-      }
+      await signUpWithGoogle()
+      // Supabase OAuth will redirect the browser; additional handling will occur after returning from OAuth.
     } catch (err: unknown) {
       if (err instanceof Error && err.message === 'DEMO_MODE') {
         // Demo mode - don't show error, just stop execution
@@ -128,23 +102,6 @@ function RegisterPageContent() {
       setError(err instanceof Error ? err.message : 'Error al registrarse con Google')
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleMetadataSubmit = async (metadata: RegistrationMetadata) => {
-    try {
-      // Here we would update the user metadata in Supabase
-      // For now, we'll simulate the process and redirect
-      console.log('Updating user metadata:', metadata)
-
-      // Redirect based on role
-      if (metadata.role === 'teacher') {
-        router.push('/dashboard')
-      } else {
-        router.push('/student')
-      }
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al completar el registro')
     }
   }
 
@@ -451,174 +408,6 @@ function RegisterPageContent() {
         </div>
       </motion.div>
 
-      {/* Metadata Modal */}
-      {showMetadataModal && googleUser && (
-        <MetadataModal
-          user={googleUser}
-          onSubmit={handleMetadataSubmit}
-          onClose={() => setShowMetadataModal(false)}
-        />
-      )}
-    </div>
-  )
-}
-
-// Metadata Modal Component
-function MetadataModal({ user, onSubmit, onClose }: {
-  user: AuthUser
-  onSubmit: (metadata: RegistrationMetadata) => void
-  onClose: () => void
-}) {
-  const [modalData, setModalData] = useState({
-    role: 'teacher' as 'teacher' | 'student',
-    schoolName: '',
-    grade: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const handleModalInputChange = (field: string, value: string) => {
-    setModalData(prev => ({ ...prev, [field]: value }))
-  }
-
-  const handleModalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    const metadata: RegistrationMetadata = {
-      first_name: user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || '',
-      last_name: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-      role: modalData.role,
-      school_name: modalData.schoolName,
-      grade: modalData.role === 'student' ? modalData.grade : undefined
-    }
-
-    await onSubmit(metadata)
-    setIsSubmitting(false)
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
-      >
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Completa tu perfil</h2>
-          <p className="text-gray-600">Necesitamos algunos datos adicionales</p>
-        </div>
-
-        <form onSubmit={handleModalSubmit} className="space-y-4">
-          {/* Role Selector */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de usuario
-            </label>
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                type="button"
-                onClick={() => handleModalInputChange('role', 'teacher')}
-                className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md transition-all duration-200 ${
-                  modalData.role === 'teacher'
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <AcademicCapIcon className="w-5 h-5" />
-                <span className="font-medium">Profesor</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleModalInputChange('role', 'student')}
-                className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md transition-all duration-200 ${
-                  modalData.role === 'student'
-                    ? 'bg-white text-indigo-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <UserIcon className="w-5 h-5" />
-                <span className="font-medium">Estudiante</span>
-              </button>
-            </div>
-          </div>
-
-          {/* School Name */}
-          <div>
-            <label htmlFor="modalSchoolName" className="block text-sm font-medium text-gray-700 mb-1">
-              {modalData.role === 'teacher' ? 'Establecimiento' : 'Colegio'}
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <BuildingOfficeIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="modalSchoolName"
-                type="text"
-                value={modalData.schoolName}
-                onChange={(e) => handleModalInputChange('schoolName', e.target.value)}
-                required
-                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 placeholder-gray-400 bg-gray-50"
-                placeholder="Nombre del colegio"
-              />
-            </div>
-          </div>
-
-          {/* Grade (only for students) */}
-          {modalData.role === 'student' && (
-            <div>
-              <label htmlFor="modalGrade" className="block text-sm font-medium text-gray-700 mb-1">
-                Curso
-              </label>
-              <select
-                id="modalGrade"
-                value={modalData.grade}
-                onChange={(e) => handleModalInputChange('grade', e.target.value)}
-                required
-                className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-gray-900 bg-gray-50"
-              >
-                <option value="">Seleccionar</option>
-                <option value="1-basico">1° Básico</option>
-                <option value="2-basico">2° Básico</option>
-                <option value="3-basico">3° Básico</option>
-                <option value="4-basico">4° Básico</option>
-                <option value="5-basico">5° Básico</option>
-                <option value="6-basico">6° Básico</option>
-                <option value="7-basico">7° Básico</option>
-                <option value="8-basico">8° Básico</option>
-                <option value="1-medio">1° Medio</option>
-                <option value="2-medio">2° Medio</option>
-                <option value="3-medio">3° Medio</option>
-                <option value="4-medio">4° Medio</option>
-              </select>
-            </div>
-          )}
-
-          {/* Buttons */}
-          <div className="flex space-x-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 bg-gray-200 text-gray-800 py-2.5 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 px-4 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Guardando...</span>
-                </div>
-              ) : (
-                'Completar'
-              )}
-            </button>
-          </div>
-        </form>
-      </motion.div>
     </div>
   )
 }

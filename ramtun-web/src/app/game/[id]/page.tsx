@@ -160,7 +160,6 @@ export default function GamePage() {
   if (!hasAccess) {
     return (
       <AccessGuard
-        gameId={gameId}
         gameTitle={gameData?.title || 'Crucigrama'}
         gameSubject={gameData?.subject || 'Educativo'}
       />

@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { EnvelopeIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { createClientComponentClient } from '../../../lib/supabase'
 
-export default function VerifyEmailPage() {
+function VerifyEmailPage() {
   const [isVerifying, setIsVerifying] = useState(false)
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'success' | 'error'>('pending')
   const [message, setMessage] = useState('')
@@ -16,7 +16,7 @@ export default function VerifyEmailPage() {
 
   const handleEmailVerification = useCallback(async (token: string) => {
     setIsVerifying(true)
-    
+
     try {
       const { data, error } = await supabase.auth.verifyOtp({
         token_hash: token,
@@ -32,7 +32,7 @@ export default function VerifyEmailPage() {
       if (data.user) {
         setVerificationStatus('success')
         setMessage('¡Email verificado exitosamente!')
-        
+
         // Redirect to appropriate dashboard based on user role
         const userRole = data.user.user_metadata?.role || 'student'
         setTimeout(() => {
@@ -84,8 +84,8 @@ export default function VerifyEmailPage() {
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${
-            verificationStatus === 'success' 
-              ? 'bg-green-100' 
+            verificationStatus === 'success'
+              ? 'bg-green-100'
               : verificationStatus === 'error'
               ? 'bg-red-100'
               : 'bg-blue-100'
@@ -102,8 +102,8 @@ export default function VerifyEmailPage() {
 
         {/* Title */}
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          {verificationStatus === 'success' 
-            ? '¡Verificación Exitosa!' 
+          {verificationStatus === 'success'
+            ? '¡Verificación Exitosa!'
             : verificationStatus === 'error'
             ? 'Error de Verificación'
             : 'Verifica tu Email'
@@ -119,8 +119,8 @@ export default function VerifyEmailPage() {
             </div>
           ) : message ? (
             <p className={`text-sm ${
-              verificationStatus === 'success' 
-                ? 'text-green-600' 
+              verificationStatus === 'success'
+                ? 'text-green-600'
                 : verificationStatus === 'error'
                 ? 'text-red-600'
                 : 'text-gray-600'
@@ -149,7 +149,7 @@ export default function VerifyEmailPage() {
               >
                 Reenviar Email
               </button>
-              
+
               <button
                 onClick={() => router.push('/auth/login')}
                 className="w-full text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
@@ -167,7 +167,7 @@ export default function VerifyEmailPage() {
               >
                 Intentar Registro Nuevamente
               </button>
-              
+
               <button
                 onClick={() => router.push('/auth/login')}
                 className="w-full text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
@@ -192,5 +192,14 @@ export default function VerifyEmailPage() {
         </div>
       </motion.div>
     </div>
+  )
+
+}
+
+export default function VerifyEmailPageWrapper() {
+  return (
+    <Suspense fallback={<div />}>
+      <VerifyEmailPage />
+    </Suspense>
   )
 }

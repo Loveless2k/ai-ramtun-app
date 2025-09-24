@@ -6,7 +6,7 @@ import { useAuth } from '../lib/auth'
 
 interface RoleProtectionProps {
   children: React.ReactNode
-  allowedRoles: ('teacher' | 'student')[]
+  allowedRoles: ('teacher' | 'student' | 'admin')[]
   redirectTo?: string
 }
 

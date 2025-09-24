@@ -76,7 +76,7 @@ export default function StudentNavigation({
           <div className="text-right">
             <p className="text-sm text-gray-600">¡Bienvenido!</p>
             <p className="text-lg font-semibold text-indigo-600">
-              {user?.user_metadata?.name || 'Estudiante Demo'}
+              {user?.user_metadata?.full_name || user?.user_metadata?.first_name || 'Estudiante Demo'}
             </p>
           </div>
         </div>

@@ -30,7 +30,6 @@ import TeacherCollaboration from '@/components/TeacherCollaboration'
 import CrosswordTemplateLibrary from '@/components/CrosswordTemplateLibrary'
 import AdvancedAnalytics from '@/components/AdvancedAnalytics'
 import { useDashboard } from './layout'
-import type { ShareOptions } from '@/components/CrosswordSharingSystem'
 
 // Types
 import type { CrosswordStats } from '../../types/crossword'
@@ -528,6 +527,7 @@ function CrosswordsTab({ crosswords, setCrosswords }: {
   crosswords: CrosswordStats[],
   setCrosswords: React.Dispatch<React.SetStateAction<CrosswordStats[]>>
 }) {
+  const { setActiveTab } = useDashboard()
   const [filter, setFilter] = useState<'all' | 'active' | 'draft' | 'archived'>('all')
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'score'>('recent')
 
@@ -869,23 +869,9 @@ function GeneratorTab() {
 
 // 🚀 PHASE 2: Sharing Tab Component
 function SharingTab() {
-  const handleShare = (crosswordId: string, options: ShareOptions) => {
-    console.log('Sharing crossword:', crosswordId, options)
-    // Implementation for sharing functionality
-  }
-
-  const handleRevoke = (crosswordId: string) => {
-    console.log('Revoking access for crossword:', crosswordId)
-    // Implementation for revoking access
-  }
-
   return (
     <div className="space-y-6">
-      <CrosswordSharingSystem
-        crosswords={[]}
-        onShare={handleShare}
-        onRevoke={handleRevoke}
-      />
+      <CrosswordSharingSystem />
     </div>
   )
 }

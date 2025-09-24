@@ -106,7 +106,7 @@ export default function Navigation() {
   }
 
   // Navegación contextual según estado de autenticación
-  const getNavItems = () => {
+  const getNavItems = (): Array<{ name: string; href: string; badge?: string }> => {
     const baseItems = [
       { name: 'Inicio', href: '/' },
     ]

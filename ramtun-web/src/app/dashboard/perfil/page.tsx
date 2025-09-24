@@ -73,11 +73,15 @@ export default function PerfilPage() {
     }))
   }
 
-  const handlePreferenceChange = (category: string, field: string, value: boolean) => {
+  const handlePreferenceChange = (
+    category: 'preferences' | 'privacy',
+    field: string,
+    value: boolean | string
+  ) => {
     setFormData(prev => ({
       ...prev,
       [category]: {
-        ...prev[category as keyof typeof prev],
+        ...(prev[category] as Record<string, unknown>),
         [field]: value
       }
     }))

@@ -59,24 +59,8 @@ function LoginPageContent() {
     setError('')
 
     try {
-      const result = await signInWithGoogle()
-
-      if (result?.user) {
-        // Obtener el rol REAL del usuario desde Supabase
-        const userRole = result.user.user_metadata?.role
-
-        if (!userRole) {
-          throw new Error('Tu cuenta no tiene un rol asignado. Por favor contacta al administrador para configurar tu perfil.')
-        }
-
-        // Redirigir automáticamente según el rol detectado
-        const redirectUrl = userRole === 'teacher' ? '/dashboard' : '/student/dashboard'
-
-        // Mostrar mensaje de bienvenida con el rol detectado
-        console.log(`✅ Login exitoso con Google como ${userRole === 'teacher' ? 'Profesor' : 'Estudiante'}`)
-
-        router.push(redirectUrl)
-      }
+      await signInWithGoogle()
+      // Supabase OAuth will redirect the browser; no further handling here.
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión con Google')
     } finally {

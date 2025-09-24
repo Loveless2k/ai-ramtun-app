@@ -526,7 +526,7 @@ export class PerfectCrosswordGenerator {
     return count
   }
 
-  private createUniversalOptimizedCrossword(questions: Omit<CrosswordQuestion, 'position' | 'number'>[]): CrosswordQuestion[] {
+  createUniversalOptimizedCrossword(questions: Omit<CrosswordQuestion, 'position' | 'number'>[]): CrosswordQuestion[] {
     console.log('🎯 Creando crucigrama con algoritmo universal optimizado...')
 
     const words = questions.map(q => ({ word: q.answer.toUpperCase(), question: q }))
@@ -618,6 +618,7 @@ export class PerfectCrosswordGenerator {
 
   private findWordIntersection(word1: CrosswordQuestion, word2: CrosswordQuestion): { row: number, col: number, word1Index: number, word2Index: number } | null {
     // Solo palabras perpendiculares pueden intersectarse
+    if (!word1.position || !word2.position) return null
     if (word1.position.direction === word2.position.direction) {
       return null
     }
@@ -625,12 +626,12 @@ export class PerfectCrosswordGenerator {
     const horizontal = word1.position.direction === 'horizontal' ? word1 : word2
     const vertical = word1.position.direction === 'vertical' ? word1 : word2
 
-    const hRow = horizontal.position.row
-    const hColStart = horizontal.position.col
+    const hRow = horizontal.position!.row
+    const hColStart = horizontal.position!.col
     const hColEnd = hColStart + horizontal.answer.length - 1
 
-    const vCol = vertical.position.col
-    const vRowStart = vertical.position.row
+    const vCol = vertical.position!.col
+    const vRowStart = vertical.position!.row
     const vRowEnd = vRowStart + vertical.answer.length - 1
 
     // Verificar si se intersectan

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import type { CrosswordQuestion as SharedCrosswordQuestion } from '../../../types/crossword'
 import {
   ArrowRightIcon,
   ArrowDownIcon,
@@ -12,22 +13,8 @@ import {
   EyeSlashIcon
 } from '@heroicons/react/24/outline'
 
-interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: string
-  position: {
-    row: number
-    col: number
-    direction: 'horizontal' | 'vertical'
-  }
-  number: number
-}
-
 interface CluesPanelProps {
-  questions: CrosswordQuestion[]
+  questions: SharedCrosswordQuestion[]
   selectedQuestion: string | null
   onQuestionSelect: (questionId: string) => void
   userAnswers: Record<string, string>
@@ -107,8 +94,8 @@ export default function CluesPanel({
 }: CluesPanelProps) {
   const [showAnswers, setShowAnswers] = useState(false)
 
-  const horizontalQuestions = questions.filter(q => q.position.direction === 'horizontal')
-  const verticalQuestions = questions.filter(q => q.position.direction === 'vertical')
+  const horizontalQuestions = questions.filter(q => q.position?.direction === 'horizontal')
+  const verticalQuestions = questions.filter(q => q.position?.direction === 'vertical')
 
   const getQuestionStatus = (questionId: string) => {
     if (correctAnswers[questionId] === true) return 'correct'
@@ -152,7 +139,7 @@ export default function CluesPanel({
   }: { 
     title: string
     icon: React.ReactNode
-    questions: CrosswordQuestion[] 
+    questions: SharedCrosswordQuestion[]
   }) => (
     <div className="mb-6">
       <div className="flex items-center space-x-2 mb-3">

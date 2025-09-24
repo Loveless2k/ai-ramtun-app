@@ -2,23 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
-
-interface CrosswordQuestion {
-  id: string
-  question: string
-  answer: string
-  category: string
-  difficulty: string
-  position: {
-    row: number
-    col: number
-    direction: 'horizontal' | 'vertical'
-  }
-  number: number
-}
+import type { CrosswordQuestion as SharedCrosswordQuestion } from '../../../types/crossword'
 
 interface CrosswordGridProps {
-  questions: CrosswordQuestion[]
+  questions: SharedCrosswordQuestion[]
   onAnswerChange: (questionId: string, answer: string) => void
   onQuestionSelect: (questionId: string) => void
   selectedQuestion: string | null
@@ -63,12 +50,12 @@ export default function CrosswordGrid({
 
     // Place questions in grid
     questions.forEach((question) => {
-      const { row, col, direction } = question.position
+      const { row, col, direction } = question.position!
       const answer = question.answer.toUpperCase()
 
       // Mark starting cell with number
       if (newGrid[row] && newGrid[row][col]) {
-        newGrid[row][col].number = question.number
+        newGrid[row][col].number = question.number ?? null
         newGrid[row][col].questionIds.push(question.id)
       }
 
@@ -96,7 +83,7 @@ export default function CrosswordGrid({
       const newGrid = prevGrid.map(row => 
         row.map(cell => ({
           ...cell,
-          isCorrect: cell.isActive ? null : null
+          isCorrect: null as boolean | null
         }))
       )
 
@@ -104,7 +91,7 @@ export default function CrosswordGrid({
       questions.forEach((question) => {
         const userAnswer = userAnswers[question.id] || ''
         const isCorrect = correctAnswers[question.id]
-        const { row, col, direction } = question.position
+        const { row, col, direction } = question.position!
 
         for (let i = 0; i < question.answer.length; i++) {
           const currentRow = direction === 'vertical' ? row + i : row
@@ -166,7 +153,7 @@ export default function CrosswordGrid({
       const question = questions.find(q => q.id === selectedQuestion)
       if (!question) return
 
-      const { row: qRow, col: qCol, direction } = question.position
+      const { row: qRow, col: qCol, direction } = question.position!
       let letterIndex = 0
 
       if (direction === 'horizontal') {
@@ -191,7 +178,7 @@ export default function CrosswordGrid({
       const question = questions.find(q => q.id === selectedQuestion)
       if (!question) return
 
-      const { row: qRow, col: qCol, direction } = question.position
+      const { row: qRow, col: qCol, direction } = question.position!
       let letterIndex = 0
 
       if (direction === 'horizontal') {
@@ -215,18 +202,18 @@ export default function CrosswordGrid({
     }
   }
 
-  const moveToNextCell = (question: CrosswordQuestion, currentIndex: number) => {
+  const moveToNextCell = (question: SharedCrosswordQuestion, currentIndex: number) => {
     if (currentIndex < question.answer.length - 1) {
-      const { row: qRow, col: qCol, direction } = question.position
+      const { row: qRow, col: qCol, direction } = question.position!
       const nextRow = direction === 'vertical' ? qRow + currentIndex + 1 : qRow
       const nextCol = direction === 'horizontal' ? qCol + currentIndex + 1 : qCol
       setFocusedCell({ row: nextRow, col: nextCol })
     }
   }
 
-  const moveToPreviousCell = (question: CrosswordQuestion, currentIndex: number) => {
+  const moveToPreviousCell = (question: SharedCrosswordQuestion, currentIndex: number) => {
     if (currentIndex > 0) {
-      const { row: qRow, col: qCol, direction } = question.position
+      const { row: qRow, col: qCol, direction } = question.position!
       const prevRow = direction === 'vertical' ? qRow + currentIndex - 1 : qRow
       const prevCol = direction === 'horizontal' ? qCol + currentIndex - 1 : qCol
       setFocusedCell({ row: prevRow, col: prevCol })
@@ -276,7 +263,7 @@ export default function CrosswordGrid({
       if (!question) continue
 
       const userAnswer = userAnswers[questionId] || ''
-      const { row: qRow, col: qCol, direction } = question.position
+      const { row: qRow, col: qCol, direction } = question.position!
 
       let letterIndex = 0
       if (direction === 'horizontal') {
